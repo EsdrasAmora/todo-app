@@ -1,0 +1,12 @@
+.git/
+dist/
+node_modules/
+.eslintignore
+.eslintrc.js
+.env
+jest.config.js
+.gitignore
+.prettierrc.js
+docker-compose.yml
+Dockerfile
+README.md
