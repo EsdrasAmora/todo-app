@@ -13,18 +13,19 @@ model User {
   updatedAt      DateTime @updatedAt @map("updated_at")
   email          String   @unique
   hashedPassword String   @map("hashed_password")
-  Todo           Todo[]
+  todo           Todo[]
 
   @@map("users")
 }
 
 model Todo {
-  id          String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  id          String    @id @default(dbgenerated("gen_random_uuid()")) @map("todo_id") @db.Uuid
   createdAt   DateTime  @default(now()) @map("created_at")
   updatedAt   DateTime  @updatedAt @map("updated_at")
   title       String
   description String?
-  completedAt DateTime? @map("completed_at")
+  completed   Boolean   @default(false) @map("completed")
+  deletedAt   DateTime? @map("deleted_at")
   userId      String    @map("user_id") @db.Uuid
   user        User      @relation(fields: [userId], references: [id])
 
