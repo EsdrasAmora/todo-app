@@ -11,8 +11,15 @@ export function createUser() {
 }
 
 export function createTodo(userId: string) {
+  const createdAt = faker.date.past();
   return prisma.todo.create({
-    data: { title: faker.lorem.sentence(), description: faker.lorem.paragraph(), userId },
+    data: {
+      title: faker.lorem.sentence(),
+      description: faker.lorem.paragraph(),
+      userId,
+      updatedAt: new Date(createdAt.getTime() + 10 * 60 * 1000),
+      createdAt,
+    },
   });
 }
 
