@@ -1,5 +1,5 @@
 import { verify, sign } from 'jsonwebtoken';
-import { Env } from './env';
+import { Env } from '../env';
 import { z } from 'zod';
 
 export class JwtService {
