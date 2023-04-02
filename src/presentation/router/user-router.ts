@@ -1,6 +1,7 @@
 import { CreateUser } from '../../domain/create-user';
+import { CurrentUser } from '../../domain/find-user';
 import { LoginUser } from '../../domain/login-user';
-import { publicProcedure, trpc } from '../trpc.context';
+import { authorizedProcedure, publicProcedure, trpc } from '../trpc.context';
 import { z } from 'zod';
 
 const userSchema = z.object({
@@ -32,7 +33,33 @@ export const userRouter = trpc.router({
         summary: 'Login user',
       },
     })
-    .input(CreateUser.schema)
+    .input(LoginUser.schema)
     .output(z.object({ authorization: z.string() }))
     .mutation(({ input }) => LoginUser.execute(input)),
+  currentUser: authorizedProcedure
+    .meta({
+      openapi: {
+        method: 'GET',
+        path: '/users/me',
+        tags: ['user'],
+        summary: 'Retrieve current user',
+        protect: true,
+      },
+    })
+    .input(CurrentUser.schema)
+    .output(userSchema)
+    .mutation(({ ctx }) => CurrentUser.execute(ctx)),
+  deleteUser: authorizedProcedure
+    .meta({
+      openapi: {
+        method: 'DELETE',
+        path: '/users',
+        tags: ['user'],
+        summary: 'Delete current user',
+        protect: true,
+      },
+    })
+    .input(CurrentUser.schema)
+    .output(userSchema)
+    .mutation(({ ctx }) => CurrentUser.execute(ctx)),
 });

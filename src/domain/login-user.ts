@@ -6,7 +6,7 @@ import { CryptoService } from '../shared/crypto';
 
 export class LoginUser {
   static schema = z.object({
-    email: z.string(),
+    email: z.string().email(),
     password: z.string(),
   });
 

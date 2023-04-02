@@ -24,7 +24,6 @@ export const authorizedProcedure = trpc.procedure.use(async ({ ctx, next }) => {
   if (!decodedToken) {
     throw new TRPCError({ code: 'UNAUTHORIZED', message: 'Invalid or expired authorization header' });
   }
-
-  const result = await next({ ctx: { userId: decodedToken.userId } });
+  const result = await next({ ctx: { userId: decodedToken.data.userId } });
   return result;
 });

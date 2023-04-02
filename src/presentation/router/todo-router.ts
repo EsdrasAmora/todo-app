@@ -10,8 +10,9 @@ const todoSchema = z.object({
   id: z.string().uuid(),
   createdAt: z.date(),
   updatedAt: z.date(),
-  title: z.string().email(),
+  title: z.string(),
   description: z.string().nullable(),
+  completed: z.boolean(),
 });
 
 export const todoRouter = trpc.router({
@@ -22,6 +23,7 @@ export const todoRouter = trpc.router({
         path: '/todos',
         tags: ['todo'],
         summary: 'Create new Todo',
+        protect: true,
       },
     })
     .input(CreateTodo.schema)
@@ -34,6 +36,7 @@ export const todoRouter = trpc.router({
         path: '/todos',
         tags: ['todo'],
         summary: 'Update Todo',
+        protect: true,
       },
     })
     .input(UpdateTodo.schema)
@@ -46,6 +49,7 @@ export const todoRouter = trpc.router({
         path: '/todos',
         tags: ['todo'],
         summary: 'Delete Todo',
+        protect: true,
       },
     })
     .input(DeleteTodo.schema)
@@ -58,6 +62,7 @@ export const todoRouter = trpc.router({
         path: '/todos/:todoId',
         tags: ['todo'],
         summary: 'Find Todo by id',
+        protect: true,
       },
     })
     .input(FindTodo.schema)
@@ -70,6 +75,7 @@ export const todoRouter = trpc.router({
         path: '/todos',
         tags: ['todo', 'user'],
         summary: 'Find Todos by user',
+        protect: true,
       },
     })
     .input(FindUserTodos.schema)
