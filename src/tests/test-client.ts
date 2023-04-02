@@ -16,6 +16,6 @@ export async function createFakeCaller() {
   return appRouter.createCaller({ authorization, [contextSymbol]: true });
 }
 
-export async function createUnauthorizedCaller() {
+export function createUnauthorizedCaller() {
   return appRouter.createCaller({ authorization: undefined, [contextSymbol]: true });
 }

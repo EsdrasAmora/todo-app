@@ -6,6 +6,8 @@ const config: Config = {
     '^.+\\.ts$': 'ts-jest',
   },
   testEnvironment: 'node',
+  globalSetup: './src/tests/setup-test.ts',
+  globalTeardown: './src/tests/teardown-test.ts',
 };
 
 export default config;

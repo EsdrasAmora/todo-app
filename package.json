@@ -15,7 +15,7 @@
     "migrate:reset": "DATABASE_URL='postgresql://postgres_user:postgres_password@localhost:5432/todo_app_db' prisma migrate reset",
     "migrate:sync": "DATABASE_URL='postgresql://postgres_user:postgres_password@localhost:5432/todo_app_db' prisma db push",
     "lint": "eslint --ext .ts src",
-    "test": "jest"
+    "test": "jest --runInBand --forceExit"
   },
   "dependencies": {
     "@prisma/client": "4.12.0",
