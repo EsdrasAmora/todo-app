@@ -4,7 +4,7 @@ import { clearDatabase } from './clear-db';
 import { JwtService } from '../shared/jwt';
 import { isDefined } from './assert-helpers';
 
-describe.only('Login User', () => {
+describe('Login User', () => {
   beforeEach(async () => {
     await clearDatabase();
   });

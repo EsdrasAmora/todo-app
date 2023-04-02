@@ -17,7 +17,7 @@ export const userRouter = trpc.router({
       openapi: {
         method: 'POST',
         path: '/users',
-        tags: ['user'],
+        tags: ['User'],
         summary: 'Create new User',
       },
     })
@@ -29,7 +29,7 @@ export const userRouter = trpc.router({
       openapi: {
         method: 'POST',
         path: '/login',
-        tags: ['user'],
+        tags: ['User'],
         summary: 'Login user',
       },
     })
@@ -41,7 +41,7 @@ export const userRouter = trpc.router({
       openapi: {
         method: 'GET',
         path: '/users/me',
-        tags: ['user'],
+        tags: ['User'],
         summary: 'Retrieve current user',
         protect: true,
       },
@@ -54,8 +54,8 @@ export const userRouter = trpc.router({
       openapi: {
         method: 'DELETE',
         path: '/users',
-        tags: ['user'],
-        summary: 'Delete current user',
+        tags: ['User'],
+        summary: 'Delete the current user and all its Todos permanently',
         protect: true,
       },
     })

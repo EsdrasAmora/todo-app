@@ -21,7 +21,7 @@ export const todoRouter = trpc.router({
       openapi: {
         method: 'POST',
         path: '/todos',
-        tags: ['todo'],
+        tags: ['Todo'],
         summary: 'Create new Todo',
         protect: true,
       },
@@ -34,7 +34,7 @@ export const todoRouter = trpc.router({
       openapi: {
         method: 'PATCH',
         path: '/todos',
-        tags: ['todo'],
+        tags: ['Todo'],
         summary: 'Update Todo',
         protect: true,
       },
@@ -47,8 +47,8 @@ export const todoRouter = trpc.router({
       openapi: {
         method: 'DELETE',
         path: '/todos',
-        tags: ['todo'],
-        summary: 'Delete Todo',
+        tags: ['Todo'],
+        summary: 'Soft delete a Todo',
         protect: true,
       },
     })
@@ -60,7 +60,7 @@ export const todoRouter = trpc.router({
       openapi: {
         method: 'GET',
         path: '/todos/:todoId',
-        tags: ['todo'],
+        tags: ['Todo'],
         summary: 'Find Todo by id',
         protect: true,
       },
@@ -73,7 +73,7 @@ export const todoRouter = trpc.router({
       openapi: {
         method: 'GET',
         path: '/todos',
-        tags: ['todo', 'user'],
+        tags: ['Todo', 'User'],
         summary: 'Find Todos by user',
         protect: true,
       },

@@ -15,6 +15,7 @@ function parseEnvFile(filename: string) {
   const path = join(process.cwd(), filename);
   if (!existsSync(path)) {
     console.debug(`No .env file found at ${path}`);
+    return {};
   }
   const file = readFileSync(path);
   return dotenv.parse(file);
