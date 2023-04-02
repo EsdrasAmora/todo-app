@@ -14,7 +14,6 @@ export async function configApi(): Promise<express.Application> {
   const app = express();
 
   app.use(cors(Env.NODE_ENV !== 'production' ? { origin: '*' } : undefined));
-  app.use(express.json());
   app.use(compression());
   app.use(helmet());
 

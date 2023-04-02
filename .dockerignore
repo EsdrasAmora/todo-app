@@ -1,12 +1,12 @@
 .git/
 dist/
 node_modules/
+src/tests/
 .eslintignore
-.eslintrc.js
+.eslintrc.json
 .env
-jest.config.js
 .gitignore
-.prettierrc.js
+.prettierrc.json
 docker-compose.yml
 Dockerfile
 README.md

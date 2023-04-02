@@ -10,7 +10,7 @@
     ],
     "types": [
       "node",
-      "jest"
+      "mocha"
     ],
     "noImplicitReturns": true,
     "removeComments": true,
