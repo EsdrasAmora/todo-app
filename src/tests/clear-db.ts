@@ -32,11 +32,15 @@ const buildDeleteStatement = (tablenames: string[]) =>
 
 const parseTableName = (tablename: string) => `"public"."${tablename}"`;
 
-export async function clearDatabase(tablesToDelete?: PrismaTableNames[]): Promise<void> {
+/**
+ * Truncate database tables.
+ * @param tablesToTruncate - Tables to truncate. If not provided, all tables will be truncated.
+ **/
+export async function clearDatabase(tablesToTruncate?: PrismaTableNames[]): Promise<void> {
   if (cachedTableNames.length === 0) {
     await allTables();
   }
 
-  const tables = tablesToDelete ?? cachedTableNames;
+  const tables = tablesToTruncate ?? cachedTableNames;
   await prisma.$executeRawUnsafe(buildDeleteStatement(tables));
 }
