@@ -7,14 +7,14 @@ export const Env = {} as EnvSchema;
 
 export function setupEnv(filename: string) {
   const config = parseEnvFile(filename);
-  const validatedConfig = EnvSchemaValidation.parse(config);
+  const validatedConfig = EnvSchemaValidation.parse(Object.assign(config, process.env));
   Object.assign(Env, validatedConfig);
 }
 
-function parseEnvFile(filename: string): unknown {
+function parseEnvFile(filename: string) {
   const path = join(process.cwd(), filename);
   if (!existsSync(path)) {
-    throw new Error(`no env file not found at: '${path}'`);
+    console.debug(`No .env file found at ${path}`);
   }
   const file = readFileSync(path);
   return dotenv.parse(file);
