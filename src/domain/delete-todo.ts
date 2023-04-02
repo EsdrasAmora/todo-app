@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import { prisma } from '../db/client';
+import { handlePrismaError } from '../shared/handle-prisma-error';
 
 export class DeleteTodo {
   static schema = z.object({
@@ -7,6 +8,6 @@ export class DeleteTodo {
   });
 
   static execute({ todoId }: z.input<typeof this.schema>) {
-    return prisma.todo.update({ where: { id: todoId }, data: { deletedAt: new Date() } });
+    return prisma.todo.update({ where: { id: todoId }, data: { deletedAt: new Date() } }).catch(handlePrismaError);
   }
 }

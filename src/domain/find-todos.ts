@@ -3,8 +3,7 @@ import { prisma } from '../db/client';
 import { AuthorizedContext } from '../presentation/trpc.context';
 
 export class FindUserTodos {
-  //TODO: Add aditional filters, maybe return deleted todos
-  static schema = z.object({});
+  static schema = z.void();
 
   static execute({ userId }: AuthorizedContext) {
     return prisma.todo.findMany({ where: { userId, deletedAt: null } });

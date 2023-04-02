@@ -14,6 +14,7 @@
     ],
     "noImplicitReturns": true,
     "removeComments": true,
+    "useUnknownInCatchVariables": false,
     "strict": true,
     "esModuleInterop": true,
     "outDir": "dist",

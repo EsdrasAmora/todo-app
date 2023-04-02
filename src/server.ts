@@ -1,5 +1,5 @@
 export async function main(envPath = 'test.env') {
-  //import order must be preserved, so Env is evaluated correctly
+  //import order must be preserved, so Env can be used safely used on top file level and static class properties
   const { setupEnv } = await import('./env');
   setupEnv(envPath);
 
@@ -13,4 +13,4 @@ export async function main(envPath = 'test.env') {
   return { router: app, server };
 }
 
-// export type AppType = AwaitedReturn<typeof main>;
+export type AppType = AwaitedReturn<typeof main>;

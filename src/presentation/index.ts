@@ -1,5 +1,3 @@
-import { Env } from '../env';
-
 import { createExpressMiddleware } from '@trpc/server/adapters/express';
 import compression from 'compression';
 import cors from 'cors';
@@ -7,9 +5,10 @@ import express from 'express';
 import helmet from 'helmet';
 import swaggerUi from 'swagger-ui-express';
 import { createOpenApiExpressMiddleware } from 'trpc-openapi';
+import { Env } from '../env';
+import { openApiDocument } from './openapi';
 import { appRouter } from './router';
 import { createTrpcContext } from './trpc.context';
-import { openApiDocument } from './openapi';
 
 export async function configApi(): Promise<express.Application> {
   const app = express();
