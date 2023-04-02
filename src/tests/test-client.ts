@@ -1,18 +1,23 @@
-import { randomUUID } from 'crypto';
 import { appRouter } from '../presentation/router';
 import { contextSymbol } from '../presentation/trpc.context';
 import { JwtService } from '../shared/jwt';
+import { prisma } from '../db/client';
+import { faker } from '@faker-js/faker';
 
-export function createCaller(userId: string) {
-  return appRouter.createCaller({ authorization: JwtService.sign({ userId }), [contextSymbol]: true });
+export function createUser() {
+  return prisma.user.create({
+    data: { email: faker.internet.email(), hashedPassword: 'anything', passwordSalt: 'anything' },
+  });
 }
 
-export function createFakeCaller() {
-  // const user = await prisma.user.create({
-  //   data: { email: 'foo@bar.com', hashedPassword: '123', passwordSalt: '321' },
-  //   select: { id: true },
-  // });
-  const authorization = JwtService.sign({ userId: randomUUID() });
+export function createTodo(userId: string) {
+  return prisma.todo.create({
+    data: { title: faker.lorem.sentence(), description: faker.lorem.paragraph(), userId },
+  });
+}
+
+export async function createCaller(userId: string) {
+  const authorization = JwtService.sign({ userId });
   return appRouter.createCaller({ authorization, [contextSymbol]: true });
 }
 

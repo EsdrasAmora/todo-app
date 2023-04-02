@@ -6,7 +6,7 @@ import { handlePrismaError } from '../shared/handle-prisma-error';
 export class UpdateTodo {
   static schema = z.object({
     todoId: z.string().uuid(),
-    title: z.string().optional(),
+    title: z.string().min(1).optional(),
     description: z.string().nullish(),
     completed: z.boolean().optional(),
   });
