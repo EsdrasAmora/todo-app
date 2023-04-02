@@ -7,6 +7,6 @@ export class DeleteTodo {
   });
 
   static execute({ todoId }: z.input<typeof this.schema>) {
-    return prisma.todo.delete({ where: { id: todoId } });
+    return prisma.todo.update({ where: { id: todoId }, data: { deletedAt: new Date() } });
   }
 }

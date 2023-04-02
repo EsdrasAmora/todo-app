@@ -1,3 +1,3 @@
 import { main } from './server';
 
-void main('.env');
+void main();

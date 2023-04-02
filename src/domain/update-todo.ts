@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import { prisma } from '../db/client';
-import { Context } from '../presentation/trpc.context';
+import { AuthorizedContext } from '../presentation/trpc.context';
 
 export class UpdateTodo {
   static schema = z.object({
@@ -10,7 +10,7 @@ export class UpdateTodo {
     completed: z.boolean().optional(),
   });
 
-  static async execute({ todoId, ...data }: z.input<typeof this.schema>, { userId }: Context) {
+  static async execute({ todoId, ...data }: z.input<typeof this.schema>, { userId }: AuthorizedContext) {
     await prisma.$transaction(async (manager) => {
       const user = await manager.todo.update({
         where: { id: todoId },

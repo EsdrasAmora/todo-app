@@ -8,8 +8,8 @@ export class LoginUser {
   });
 
   static async execute(input: z.input<typeof this.schema>) {
-    const user = prisma.user.create({ data: input as any });
+    const _user = prisma.user.findUnique({ where: { email: input.email } });
 
-    return user;
+    return { authorization: 'authorization token' };
   }
 }

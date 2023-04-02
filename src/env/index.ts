@@ -14,7 +14,7 @@ export function setupEnv(filename: string) {
 function parseEnvFile(filename: string): unknown {
   const path = join(process.cwd(), filename);
   if (!existsSync(path)) {
-    return {};
+    throw new Error(`no env file not found at: '${path}'`);
   }
   const file = readFileSync(path);
   return dotenv.parse(file);

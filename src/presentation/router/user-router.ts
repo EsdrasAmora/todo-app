@@ -1,4 +1,5 @@
 import { CreateUser } from '../../domain/create-user';
+import { LoginUser } from '../../domain/login-user';
 import { publicProcedure, trpc } from '../trpc.context';
 import { z } from 'zod';
 
@@ -26,12 +27,12 @@ export const userRouter = trpc.router({
     .meta({
       openapi: {
         method: 'POST',
-        path: '/users',
+        path: '/login',
         tags: ['user'],
         summary: 'Login user',
       },
     })
     .input(CreateUser.schema)
-    .output(userSchema)
-    .mutation(({ input }) => CreateUser.execute(input)),
+    .output(z.object({ authorization: z.string() }))
+    .mutation(({ input }) => LoginUser.execute(input)),
 });

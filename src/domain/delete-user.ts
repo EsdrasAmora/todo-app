@@ -1,12 +1,8 @@
-import { z } from 'zod';
 import { prisma } from '../db/client';
+import { AuthorizedContext } from '../presentation/trpc.context';
 
 export class DeleteUser {
-  static schema = z.object({
-    userId: z.string().uuid(),
-  });
-
-  static async execute({ userId }: z.input<typeof this.schema>) {
+  static async execute({ userId }: AuthorizedContext) {
     await prisma.$transaction([
       prisma.todo.deleteMany({ where: { userId } }),
       prisma.user.delete({ where: { id: userId } }),

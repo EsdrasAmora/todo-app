@@ -11,7 +11,7 @@ import { appRouter } from './router';
 import { createTrpcContext } from './trpc.context';
 import { openApiDocument } from './openapi';
 
-export async function configure(): Promise<express.Application> {
+export async function configApi(): Promise<express.Application> {
   const app = express();
 
   app.use(cors(Env.NODE_ENV !== 'production' ? { origin: '*' } : undefined));

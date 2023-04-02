@@ -1,16 +1,21 @@
-import { CreateUser } from '../../domain/create-user';
-import { publicProcedure, trpc } from '../trpc.context';
+import { CreateTodo } from '../../domain/create-todo';
+import { DeleteTodo } from '../../domain/delete-todo';
+import { FindTodo } from '../../domain/find-todo';
+import { FindUserTodos } from '../../domain/find-todos';
+import { UpdateTodo } from '../../domain/update-todo';
+import { authorizedProcedure, trpc } from '../trpc.context';
 import { z } from 'zod';
 
 const todoSchema = z.object({
   id: z.string().uuid(),
   createdAt: z.date(),
   updatedAt: z.date(),
-  email: z.string().email(),
+  title: z.string().email(),
+  description: z.string().nullable(),
 });
 
 export const todoRouter = trpc.router({
-  create: publicProcedure
+  create: authorizedProcedure
     .meta({
       openapi: {
         method: 'POST',
@@ -19,7 +24,55 @@ export const todoRouter = trpc.router({
         summary: 'Create new Todo',
       },
     })
-    .input(CreateUser.schema)
+    .input(CreateTodo.schema)
     .output(todoSchema)
-    .mutation(({ input }) => CreateUser.execute(input)),
+    .mutation(({ input, ctx }) => CreateTodo.execute(input, ctx)),
+  update: authorizedProcedure
+    .meta({
+      openapi: {
+        method: 'PATCH',
+        path: '/todos',
+        tags: ['todo'],
+        summary: 'Update Todo',
+      },
+    })
+    .input(UpdateTodo.schema)
+    .output(z.void())
+    .mutation(({ input, ctx }) => UpdateTodo.execute(input, ctx)),
+  delete: authorizedProcedure
+    .meta({
+      openapi: {
+        method: 'DELETE',
+        path: '/todos',
+        tags: ['todo'],
+        summary: 'Delete Todo',
+      },
+    })
+    .input(DeleteTodo.schema)
+    .output(todoSchema)
+    .mutation(({ input }) => DeleteTodo.execute(input)),
+  findById: authorizedProcedure
+    .meta({
+      openapi: {
+        method: 'GET',
+        path: '/todos/:todoId',
+        tags: ['todo'],
+        summary: 'Find Todo by id',
+      },
+    })
+    .input(FindTodo.schema)
+    .output(todoSchema)
+    .mutation(({ input, ctx }) => FindTodo.execute(input, ctx)),
+  findUserTodos: authorizedProcedure
+    .meta({
+      openapi: {
+        method: 'GET',
+        path: '/todos',
+        tags: ['todo', 'user'],
+        summary: 'Find Todos by user',
+      },
+    })
+    .input(FindUserTodos.schema)
+    .output(todoSchema.array())
+    .mutation(({ ctx }) => FindUserTodos.execute(ctx)),
 });
