@@ -9,7 +9,7 @@ describe('Create Todo', () => {
     await clearDatabase();
   });
 
-  it('Creates sucessfully', async () => {
+  it('should create a todo successfully', async () => {
     const { id: userId } = await createUser();
     const client = await createCaller(userId);
     const before = new Date();
@@ -23,7 +23,7 @@ describe('Create Todo', () => {
     expect(todoDb).excluding(['userId', 'deletedAt']).to.deep.equal(todo);
   });
 
-  it('Unauthorized', async () => {
+  it('should error: unauthorized', async () => {
     const client = createUnauthorizedCaller();
     await assertThrows(
       client.todo.create({ title: 'title', description: 'description' }),
@@ -31,7 +31,7 @@ describe('Create Todo', () => {
     );
   });
 
-  it('Empty Title', async () => {
+  it('should error: empty title', async () => {
     const { id: userId } = await createUser();
     const client = await createCaller(userId);
     await assertValidationError(

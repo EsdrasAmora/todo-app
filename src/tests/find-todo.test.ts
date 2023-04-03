@@ -10,7 +10,7 @@ describe('Find Todo', () => {
     await clearDatabase();
   });
 
-  it('Finds sucessfully', async () => {
+  it('should find todo successfully', async () => {
     const { id: userId } = await createUser();
     const client = await createCaller(userId);
     const dbTodo = await createTodo(userId);
@@ -20,12 +20,12 @@ describe('Find Todo', () => {
     expect(todo).excluding(['userId', 'deletedAt']).to.be.deep.eq(dbTodo);
   });
 
-  it('Unauthorized', async () => {
+  it('should error: unauthorized', async () => {
     const client = createUnauthorizedCaller();
     await assertThrows(client.todo.findById({ todoId: randomUUID() }), 'Missing authorization header');
   });
 
-  it('A user can only see its own todos', async () => {
+  it('should error: user should only be able to see its own todos', async () => {
     const otherUserTodo = await prisma.todo.create({
       data: { title: 'e', description: 'e', user: { create: { email: 'e', hashedPassword: 'e', passwordSalt: 'e' } } },
     });
@@ -35,14 +35,14 @@ describe('Find Todo', () => {
     await assertThrows(client.todo.findById({ todoId: otherUserTodo.id }), 'Resource not found');
   });
 
-  it('Not found', async () => {
+  it('should error: Not found', async () => {
     const { id: userId } = await createUser();
     const client = await createCaller(userId);
 
     await assertThrows(client.todo.findById({ todoId: randomUUID() }), 'Resource not found');
   });
 
-  it('Soft deleted', async () => {
+  it('should error: todo soft deleted', async () => {
     const { id: userId } = await createUser();
     const client = await createCaller(userId);
     const dbTodo = await createTodo(userId);
@@ -51,7 +51,7 @@ describe('Find Todo', () => {
     await assertThrows(client.todo.findById({ todoId: dbTodo.id }), 'Resource not found');
   });
 
-  it('Invalid uuid', async () => {
+  it('should error: invalid uuid', async () => {
     const { id: userId } = await createUser();
     const client = await createCaller(userId);
 

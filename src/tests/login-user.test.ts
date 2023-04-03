@@ -9,7 +9,7 @@ describe('Login User', () => {
     await clearDatabase();
   });
 
-  it('Login sucessfully', async () => {
+  it('should login successfully', async () => {
     const client = createUnauthorizedCaller();
     const before = new Date();
     const user = await client.user.create({ email: 'temp@bar.com', password: 'ValidPassword12' });
@@ -20,13 +20,13 @@ describe('Login User', () => {
     expect(decodedToken.iat * 1000).to.be.approximately(before.getTime(), 1000);
   });
 
-  it('Email not found', async () => {
+  it('should error: email not found', async () => {
     const client = createUnauthorizedCaller();
     const result = client.user.login({ email: 'foo@bar.com', password: 'ValidPassword12' });
     await assertThrows(result, 'User not found');
   });
 
-  it('Invalid credentials', async () => {
+  it('should error: invalid credentials', async () => {
     const client = createUnauthorizedCaller();
     await client.user.create({ email: 'foo@bar.com', password: 'OtherPassword3' });
     const result = client.user.login({ email: 'foo@bar.com', password: 'ValidPassword12' });

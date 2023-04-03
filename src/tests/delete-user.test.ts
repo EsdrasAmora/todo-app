@@ -9,7 +9,7 @@ describe('Delete User', () => {
     await clearDatabase();
   });
 
-  it('Delete sucessfully', async () => {
+  it('should delete successfully', async () => {
     const { id: userId } = await createUser();
     const client = await createCaller(userId);
     await Promise.all([...Array(5)].map(() => createTodo(userId)));
@@ -22,7 +22,7 @@ describe('Delete User', () => {
     expect(user).to.be.null;
   });
 
-  it('Unauthorized', async () => {
+  it('should error: unauthorized', async () => {
     const client = createUnauthorizedCaller();
     await assertThrows(client.user.delete(), 'Missing authorization header');
   });

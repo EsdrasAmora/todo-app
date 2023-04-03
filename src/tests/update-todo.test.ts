@@ -10,7 +10,7 @@ describe('Update Todo', () => {
     await clearDatabase();
   });
 
-  it('Creates sucessfully', async () => {
+  it('should update a todo successfully', async () => {
     const { id: userId } = await createUser();
     const client = await createCaller(userId);
     const dbTodo = await createTodo(userId);
@@ -34,12 +34,12 @@ describe('Update Todo', () => {
     expect(todoDb).excluding(['userId', 'deletedAt']).to.deep.equal(todo);
   });
 
-  it('Unauthorized', async () => {
+  it('should error: unauthorized', async () => {
     const client = createUnauthorizedCaller();
     await assertThrows(client.todo.update({ todoId: randomUUID() }), 'Missing authorization header');
   });
 
-  it('A user can only update its own todos', async () => {
+  it('should error: user should be only able to update its own todos', async () => {
     const otherUserTodo = await prisma.todo.create({
       data: {
         title: 'e',
@@ -53,7 +53,7 @@ describe('Update Todo', () => {
     await assertThrows(client.todo.update({ todoId: otherUserTodo.id }), 'Resource not found');
   });
 
-  it('Soft deleted', async () => {
+  it('should error: soft deleted todo', async () => {
     const { id: userId } = await createUser();
     const client = await createCaller(userId);
     const dbTodo = await createTodo(userId);
@@ -62,14 +62,14 @@ describe('Update Todo', () => {
     await assertThrows(client.todo.delete({ todoId: dbTodo.id }), 'Resource not found');
   });
 
-  it('Invalid uuid', async () => {
+  it('should error: invalid uuid', async () => {
     const { id: userId } = await createUser();
     const client = await createCaller(userId);
 
     await assertValidationError(client.todo.delete({ todoId: '123' }), 'Invalid uuid');
   });
 
-  it('Empty Title', async () => {
+  it('should error: empty title', async () => {
     const { id: userId } = await createUser();
     const client = await createCaller(userId);
     const dbTodo = await createTodo(userId);

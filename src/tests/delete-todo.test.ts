@@ -10,7 +10,7 @@ describe('Delete Todo', () => {
     await clearDatabase();
   });
 
-  it('Delete sucessfully', async () => {
+  it('should delete successfully', async () => {
     const { id: userId } = await createUser();
     const client = await createCaller(userId);
     const dbTodo = await createTodo(userId);
@@ -21,12 +21,12 @@ describe('Delete Todo', () => {
     expect(todo).to.be.null;
   });
 
-  it('Unauthorized', async () => {
+  it('should error: unauthorized', async () => {
     const client = createUnauthorizedCaller();
     await assertThrows(client.todo.delete({ todoId: randomUUID() }), 'Missing authorization header');
   });
 
-  it('A user can only deleted its own todos', async () => {
+  it('should error: user should only be able to deleted its own todos', async () => {
     const otherUserTodo = await prisma.todo.create({
       data: { title: 'e', description: 'e', user: { create: { email: 'e', hashedPassword: 'e', passwordSalt: 'e' } } },
     });
@@ -36,14 +36,14 @@ describe('Delete Todo', () => {
     await assertThrows(client.todo.delete({ todoId: otherUserTodo.id }), 'Resource not found');
   });
 
-  it('Not found', async () => {
+  it('should error: todo not found', async () => {
     const { id: userId } = await createUser();
     const client = await createCaller(userId);
 
     await assertThrows(client.todo.delete({ todoId: randomUUID() }), 'Resource not found');
   });
 
-  it('Already soft deleted', async () => {
+  it('should error: todo soft deleted', async () => {
     const { id: userId } = await createUser();
     const client = await createCaller(userId);
     const dbTodo = await createTodo(userId);
@@ -52,7 +52,7 @@ describe('Delete Todo', () => {
     await assertThrows(client.todo.delete({ todoId: randomUUID() }), 'Resource not found');
   });
 
-  it('Invalid uuid', async () => {
+  it('should error: invalid uuid', async () => {
     const { id: userId } = await createUser();
     const client = await createCaller(userId);
 

@@ -9,7 +9,7 @@ describe('Find user todos', () => {
     await clearDatabase();
   });
 
-  it('Finds sucessfully', async () => {
+  it('should find user successfully', async () => {
     const { id: userId } = await createUser();
     const client = await createCaller(userId);
     const dbTodos = await Promise.all([...Array(5)].map(() => createTodo(userId)));
@@ -20,12 +20,12 @@ describe('Find user todos', () => {
       .to.be.deep.eq(dbTodos.sort((a, b) => b.updatedAt.getTime() - a.updatedAt.getTime()));
   });
 
-  it('Unauthorized', async () => {
+  it('should error: unauthorized', async () => {
     const client = createUnauthorizedCaller();
     await assertThrows(client.todo.findUserTodos(), 'Missing authorization header');
   });
 
-  it('Filter out soft deleted todos', async () => {
+  it('sould omit soft deleted todos', async () => {
     const { id: userId } = await createUser();
     const client = await createCaller(userId);
     const [softDel1, softDel2, ...dbTodos] = await Promise.all([...Array(5)].map(() => createTodo(userId)));

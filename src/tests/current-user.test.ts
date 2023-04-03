@@ -9,7 +9,7 @@ describe('Fetch Current user', () => {
     await clearDatabase();
   });
 
-  it('Fetch Current user sucessfully', async () => {
+  it('should fetch current user successfully', async () => {
     const { id: userId } = await createUser();
     const client = await createCaller(userId);
 
@@ -19,12 +19,12 @@ describe('Fetch Current user', () => {
     expect(user).excluding(['hashedPassword', 'passwordSalt']).to.be.deep.eq(dbUser);
   });
 
-  it('Unauthorized', async () => {
+  it('should error: unauthorized', async () => {
     const client = createUnauthorizedCaller();
     await assertThrows(client.user.me(), 'Missing authorization header');
   });
 
-  it('Deleted user', async () => {
+  it('should error: deleted user', async () => {
     const { id: userId } = await createUser();
     const client = await createCaller(userId);
     await prisma.user.delete({ where: { id: userId } });
