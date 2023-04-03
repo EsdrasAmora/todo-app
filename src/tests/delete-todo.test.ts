@@ -5,7 +5,7 @@ import { assertThrows, assertValidationError } from './assert-helpers';
 import { prisma } from '../db/client';
 import { randomUUID } from 'crypto';
 
-describe.only('Delete Todo', () => {
+describe('Delete Todo', () => {
   beforeEach(async () => {
     await clearDatabase();
   });
