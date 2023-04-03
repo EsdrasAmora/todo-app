@@ -13,7 +13,7 @@ describe('Fetch Current user', () => {
     const { id: userId } = await createUser();
     const client = await createCaller(userId);
 
-    const user = await client.user.currentUser();
+    const user = await client.user.me();
     const dbUser = await prisma.user.findUnique({ where: { id: userId } });
 
     expect(user).excluding(['hashedPassword', 'passwordSalt']).to.be.deep.eq(dbUser);
@@ -21,7 +21,7 @@ describe('Fetch Current user', () => {
 
   it('Unauthorized', async () => {
     const client = createUnauthorizedCaller();
-    await assertThrows(client.user.currentUser(), 'Missing authorization header');
+    await assertThrows(client.user.me(), 'Missing authorization header');
   });
 
   it('Deleted user', async () => {
@@ -29,6 +29,6 @@ describe('Fetch Current user', () => {
     const client = await createCaller(userId);
     await prisma.user.delete({ where: { id: userId } });
 
-    await assertThrows(client.user.currentUser(), 'Resource not found');
+    await assertThrows(client.user.me(), 'Resource not found');
   });
 });
