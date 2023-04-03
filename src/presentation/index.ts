@@ -25,8 +25,16 @@ export async function configApi(): Promise<express.Application> {
     createOpenApiExpressMiddleware({
       router: appRouter,
       createContext: createTrpcContext,
+      responseMeta: ({ errors, type }) => {
+        if (!errors.length && type === 'mutation') {
+          return { status: 201 };
+        }
+        return {};
+      },
     }) as express.RequestHandler,
   );
 
   return app;
 }
+
+// const a =
