@@ -2,7 +2,8 @@ import { expect } from 'chai';
 import { prisma } from '../db/client';
 import { assertThrows } from './assert-helpers';
 import { clearDatabase } from './clear-db';
-import { createCaller, createUnauthorizedCaller, createUser } from './test-client';
+import { createCaller, createUser } from './test-client';
+import { checkAuthorizedRoute } from './auth-check';
 
 describe('Fetch Current user', () => {
   beforeEach(async () => {
@@ -19,10 +20,7 @@ describe('Fetch Current user', () => {
     expect(user).excluding(['hashedPassword', 'passwordSalt']).to.be.deep.eq(dbUser);
   });
 
-  it('should error: unauthorized', async () => {
-    const client = createUnauthorizedCaller();
-    await assertThrows(client.user.me(), 'Missing authorization header');
-  });
+  checkAuthorizedRoute('user', 'me');
 
   it('should error: deleted user', async () => {
     const { id: userId } = await createUser();

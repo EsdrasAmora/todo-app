@@ -1,9 +1,9 @@
 import { expect } from 'chai';
-import { randomUUID } from 'crypto';
 import { prisma } from '../db/client';
 import { assertThrows, assertValidationError } from './assert-helpers';
 import { clearDatabase } from './clear-db';
-import { createCaller, createTodo, createUnauthorizedCaller, createUser } from './test-client';
+import { createCaller, createTodo, createUser } from './test-client';
+import { checkAuthorizedRoute } from './auth-check';
 
 describe('Update Todo', () => {
   beforeEach(async () => {
@@ -34,10 +34,7 @@ describe('Update Todo', () => {
     expect(todoDb).excluding(['userId', 'deletedAt']).to.deep.equal(todo);
   });
 
-  it('should error: unauthorized', async () => {
-    const client = createUnauthorizedCaller();
-    await assertThrows(client.todo.update({ todoId: randomUUID() }), 'Missing authorization header');
-  });
+  checkAuthorizedRoute('todo', 'findUserTodos');
 
   it('should error: user should be only able to update its own todos', async () => {
     const otherUserTodo = await prisma.todo.create({

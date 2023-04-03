@@ -1,9 +1,10 @@
 import { expect } from 'chai';
 import { clearDatabase } from './clear-db';
-import { createCaller, createTodo, createUnauthorizedCaller, createUser } from './test-client';
+import { createCaller, createTodo, createUser } from './test-client';
 import { assertThrows, assertValidationError } from './assert-helpers';
 import { prisma } from '../db/client';
 import { randomUUID } from 'crypto';
+import { checkAuthorizedRoute } from './auth-check';
 
 describe('Find Todo', () => {
   beforeEach(async () => {
@@ -20,10 +21,7 @@ describe('Find Todo', () => {
     expect(todo).excluding(['userId', 'deletedAt']).to.be.deep.eq(dbTodo);
   });
 
-  it('should error: unauthorized', async () => {
-    const client = createUnauthorizedCaller();
-    await assertThrows(client.todo.findById({ todoId: randomUUID() }), 'Missing authorization header');
-  });
+  checkAuthorizedRoute('todo', 'findById');
 
   it('should error: user should only be able to see its own todos', async () => {
     const otherUserTodo = await prisma.todo.create({

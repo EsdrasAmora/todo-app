@@ -1,9 +1,10 @@
 import { expect } from 'chai';
 import { clearDatabase } from './clear-db';
-import { createCaller, createTodo, createUnauthorizedCaller, createUser } from './test-client';
+import { createCaller, createTodo, createUser } from './test-client';
 import { assertThrows, assertValidationError } from './assert-helpers';
 import { prisma } from '../db/client';
 import { randomUUID } from 'crypto';
+import { checkAuthorizedRoute } from './auth-check';
 
 describe('Delete Todo', () => {
   beforeEach(async () => {
@@ -21,10 +22,7 @@ describe('Delete Todo', () => {
     expect(todo).to.be.null;
   });
 
-  it('should error: unauthorized', async () => {
-    const client = createUnauthorizedCaller();
-    await assertThrows(client.todo.delete({ todoId: randomUUID() }), 'Missing authorization header');
-  });
+  checkAuthorizedRoute('todo', 'delete');
 
   it('should error: user should only be able to deleted its own todos', async () => {
     const otherUserTodo = await prisma.todo.create({

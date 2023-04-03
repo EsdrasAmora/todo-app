@@ -1,8 +1,8 @@
 import { expect } from 'chai';
 import { prisma } from '../db/client';
-import { assertThrows } from './assert-helpers';
 import { clearDatabase } from './clear-db';
-import { createCaller, createTodo, createUnauthorizedCaller, createUser } from './test-client';
+import { createCaller, createTodo, createUser } from './test-client';
+import { checkAuthorizedRoute } from './auth-check';
 
 describe('Delete User', () => {
   beforeEach(async () => {
@@ -22,8 +22,5 @@ describe('Delete User', () => {
     expect(user).to.be.null;
   });
 
-  it('should error: unauthorized', async () => {
-    const client = createUnauthorizedCaller();
-    await assertThrows(client.user.delete(), 'Missing authorization header');
-  });
+  checkAuthorizedRoute('user', 'delete');
 });

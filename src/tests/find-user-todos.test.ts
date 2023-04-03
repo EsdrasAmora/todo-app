@@ -1,8 +1,8 @@
 import { expect } from 'chai';
-import { clearDatabase } from './clear-db';
-import { createCaller, createTodo, createUnauthorizedCaller, createUser } from './test-client';
-import { assertThrows } from './assert-helpers';
 import { prisma } from '../db/client';
+import { checkAuthorizedRoute } from './auth-check';
+import { clearDatabase } from './clear-db';
+import { createCaller, createTodo, createUser } from './test-client';
 
 describe('Find user todos', () => {
   beforeEach(async () => {
@@ -20,10 +20,7 @@ describe('Find user todos', () => {
       .to.be.deep.eq(dbTodos.sort((a, b) => b.updatedAt.getTime() - a.updatedAt.getTime()));
   });
 
-  it('should error: unauthorized', async () => {
-    const client = createUnauthorizedCaller();
-    await assertThrows(client.todo.findUserTodos(), 'Missing authorization header');
-  });
+  checkAuthorizedRoute('todo', 'findUserTodos');
 
   it('sould omit soft deleted todos', async () => {
     const { id: userId } = await createUser();

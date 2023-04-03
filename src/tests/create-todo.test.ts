@@ -1,8 +1,9 @@
 import { expect } from 'chai';
-import { clearDatabase } from './clear-db';
-import { createCaller, createUnauthorizedCaller, createUser } from './test-client';
-import { assertThrows, assertValidationError } from './assert-helpers';
 import { prisma } from '../db/client';
+import { assertValidationError } from './assert-helpers';
+import { checkAuthorizedRoute } from './auth-check';
+import { clearDatabase } from './clear-db';
+import { createCaller, createUser } from './test-client';
 
 describe('Create Todo', () => {
   beforeEach(async () => {
@@ -23,13 +24,7 @@ describe('Create Todo', () => {
     expect(todoDb).excluding(['userId', 'deletedAt']).to.deep.equal(todo);
   });
 
-  it('should error: unauthorized', async () => {
-    const client = createUnauthorizedCaller();
-    await assertThrows(
-      client.todo.create({ title: 'title', description: 'description' }),
-      'Missing authorization header',
-    );
-  });
+  checkAuthorizedRoute('todo', 'create');
 
   it('should error: empty title', async () => {
     const { id: userId } = await createUser();
