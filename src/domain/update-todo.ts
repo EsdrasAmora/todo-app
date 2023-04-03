@@ -11,17 +11,12 @@ export class UpdateTodo {
     completed: z.boolean().optional(),
   });
 
-  static async execute({ todoId, ...data }: z.input<typeof this.schema>, { userId }: AuthorizedContext) {
-    await prisma.$transaction(async (manager) => {
-      const user = await manager.todo
-        .update({
-          where: { id: todoId },
-          data,
-        })
-        .catch(handlePrismaError);
-      if (user.id !== userId) {
-        throw new Error(`Unauthorized: user '${userId}' does not own todo '${todoId}'`);
-      }
-    });
+  static execute({ todoId, ...data }: z.input<typeof this.schema>, { userId }: AuthorizedContext) {
+    return prisma.todo
+      .update({
+        where: { id: todoId, userId, deletedAt: null },
+        data,
+      })
+      .catch(handlePrismaError);
   }
 }

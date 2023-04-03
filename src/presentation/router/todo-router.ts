@@ -40,7 +40,7 @@ export const todoRouter = trpc.router({
       },
     })
     .input(UpdateTodo.schema)
-    .output(z.void())
+    .output(todoSchema)
     .mutation(({ input, ctx }) => UpdateTodo.execute(input, ctx)),
   delete: authorizedProcedure
     .meta({

@@ -48,7 +48,7 @@ describe('Find Todo', () => {
     const dbTodo = await createTodo(userId);
     await prisma.todo.update({ where: { id: dbTodo.id }, data: { deletedAt: new Date() } });
 
-    await assertThrows(client.todo.findById({ todoId: randomUUID() }), 'Resource not found');
+    await assertThrows(client.todo.findById({ todoId: dbTodo.id }), 'Resource not found');
   });
 
   it('Invalid uuid', async () => {
