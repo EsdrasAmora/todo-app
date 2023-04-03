@@ -1,7 +1,7 @@
 import { CreateTodo } from '../../domain/create-todo';
 import { DeleteTodo } from '../../domain/delete-todo';
 import { FindTodo } from '../../domain/find-todo';
-import { FindUserTodos } from '../../domain/find-todos';
+import { FindUserTodos } from '../../domain/find-user-todos';
 import { UpdateTodo } from '../../domain/update-todo';
 import { authorizedProcedure, trpc } from '../trpc.context';
 import { z } from 'zod';
@@ -53,8 +53,10 @@ export const todoRouter = trpc.router({
       },
     })
     .input(DeleteTodo.schema)
-    .output(todoSchema)
-    .mutation(({ input }) => DeleteTodo.execute(input)),
+    .output(z.void())
+    .mutation(async ({ input, ctx }) => {
+      await DeleteTodo.execute(input, ctx);
+    }),
   findById: authorizedProcedure
     .meta({
       openapi: {

@@ -1,5 +1,5 @@
 import { CreateUser } from '../../domain/create-user';
-import { CurrentUser } from '../../domain/find-user';
+import { CurrentUser } from '../../domain/current-user';
 import { LoginUser } from '../../domain/login-user';
 import { authorizedProcedure, publicProcedure, trpc } from '../trpc.context';
 import { z } from 'zod';
