@@ -1,0 +1,13 @@
+{
+  "version": "5",
+  "dialect": "pg",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "5",
+      "when": 1700941892095,
+      "tag": "0000_supreme_skullbuster",
+      "breakpoints": true
+    }
+  ]
+}

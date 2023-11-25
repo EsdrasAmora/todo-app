@@ -9,9 +9,9 @@ services:
       - POSTGRES_USER=postgres_user
       - POSTGRES_PASSWORD=postgres_password
       - POSTGRES_DB=todo_app_db
-  server:
-    image: esdras-amora/todo-app:latest
-    ports:
-      - '3000:3000'
-    build:
-      dockerfile: Dockerfile
+  # server:
+  #   image: esdras-amora/todo-app:latest
+  #   ports:
+  #     - '3000:3000'
+  #   build:
+  #     dockerfile: Dockerfile
