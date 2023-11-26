@@ -1,12 +1,11 @@
 import { boolean, pgTable, text, timestamp, uniqueIndex, uuid } from 'drizzle-orm/pg-core';
-// import { sql } from 'drizzle-orm';
 
-export const users = pgTable(
+export const UserEntity = pgTable(
   'users',
   {
-    userId: uuid('user_id').defaultRandom().primaryKey().notNull(),
-    createdAt: timestamp('created_at', { precision: 3, mode: 'string' }).defaultNow().notNull(),
-    updatedAt: timestamp('updated_at', { precision: 3, mode: 'string' }).notNull(),
+    id: uuid('user_id').defaultRandom().primaryKey().notNull(),
+    createdAt: timestamp('created_at', { withTimezone: true, precision: 6, mode: 'date' }).defaultNow().notNull(),
+    updatedAt: timestamp('updated_at', { withTimezone: true, precision: 6, mode: 'date' }).defaultNow().notNull(),
     email: text('email').notNull(),
     passwordSeed: text('password_seed').notNull(),
     hashedPassword: text('hashed_password').notNull(),
@@ -18,15 +17,15 @@ export const users = pgTable(
   },
 );
 
-export const todos = pgTable('todos', {
-  todoId: uuid('todo_id').defaultRandom().primaryKey().notNull(),
-  createdAt: timestamp('created_at', { precision: 3, mode: 'string' }).defaultNow().notNull(),
-  updatedAt: timestamp('updated_at', { precision: 3, mode: 'string' }).notNull(),
+export const TodoEntity = pgTable('todos', {
+  id: uuid('todo_id').defaultRandom().primaryKey().notNull(),
+  createdAt: timestamp('created_at', { withTimezone: true, precision: 6, mode: 'date' }).defaultNow().notNull(),
+  updatedAt: timestamp('updated_at', { withTimezone: true, precision: 6, mode: 'date' }).defaultNow().notNull(),
   title: text('title').notNull(),
   description: text('description'),
   completed: boolean('completed').default(false).notNull(),
-  deletedAt: timestamp('deleted_at', { precision: 3, mode: 'string' }),
+  deletedAt: timestamp('deleted_at', { withTimezone: true, precision: 6, mode: 'date' }),
   userId: uuid('user_id')
     .notNull()
-    .references(() => users.userId, { onDelete: 'restrict', onUpdate: 'cascade' }),
+    .references(() => UserEntity.id, { onDelete: 'restrict', onUpdate: 'cascade' }),
 });

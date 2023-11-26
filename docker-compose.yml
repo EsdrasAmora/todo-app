@@ -1,17 +1,13 @@
+version: '3'
+
 services:
   database:
     image: postgres:15.1-alpine
     ports:
       - '5432:5432'
-    volumes:
-      - ./db/dumps:/app-db-dumps
+    tmpfs:
+      - /var/lib/postgresql/data
     environment:
       - POSTGRES_USER=postgres_user
       - POSTGRES_PASSWORD=postgres_password
       - POSTGRES_DB=todo_app_db
-  # server:
-  #   image: esdras-amora/todo-app:latest
-  #   ports:
-  #     - '3000:3000'
-  #   build:
-  #     dockerfile: Dockerfile

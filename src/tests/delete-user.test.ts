@@ -1,8 +1,10 @@
 import { expect } from 'chai';
-import { prisma } from '../db/client';
+import { DbClient } from '../db/client';
 import { clearDatabase } from './clear-db';
 import { createCaller, createTodo, createUser } from './test-client';
 import { checkAuthorizedRoute } from './auth-check';
+import { TodoEntity, UserEntity } from 'db/schema';
+import { eq } from 'drizzle-orm';
 
 describe('Delete User', () => {
   beforeEach(async () => {
@@ -16,10 +18,11 @@ describe('Delete User', () => {
 
     await client.user.delete();
 
-    const todos = await prisma.todo.findMany({ where: { userId } });
+    const todos = await DbClient.query.TodoEntity.findMany({ where: eq(TodoEntity.userId, userId) });
     expect(todos).to.be.empty;
-    const user = await prisma.user.findUnique({ where: { id: userId } });
-    expect(user).to.be.null;
+
+    const user = await DbClient.query.UserEntity.findFirst({ where: eq(UserEntity.id, userId) });
+    expect(user).to.be.undefined;
   });
 
   checkAuthorizedRoute('user', 'delete');

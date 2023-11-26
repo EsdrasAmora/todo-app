@@ -10,16 +10,11 @@
     "dev": "tsx --watch src/index.ts",
     "build": "tsup-node src/index.ts --minify --target esnext",
     "start": "node dist/index.js",
-    "db:codegen": "prisma generate",
-    "migrate:dev": "DATABASE_URL='postgresql://postgres_user:postgres_password@localhost:5432/todo_app_db' prisma migrate dev",
-    "migrate:reset": "DATABASE_URL='postgresql://postgres_user:postgres_password@localhost:5432/todo_app_db' prisma migrate reset",
-    "migrate:sync": "DATABASE_URL='postgresql://postgres_user:postgres_password@localhost:5432/todo_app_db' prisma db push",
     "generate": "drizzle-kit generate:pg",
     "lint": "eslint --ext .ts src",
     "test": "ts-mocha 'src/tests/*.test.ts' --paths -r 'src/tests/test-setup.ts' --colors --delay --exit"
   },
   "dependencies": {
-    "@prisma/client": "4.12.0",
     "@trpc/server": "10.18.0",
     "compression": "1.7.4",
     "cors": "2.8.5",
@@ -58,16 +53,12 @@
     "eslint-plugin-prettier": "4.2.1",
     "mocha": "10.2.0",
     "prettier": "2.8.7",
-    "prisma": "4.12.0",
     "supertest": "6.3.3",
     "ts-mocha": "10.0.0",
     "ts-node": "10.9.1",
     "tsup": "6.7.0",
     "tsx": "3.12.6",
     "typescript": "5.0.3"
-  },
-  "prisma": {
-    "seed": "tsx src/seed.ts"
   },
   "engines": {
     "node": ">=18",

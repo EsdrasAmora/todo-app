@@ -1,8 +1,10 @@
 import { expect } from 'chai';
-import { prisma } from '../db/client';
+import { DbClient } from '../db/client';
 import { checkAuthorizedRoute } from './auth-check';
 import { clearDatabase } from './clear-db';
 import { createCaller, createTodo, createUser } from './test-client';
+import { inArray } from 'drizzle-orm';
+import { TodoEntity } from 'db/schema';
 
 describe('Find user todos', () => {
   beforeEach(async () => {
@@ -27,10 +29,10 @@ describe('Find user todos', () => {
     const client = await createCaller(userId);
     const [softDel1, softDel2, ...dbTodos] = await Promise.all([...Array(5)].map(() => createTodo(userId)));
 
-    await prisma.todo.updateMany({
-      where: { id: { in: [softDel1.id, softDel2.id] } },
-      data: { deletedAt: new Date() },
-    });
+    await DbClient.update(TodoEntity)
+      .set({ deletedAt: new Date() })
+      .where(inArray(TodoEntity.id, [softDel1.id, softDel2.id]))
+      .execute();
 
     const todos = await client.todo.findUserTodos();
 

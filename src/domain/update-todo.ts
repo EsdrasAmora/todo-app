@@ -1,7 +1,9 @@
+import { TodoEntity } from 'db/schema';
+import { and, eq, isNull } from 'drizzle-orm';
 import { z } from 'zod';
-import { prisma } from '../db/client';
+import { DbClient } from '../db/client';
 import { AuthorizedContext } from '../presentation/trpc.context';
-import { handlePrismaError } from '../shared/handle-prisma-error';
+import { throwOnNotFound } from 'shared/errors';
 
 export class UpdateTodo {
   static schema = z.object({
@@ -11,12 +13,12 @@ export class UpdateTodo {
     completed: z.boolean().optional(),
   });
 
-  static execute({ todoId, ...data }: z.input<typeof this.schema>, { userId }: AuthorizedContext) {
-    return prisma.todo
-      .update({
-        where: { id: todoId, userId, deletedAt: null },
-        data,
-      })
-      .catch(handlePrismaError);
+  @throwOnNotFound
+  static async execute({ todoId, ...data }: z.input<typeof this.schema>, { userId }: AuthorizedContext) {
+    const [result] = await DbClient.update(TodoEntity)
+      .set({ ...data, updatedAt: new Date() })
+      .where(and(eq(TodoEntity.id, todoId), eq(TodoEntity.userId, userId), isNull(TodoEntity.deletedAt)))
+      .returning();
+    return result;
   }
 }

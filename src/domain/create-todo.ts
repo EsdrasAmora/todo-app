@@ -1,6 +1,7 @@
 import { z } from 'zod';
-import { prisma } from '../db/client';
 import { AuthorizedContext } from '../presentation/trpc.context';
+import { DbClient } from 'db/client';
+import { TodoEntity } from 'db/schema';
 
 export class CreateTodo {
   static schema = z.object({
@@ -8,7 +9,10 @@ export class CreateTodo {
     description: z.string().nullish(),
   });
 
-  static execute(input: z.input<typeof this.schema>, { userId }: AuthorizedContext) {
-    return prisma.todo.create({ data: { ...input, userId } });
+  static async execute(input: z.input<typeof this.schema>, { userId }: AuthorizedContext) {
+    const [result] = await DbClient.insert(TodoEntity)
+      .values({ ...input, userId })
+      .returning();
+    return result;
   }
 }

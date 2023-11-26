@@ -19,4 +19,4 @@ Or run `pnpm dev` to run the code with file watch.
 ## Architerure
 
 The main idea here is to colocate use cases with schema definitions, keeping the presentation layer skinny as possible.  
-The use cases being so simple and using an ORM, Prisma, make an extra data layer unnecessary.
+The use cases being so simple and using an ORM, Drizzle, make an extra data layer unnecessary.

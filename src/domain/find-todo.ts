@@ -1,14 +1,24 @@
 import { z } from 'zod';
-import { prisma } from '../db/client';
+import { DbClient } from '../db/client';
 import { AuthorizedContext } from '../presentation/trpc.context';
-import { handlePrismaError } from '../shared/handle-prisma-error';
+import { throwOnNotFound } from 'shared/errors';
+import { and, eq, isNull } from 'drizzle-orm';
+import { TodoEntity } from 'db/schema';
+import { TRPCError } from '@trpc/server';
 
 export class FindTodo {
   static schema = z.object({
     todoId: z.string().uuid(),
   });
 
-  static execute({ todoId }: z.input<typeof this.schema>, { userId }: AuthorizedContext) {
-    return prisma.todo.findUniqueOrThrow({ where: { id: todoId, deletedAt: null, userId } }).catch(handlePrismaError);
+  @throwOnNotFound
+  static async execute({ todoId }: z.input<typeof this.schema>, { userId }: AuthorizedContext) {
+    const result = await DbClient.query.TodoEntity.findFirst({
+      where: and(eq(TodoEntity.id, todoId), eq(TodoEntity.userId, userId), isNull(TodoEntity.deletedAt)),
+    });
+    if (!result) {
+      throw new TRPCError({ code: 'NOT_FOUND', message: 'Resource not found' });
+    }
+    return result;
   }
 }

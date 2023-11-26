@@ -1,11 +1,16 @@
 import { z } from 'zod';
-import { prisma } from '../db/client';
+import { DbClient } from '../db/client';
 import { AuthorizedContext } from '../presentation/trpc.context';
+import { TodoEntity } from 'db/schema';
+import { isNull, desc, and, eq } from 'drizzle-orm';
 
 export class FindUserTodos {
   static schema = z.void();
 
   static execute({ userId }: AuthorizedContext) {
-    return prisma.todo.findMany({ where: { userId, deletedAt: null }, orderBy: { updatedAt: 'desc' } });
+    return DbClient.select()
+      .from(TodoEntity)
+      .where(and(eq(TodoEntity.userId, userId), isNull(TodoEntity.deletedAt)))
+      .orderBy(desc(TodoEntity.updatedAt));
   }
 }

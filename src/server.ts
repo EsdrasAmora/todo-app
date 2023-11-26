@@ -1,15 +1,14 @@
 export async function main(envPath = 'test.env') {
-  //Env must be the first to be imported so it can be used safely used on files' top level and in static class properties
+  //Env must be imported first so it can be used safely in top-level files.
   console.log('Starting server...');
-
-  const { setupEnv, Env } = await import('./env');
   console.debug('Loading env...');
+  const { setupEnv, Env } = await import('./env');
   setupEnv(envPath);
   console.debug('env loaded');
 
-  const { prisma } = await import('./db/client');
   console.debug('starting db...');
-  await prisma.$connect();
+  const { Sql } = await import('./db/client');
+  await Sql`SELECT NOW()`;
   console.debug('db started');
 
   const { configApi } = await import('./presentation/index');

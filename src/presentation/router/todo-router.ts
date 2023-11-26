@@ -54,9 +54,7 @@ export const todoRouter = trpc.router({
     })
     .input(DeleteTodo.schema)
     .output(z.void())
-    .mutation(async ({ input, ctx }) => {
-      await DeleteTodo.execute(input, ctx);
-    }),
+    .mutation(({ input, ctx }) => DeleteTodo.execute(input, ctx)),
   findById: authorizedProcedure
     .meta({
       openapi: {

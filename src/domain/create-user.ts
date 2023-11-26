@@ -1,21 +1,27 @@
 import { z } from 'zod';
-import { prisma } from '../db/client';
+import { DbClient } from '../db/client';
 import { TRPCError } from '@trpc/server';
 import { Env } from '../env';
 import { CryptoService } from '../shared/crypto';
+import { UserEntity } from 'db/schema';
+import { eq } from 'drizzle-orm';
 
 export class CreateUser {
   static async execute(input: z.input<typeof this.schema>) {
-    const sameEmailUser = await prisma.user.findUnique({ where: { email: input.email } });
+    const sameEmailUser = await DbClient.query.UserEntity.findFirst({ where: eq(UserEntity.email, input.email) });
 
     if (sameEmailUser) {
       throw new TRPCError({ code: 'CONFLICT', message: 'Email already in use' });
     }
 
-    const passwordSalt = CryptoService.createSalt();
-    const hashedPassword = CryptoService.hashSaltPassword(input.password, passwordSalt);
+    const passwordSeed = CryptoService.createSalt();
+    const hashedPassword = CryptoService.hashSaltPassword(input.password, passwordSeed);
 
-    return prisma.user.create({ data: { email: input.email, hashedPassword, passwordSalt } });
+    const [result] = await DbClient.insert(UserEntity)
+      .values({ email: input.email, passwordSeed, hashedPassword })
+      .returning();
+
+    return result;
   }
 
   static schema = z.object({

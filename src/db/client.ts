@@ -1,10 +1,7 @@
-import { PrismaClient } from '@prisma/client';
 import { Env } from '../env';
+import postgres from 'postgres';
+import * as schema from './schema';
+import { drizzle } from 'drizzle-orm/postgres-js';
 
-const databaseUrl = `${Env.DATABASE_URL}?connection_limit=${Env.DATABASE_CONNECTION_LIMIT}&pool_timeout=${Env.DATABASE_CONNECTION_POOL_TIMEOUT}`;
-
-export const prisma = new PrismaClient({
-  datasources: { db: { url: databaseUrl } },
-  log: ['warn'],
-  errorFormat: 'minimal',
-});
+export const Sql = postgres(Env.DATABASE_URL, { max: 20 });
+export const DbClient = drizzle(Sql, { schema });
