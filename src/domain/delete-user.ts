@@ -1,4 +1,4 @@
-import { TodoEntity, UserEntity } from 'db/schema';
+import { TodoEntity, UserEntity } from '../db/schema';
 import { DbClient } from '../db/client';
 import { AuthorizedContext } from '../presentation/trpc.context';
 import { eq } from 'drizzle-orm';

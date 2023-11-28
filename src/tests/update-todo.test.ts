@@ -1,11 +1,11 @@
-import { expect } from 'chai';
+import { beforeEach, expect, describe, it } from 'vitest';
 import { DbClient } from '../db/client';
 import { assertThrows, assertValidationError } from './assert-helpers';
 import { clearDatabase } from './clear-db';
 import { createCaller, createTodo, createUser } from './test-client';
 import { checkAuthorizedRoute } from './auth-check';
 import { eq } from 'drizzle-orm';
-import { TodoEntity, UserEntity } from 'db/schema';
+import { TodoEntity, UserEntity } from '../db/schema';
 
 describe('Update Todo', () => {
   beforeEach(async () => {
@@ -34,7 +34,7 @@ describe('Update Todo', () => {
     // expect(todo.updatedAt).to.be.greaterThanOrEqual(beforeUpdate);
 
     const todoDb = await DbClient.query.TodoEntity.findFirst({ where: eq(TodoEntity.id, todo.id) });
-    expect(todoDb).excluding(['userId', 'deletedAt']).to.deep.equal(todo);
+    expect(todoDb).toMatchObject(todo);
   });
 
   checkAuthorizedRoute('todo', 'findUserTodos');

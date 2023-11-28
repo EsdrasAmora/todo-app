@@ -1,4 +1,4 @@
-import { assert, expect } from 'chai';
+import { assert, expect } from 'vitest';
 
 export const assertThrows = async (promise: Promise<any>, expected?: string | ((err: any) => void)) => {
   try {

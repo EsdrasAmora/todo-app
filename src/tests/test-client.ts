@@ -3,7 +3,7 @@ import { contextSymbol } from '../presentation/trpc.context';
 import { JwtService } from '../shared/jwt';
 import { DbClient } from '../db/client';
 import { faker } from '@faker-js/faker';
-import { TodoEntity, UserEntity } from 'db/schema';
+import { TodoEntity, UserEntity } from '../db/schema';
 
 export async function createUser() {
   const [result] = await DbClient.insert(UserEntity)
@@ -36,5 +36,5 @@ export async function createCaller(userId: string) {
 }
 
 export function createUnauthorizedCaller() {
-  return appRouter.createCaller({ authorization: undefined, [contextSymbol]: true });
+  return appRouter.createCaller({ authorization: null, [contextSymbol]: true });
 }

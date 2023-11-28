@@ -1,5 +1,5 @@
 import { faker } from '@faker-js/faker';
-import { TodoEntity, UserEntity } from 'db/schema';
+import { TodoEntity, UserEntity } from './db/schema';
 
 async function seed() {
   const { setupEnv } = await import('./env');

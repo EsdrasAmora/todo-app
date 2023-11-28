@@ -3,7 +3,7 @@ import { DbClient } from '../db/client';
 import { TRPCError } from '@trpc/server';
 import { Env } from '../env';
 import { CryptoService } from '../shared/crypto';
-import { UserEntity } from 'db/schema';
+import { UserEntity } from '../db/schema';
 import { eq } from 'drizzle-orm';
 
 export class CreateUser {

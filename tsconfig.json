@@ -2,16 +2,10 @@
   "compilerOptions": {
     "baseUrl": "./src",
     "target": "ES2022",
-    "module": "commonjs",
-    "lib": [
-      "ES2022",
-      "DOM",
-      "ESNext"
-    ],
-    "types": [
-      "node",
-      "mocha"
-    ],
+    "module": "ESNext",
+    "moduleResolution": "NodeNext",
+    "lib": ["ES2022", "DOM", "ESNext"],
+    "types": ["node"],
     "noImplicitReturns": true,
     "removeComments": true,
     "useUnknownInCatchVariables": false,
@@ -20,11 +14,7 @@
     "outDir": "dist",
     "skipLibCheck": true,
     "sourceMap": true,
-    "resolveJsonModule": true,
+    "resolveJsonModule": true
   },
-  "exclude": [
-    "node_modules",
-    "dist",
-    "coverage"
-  ]
+  "exclude": ["node_modules", "dist", "coverage"]
 }

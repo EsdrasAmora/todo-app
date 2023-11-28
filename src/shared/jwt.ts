@@ -1,4 +1,4 @@
-import { verify, sign } from 'jsonwebtoken';
+import jsonToken from 'jsonwebtoken';
 import { Env } from '../env';
 import { z } from 'zod';
 
@@ -13,7 +13,7 @@ export class JwtService {
   static verify(token: string) {
     try {
       const splitToken = token.split(' ')[1];
-      return this.jwtSchema.parse(verify(splitToken, Env.JWT_SECRET));
+      return this.jwtSchema.parse(jsonToken.verify(splitToken, Env.JWT_SECRET));
     } catch (err) {
       console.debug('Invalid JWT token', err.message);
     }
@@ -21,7 +21,7 @@ export class JwtService {
   }
 
   static sign(payload: object): string {
-    const token = sign({ data: payload }, Env.JWT_SECRET, { expiresIn: Env.JWT_EXPIRATION_TIME });
+    const token = jsonToken.sign({ data: payload }, Env.JWT_SECRET, { expiresIn: Env.JWT_EXPIRATION_TIME });
     return `${this.BEARER} ${token}`;
   }
 }

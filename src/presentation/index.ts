@@ -1,7 +1,7 @@
 import { appRouter } from './router';
 import { Hono } from 'hono';
 import { serve } from '@hono/node-server';
-import { Env } from 'env';
+import { Env } from '../env';
 import { Server } from 'http';
 import { createTrpcContext } from './trpc.context';
 import { swaggerUI } from '@hono/swagger-ui';

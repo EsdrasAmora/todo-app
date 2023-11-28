@@ -1,9 +1,9 @@
-import { TodoEntity } from 'db/schema';
+import { TodoEntity } from '../db/schema';
 import { and, eq, isNull } from 'drizzle-orm';
 import { z } from 'zod';
 import { DbClient } from '../db/client';
 import { AuthorizedContext } from '../presentation/trpc.context';
-import { throwOnNotFound } from 'shared/errors';
+import { TRPCError } from '@trpc/server';
 
 export class UpdateTodo {
   static schema = z.object({
@@ -13,12 +13,14 @@ export class UpdateTodo {
     completed: z.boolean().optional(),
   });
 
-  @throwOnNotFound
   static async execute({ todoId, ...data }: z.input<typeof this.schema>, { userId }: AuthorizedContext) {
     const [result] = await DbClient.update(TodoEntity)
       .set({ ...data, updatedAt: new Date() })
       .where(and(eq(TodoEntity.id, todoId), eq(TodoEntity.userId, userId), isNull(TodoEntity.deletedAt)))
       .returning();
+    if (!result) {
+      throw new TRPCError({ code: 'NOT_FOUND', message: 'Resource not found' });
+    }
     return result;
   }
 }

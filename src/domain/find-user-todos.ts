@@ -1,7 +1,7 @@
 import { z } from 'zod';
 import { DbClient } from '../db/client';
 import { AuthorizedContext } from '../presentation/trpc.context';
-import { TodoEntity } from 'db/schema';
+import { TodoEntity } from '../db/schema';
 import { isNull, desc, and, eq } from 'drizzle-orm';
 
 export class FindUserTodos {
