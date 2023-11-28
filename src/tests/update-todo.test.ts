@@ -14,7 +14,7 @@ describe('Update Todo', () => {
 
   it('should update a todo successfully', async () => {
     const { id: userId } = await createUser();
-    const client = await createCaller(userId);
+    // const client = await createCaller(userId);
     const dbTodo = await createTodo(userId);
 
     // const beforeUpdate = new Date();

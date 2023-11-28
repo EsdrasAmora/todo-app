@@ -1,84 +1,143 @@
+import { DeleteTodo } from 'domain/delete-todo';
 import { CreateTodo } from '../../domain/create-todo';
-import { DeleteTodo } from '../../domain/delete-todo';
-import { FindTodo } from '../../domain/find-todo';
-import { FindUserTodos } from '../../domain/find-user-todos';
-import { UpdateTodo } from '../../domain/update-todo';
-import { authorizedProcedure, trpc } from '../trpc.context';
-import { z } from 'zod';
+import { OpenAPIHono, createRoute, z } from '@hono/zod-openapi';
+import { FindTodo } from 'domain/find-todo';
+import { TodoSchema } from 'model/todos.model';
+import { AuthorizedContext } from 'presentation/trpc.context';
+import { authMiddleware } from 'presentation/context';
+import { FindUserTodos } from 'domain/find-user-todos';
+import { UpdateTodo } from 'domain/update-todo';
 
-const todoSchema = z.object({
-  id: z.string().uuid(),
-  createdAt: z.date(),
-  updatedAt: z.date(),
-  title: z.string(),
-  description: z.string().nullable(),
-  completed: z.boolean(),
-});
-
-export const todoRouter = trpc.router({
-  create: authorizedProcedure
-    .meta({
-      openapi: {
-        method: 'POST',
-        path: '/todos',
-        tags: ['Todo'],
-        summary: 'Create new Todo',
-        protect: true,
+export const TodoAppRouter = new OpenAPIHono<{ Variables: AuthorizedContext }>()
+  // .use('*', authMiddleware)
+  .openapi(
+    createRoute({
+      method: 'get',
+      operationId: 'findUserTodos',
+      path: '/',
+      responses: {
+        201: {
+          content: {
+            'application/json': {
+              schema: TodoSchema.array(),
+            },
+          },
+          description: 'Todo found',
+        },
       },
-    })
-    .input(CreateTodo.schema)
-    .output(todoSchema)
-    .mutation(({ input, ctx }) => CreateTodo.execute(input, ctx)),
-  update: authorizedProcedure
-    .meta({
-      openapi: {
-        method: 'PATCH',
-        path: '/todos',
-        tags: ['Todo'],
-        summary: 'Update Todo',
-        protect: true,
+    }),
+    async (c) => {
+      return c.jsonT(await FindUserTodos.execute(c.var), 200);
+    },
+  )
+  .openapi(
+    createRoute({
+      method: 'patch',
+      operationId: 'updateTodo',
+      path: '/{id}',
+      request: {
+        body: {
+          content: {
+            'application/json': {
+              schema: UpdateTodo.schema,
+            },
+          },
+        },
+        params: z.object({ id: z.string() }),
       },
-    })
-    .input(UpdateTodo.schema)
-    .output(todoSchema)
-    .mutation(({ input, ctx }) => UpdateTodo.execute(input, ctx)),
-  delete: authorizedProcedure
-    .meta({
-      openapi: {
-        method: 'DELETE',
-        path: '/todos',
-        tags: ['Todo'],
-        summary: 'Soft delete a Todo',
-        protect: true,
+      responses: {
+        201: {
+          content: {
+            'application/json': {
+              schema: TodoSchema.array(),
+            },
+          },
+          description: 'Todo found',
+        },
       },
-    })
-    .input(DeleteTodo.schema)
-    .output(z.void())
-    .mutation(({ input, ctx }) => DeleteTodo.execute(input, ctx)),
-  findById: authorizedProcedure
-    .meta({
-      openapi: {
-        method: 'GET',
-        path: '/todos/:todoId',
-        tags: ['Todo'],
-        summary: 'Find Todo by id',
-        protect: true,
+    }),
+    async (c) => {
+      const input = c.req.valid('json');
+      const { id } = c.req.valid('param');
+      return c.json(await UpdateTodo.execute(id, input, c.var), 201);
+    },
+  )
+  .openapi(
+    createRoute({
+      method: 'post',
+      operationId: 'createTodo',
+      path: '/',
+      request: {
+        body: {
+          content: {
+            'application/json': {
+              schema: CreateTodo.schema,
+            },
+          },
+        },
       },
-    })
-    .input(FindTodo.schema)
-    .output(todoSchema)
-    .mutation(({ input, ctx }) => FindTodo.execute(input, ctx)),
-  findUserTodos: authorizedProcedure
-    .meta({
-      openapi: {
-        method: 'GET',
-        path: '/todos',
-        tags: ['Todo', 'User'],
-        summary: 'Find Todos by user',
-        protect: true,
+      responses: {
+        200: {
+          content: {
+            'application/json': {
+              schema: TodoSchema,
+            },
+          },
+          description: 'Created Todo',
+        },
       },
-    })
-    .input(FindUserTodos.schema)
-    .output(todoSchema.array())
-    .mutation(({ ctx }) => FindUserTodos.execute(ctx)),
-});
+    }),
+    async (c) => {
+      const input = c.req.valid('json');
+      return c.jsonT(await CreateTodo.execute(input, c.var), 200);
+    },
+  )
+  .openapi(
+    createRoute({
+      method: 'get',
+      operationId: 'findTodoById',
+      path: '/{id}',
+      request: {
+        params: z.object({ id: z.string() }),
+      },
+      responses: {
+        200: {
+          content: {
+            'application/json': {
+              schema: TodoSchema,
+            },
+          },
+          description: 'Todo found',
+        },
+      },
+    }),
+    async (c) => {
+      const { id } = c.req.valid('param');
+      return c.json(await FindTodo.execute(id, c.var), 200);
+    },
+  )
+  .openapi(
+    createRoute({
+      method: 'delete',
+      operationId: 'deleteTodo',
+      path: '/{id}',
+      request: {
+        params: DeleteTodo.schema,
+      },
+      responses: {
+        201: {
+          content: {
+            'application/json': {
+              schema: TodoSchema,
+            },
+          },
+          description: 'Todo found',
+        },
+      },
+    }),
+    async (c) => {
+      const input = c.req.valid('param');
+      return c.json(await DeleteTodo.execute(input, c.var), 201);
+    },
+  )
+  .use('*', authMiddleware);

@@ -1,4 +1,4 @@
-import { z } from 'zod';
+import { z } from '@hono/zod-openapi';
 import { DbClient } from '../db/client';
 import { TRPCError } from '@trpc/server';
 import { Env } from '../env';

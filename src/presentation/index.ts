@@ -1,40 +1,31 @@
-import { createExpressMiddleware } from '@trpc/server/adapters/express';
-import compression from 'compression';
-import cors from 'cors';
-import express from 'express';
-import helmet from 'helmet';
-import swaggerUi from 'swagger-ui-express';
-import { createOpenApiExpressMiddleware } from 'trpc-openapi';
-import { Env } from '../env';
-import { openApiDocument } from './openapi';
-import { appRouter } from './router';
-import { createTrpcContext } from './trpc.context';
+import { OpenAPIHono } from '@hono/zod-openapi';
+import { TodoAppRouter } from './router/todo-router';
+import { swaggerUI } from '@hono/swagger-ui';
+// import { UserAppRouter } from './router/user-router';
 
-export async function configApi(): Promise<express.Application> {
-  const app = express();
+export async function configApi() {
+  const app = new OpenAPIHono({}).route('/todos', TodoAppRouter);
+  // app.route('/users', UserAppRouter);
 
-  app.use(cors(Env.NODE_ENV !== 'production' ? { origin: '*' } : undefined));
-  app.use(compression());
-  app.use(helmet());
-
-  app.use('/', swaggerUi.serve);
-  app.get('/', swaggerUi.setup(openApiDocument));
-  app.use('/api/trpc', createExpressMiddleware({ router: appRouter, createContext: createTrpcContext }));
-  app.use(
-    '/api',
-    createOpenApiExpressMiddleware({
-      router: appRouter,
-      createContext: createTrpcContext,
-      responseMeta: ({ errors, type }) => {
-        if (!errors.length && type === 'mutation') {
-          return { status: 201 };
-        }
-        return {};
-      },
-    }) as express.RequestHandler,
+  app.get(
+    '/ui',
+    swaggerUI({
+      url: '/doc',
+    }),
   );
+  app.doc('/doc', {
+    openapi: '3.0.0',
+    info: {
+      version: '1.0.0',
+      title: 'My API',
+    },
+  });
 
   return app;
 }
 
-// const a =
+export type AppType = Awaited<ReturnType<typeof configApi>>;
+// const client = hc<AppType>('http://localhost:8787/');
+
+// client.todos.$post({json: {title: }})
+// client.todos.$post['{id}'];

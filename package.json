@@ -15,6 +15,9 @@
     "test": "ts-mocha 'src/tests/*.test.ts' --paths -r 'src/tests/test-setup.ts' --colors --delay --exit"
   },
   "dependencies": {
+    "@hono/node-server": "^1.2.3",
+    "@hono/swagger-ui": "^0.1.0",
+    "@hono/zod-openapi": "^0.8.6",
     "@trpc/server": "10.18.0",
     "compression": "1.7.4",
     "cors": "2.8.5",
@@ -23,6 +26,7 @@
     "drizzle-orm": "^0.29.0",
     "express": "4.18.2",
     "helmet": "6.0.1",
+    "hono": "^3.10.2",
     "jsonwebtoken": "9.0.0",
     "postgres": "^3.4.3",
     "swagger-ui-express": "4.6.2",

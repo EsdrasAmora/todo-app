@@ -1,66 +1,46 @@
-import { CreateUser } from '../../domain/create-user';
-import { DeleteUser } from '../../domain/delete-user';
-import { FetchCurrentUser } from '../../domain/fetch-current-user';
-import { LoginUser } from '../../domain/login-user';
-import { authorizedProcedure, publicProcedure, trpc } from '../trpc.context';
-import { z } from 'zod';
+// import { UserSchema } from 'model/users.model';
+// import { CreateUser } from '../../domain/create-user';
+// import { DeleteUser } from '../../domain/delete-user';
+// import { FetchCurrentUser } from '../../domain/fetch-current-user';
+// import { LoginUser } from '../../domain/login-user';
+import { OpenAPIHono, createRoute } from '@hono/zod-openapi';
+import { CreateUser } from 'domain/create-user';
+import { UserSchema } from 'model/users.model';
+import { AuthorizedContext } from '../trpc.context';
 
-const userSchema = z.object({
-  id: z.string().uuid(),
-  createdAt: z.date(),
-  updatedAt: z.date(),
-  email: z.string().email(),
-});
+export const UserAppRouter = new OpenAPIHono<{ Variables: AuthorizedContext }>();
 
-export const userRouter = trpc.router({
-  create: publicProcedure
-    .meta({
-      openapi: {
-        method: 'POST',
-        path: '/users',
-        tags: ['User'],
-        summary: 'Create new User',
+// import { authMiddleware } from 'presentation/context';
+// UserAppRouter.use('*', authMiddleware);
+
+UserAppRouter.openapi(
+  createRoute({
+    method: 'post',
+    operationId: 'createUser',
+    path: '/',
+    request: {
+      body: {
+        content: {
+          'application/json': {
+            schema: CreateUser.schema,
+          },
+        },
       },
-    })
-    .input(CreateUser.schema)
-    .output(userSchema)
-    .mutation(({ input }) => CreateUser.execute(input)),
-  login: publicProcedure
-    .meta({
-      openapi: {
-        method: 'POST',
-        path: '/login',
-        tags: ['User'],
-        summary: 'Login user',
+    },
+    responses: {
+      201: {
+        content: {
+          'application/json': {
+            schema: UserSchema,
+          },
+        },
+        description: 'Created User',
       },
-    })
-    .input(LoginUser.schema)
-    .output(z.object({ authorization: z.string() }))
-    .mutation(({ input }) => LoginUser.execute(input)),
-  me: authorizedProcedure
-    .meta({
-      openapi: {
-        method: 'GET',
-        path: '/users/me',
-        tags: ['User'],
-        summary: 'Retrieve current user',
-        protect: true,
-      },
-    })
-    .input(FetchCurrentUser.schema)
-    .output(userSchema)
-    .mutation(({ ctx }) => FetchCurrentUser.execute(ctx)),
-  delete: authorizedProcedure
-    .meta({
-      openapi: {
-        method: 'DELETE',
-        path: '/users',
-        tags: ['User'],
-        summary: 'Delete the current user and all its Todos permanently',
-        protect: true,
-      },
-    })
-    .input(z.void())
-    .output(z.void())
-    .mutation(({ ctx }) => DeleteUser.execute(ctx)),
-});
+    },
+  }),
+  async (c) => {
+    const input = c.req.valid('json');
+    const result = await CreateUser.execute(input);
+    return c.json(result, 201);
+  },
+);

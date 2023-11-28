@@ -1,8 +1,10 @@
+import { serve } from '@hono/node-server';
+
 export async function main(envPath = 'test.env') {
   //Env must be imported first so it can be used safely in top-level files.
   console.log('Starting server...');
   console.debug('Loading env...');
-  const { setupEnv, Env } = await import('./env');
+  const { setupEnv } = await import('./env');
   setupEnv(envPath);
   console.debug('env loaded');
 
@@ -15,11 +17,19 @@ export async function main(envPath = 'test.env') {
   console.debug('Configuring api...');
   const app = await configApi();
 
-  const server = app.listen(Env.PORT, () => {
-    console.log(`Server started on port ${Env.PORT}`);
-  });
+  serve(
+    {
+      fetch: app.fetch,
+      port: 3000,
+      hostname: 'localhost',
+    },
+    (info) => {
+      console.log(`Server started`);
+      console.log(info);
+    },
+  );
 
-  return { router: app, server };
+  // return { router: app, server };
 }
 
 export type AppType = AwaitedReturn<typeof main>;

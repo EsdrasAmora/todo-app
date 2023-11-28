@@ -4,8 +4,8 @@ export const UserEntity = pgTable(
   'users',
   {
     id: uuid('user_id').defaultRandom().primaryKey().notNull(),
-    createdAt: timestamp('created_at', { withTimezone: true, precision: 6, mode: 'date' }).defaultNow().notNull(),
-    updatedAt: timestamp('updated_at', { withTimezone: true, precision: 6, mode: 'date' }).defaultNow().notNull(),
+    createdAt: timestamp('created_at', { withTimezone: true, precision: 6, mode: 'string' }).defaultNow().notNull(),
+    updatedAt: timestamp('updated_at', { withTimezone: true, precision: 6, mode: 'string' }).defaultNow().notNull(),
     email: text('email').notNull(),
     passwordSeed: text('password_seed').notNull(),
     hashedPassword: text('hashed_password').notNull(),
@@ -19,12 +19,12 @@ export const UserEntity = pgTable(
 
 export const TodoEntity = pgTable('todos', {
   id: uuid('todo_id').defaultRandom().primaryKey().notNull(),
-  createdAt: timestamp('created_at', { withTimezone: true, precision: 6, mode: 'date' }).defaultNow().notNull(),
-  updatedAt: timestamp('updated_at', { withTimezone: true, precision: 6, mode: 'date' }).defaultNow().notNull(),
+  createdAt: timestamp('created_at', { withTimezone: true, precision: 6, mode: 'string' }).defaultNow().notNull(),
+  updatedAt: timestamp('updated_at', { withTimezone: true, precision: 6, mode: 'string' }).defaultNow().notNull(),
   title: text('title').notNull(),
   description: text('description'),
   completed: boolean('completed').default(false).notNull(),
-  deletedAt: timestamp('deleted_at', { withTimezone: true, precision: 6, mode: 'date' }),
+  deletedAt: timestamp('deleted_at', { withTimezone: true, precision: 6, mode: 'string' }),
   userId: uuid('user_id')
     .notNull()
     .references(() => UserEntity.id, { onDelete: 'restrict', onUpdate: 'cascade' }),

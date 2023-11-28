@@ -1,4 +1,4 @@
-import { z } from 'zod';
+import { z } from '@hono/zod-openapi';
 import { DbClient } from '../db/client';
 import { AuthorizedContext } from '../presentation/trpc.context';
 import { TodoEntity } from 'db/schema';
