@@ -1,11 +1,11 @@
 import { TRPCError, initTRPC } from '@trpc/server';
-import { CreateExpressContextOptions } from '@trpc/server/adapters/express';
 import { OpenApiMeta } from 'trpc-openapi';
 import { JwtService } from '../shared/jwt';
+import { FetchCreateContextFnOptions } from '@trpc/server/adapters/fetch';
 
 export const contextSymbol = Symbol('context');
-export const createTrpcContext = ({ req }: CreateExpressContextOptions) => {
-  const authorization = req.headers.authorization;
+export const createTrpcContext = ({ req }: FetchCreateContextFnOptions) => {
+  const authorization = req.headers.get('authorization');
   return { authorization, [contextSymbol]: true } as const;
 };
 

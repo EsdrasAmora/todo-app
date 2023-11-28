@@ -1,40 +1,53 @@
-import { createExpressMiddleware } from '@trpc/server/adapters/express';
-import compression from 'compression';
-import cors from 'cors';
-import express from 'express';
-import helmet from 'helmet';
-import swaggerUi from 'swagger-ui-express';
-import { createOpenApiExpressMiddleware } from 'trpc-openapi';
-import { Env } from '../env';
-import { openApiDocument } from './openapi';
 import { appRouter } from './router';
+import { Hono } from 'hono';
+import { serve } from '@hono/node-server';
+import { Env } from 'env';
+import { Server } from 'http';
 import { createTrpcContext } from './trpc.context';
+import { swaggerUI } from '@hono/swagger-ui';
+import { openApiJsonDoc } from './openapi';
+import { createOpenApiFetchHandler } from './fetch-adapter';
+import { trpcServer } from './trpc-server';
 
-export async function configApi(): Promise<express.Application> {
-  const app = express();
+export async function configApi() {
+  const app = new Hono();
 
-  app.use(cors(Env.NODE_ENV !== 'production' ? { origin: '*' } : undefined));
-  app.use(compression());
-  app.use(helmet());
-
-  app.use('/', swaggerUi.serve);
-  app.get('/', swaggerUi.setup(openApiDocument));
-  app.use('/api/trpc', createExpressMiddleware({ router: appRouter, createContext: createTrpcContext }));
   app.use(
-    '/api',
-    createOpenApiExpressMiddleware({
+    '/trpc/*',
+    trpcServer({
       router: appRouter,
+    }),
+  );
+
+  app.get('/doc', (c) => c.text(openApiJsonDoc));
+  app.get('/ui', swaggerUI({ url: '/doc' }));
+
+  app.use('/api/*', async (c) => {
+    const response = await createOpenApiFetchHandler({
+      req: c.req.raw,
       createContext: createTrpcContext,
+      endpoint: '/api',
       responseMeta: ({ errors, type }) => {
         if (!errors.length && type === 'mutation') {
           return { status: 201 };
         }
         return {};
       },
-    }) as express.RequestHandler,
-  );
+      router: appRouter,
+    });
+    return response;
+  });
 
-  return app;
+  const nodejsApp = serve(
+    {
+      fetch: app.fetch,
+      port: Env.PORT,
+      hostname: 'localhost',
+    },
+    (address) => {
+      console.log(`Server running in port ${address.port}`);
+    },
+  ) as Server;
+
+  return nodejsApp;
 }
-
-// const a =

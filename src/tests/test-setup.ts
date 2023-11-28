@@ -6,6 +6,7 @@ use(chaiExclude);
 
 void main('test.env').then(async () => {
   const { clearDatabase } = await import('../tests/clear-db');
+  console.log('aqqasdasdasd');
   await clearDatabase();
   console.log('Starting test switch');
   run();
