@@ -8,14 +8,12 @@ export async function main(envPath = 'test.env') {
 
   console.debug('starting db...');
   const { Sql } = await import('./db/client');
-  await Sql`SELECT NOW()`;
-  console.debug('db started');
+  const dbTime = await Sql`SELECT NOW()`;
+  console.debug(`db started, dbTime: ${dbTime}`);
 
   const { configApi } = await import('./presentation/index');
   console.debug('Configuring api...');
   const app = await configApi();
 
-  return { router: app };
+  return { app };
 }
-
-export type AppType = AwaitedReturn<typeof main>;

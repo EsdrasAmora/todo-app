@@ -1,4 +1,4 @@
-import { expect } from 'chai';
+import { beforeEach, expect, describe, it } from 'vitest';
 import { createUnauthorizedCaller } from './test-client';
 import { clearDatabase } from './clear-db';
 import { assertThrows, assertValidationError } from './assert-helpers';

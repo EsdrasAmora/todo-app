@@ -38,6 +38,15 @@ export async function configApi() {
     return response;
   });
 
+  //use when available: https://github.com/tc39/proposal-promise-with-resolvers
+  let resolve = (_val?: any) => {};
+  let reject = (_val?: any) => {};
+
+  const serverListenPromise = new Promise((res, rej) => {
+    resolve = res;
+    reject = rej;
+  });
+
   const nodejsApp = serve(
     {
       fetch: app.fetch,
@@ -46,8 +55,12 @@ export async function configApi() {
     },
     (address) => {
       console.log(`Server running in port ${address.port}`);
+      resolve();
     },
   ) as Server;
+
+  nodejsApp.once('error', reject);
+  await serverListenPromise;
 
   return nodejsApp;
 }

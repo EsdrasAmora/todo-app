@@ -1,11 +1,11 @@
-import { expect } from 'chai';
+import { beforeEach, expect, describe, it } from 'vitest';
 import { DbClient } from '../db/client';
 import { assertThrows } from './assert-helpers';
 import { clearDatabase } from './clear-db';
 import { createCaller, createUser } from './test-client';
 import { checkAuthorizedRoute } from './auth-check';
 import { eq } from 'drizzle-orm';
-import { UserEntity } from 'db/schema';
+import { UserEntity } from '../db/schema';
 
 describe('Fetch Current user', () => {
   beforeEach(async () => {
@@ -19,7 +19,7 @@ describe('Fetch Current user', () => {
     const user = await client.user.me();
     const dbUser = await DbClient.query.UserEntity.findFirst({ where: eq(UserEntity.id, userId) });
 
-    expect(user).excluding(['hashedPassword', 'passwordSeed']).to.be.deep.eq(dbUser);
+    expect(dbUser).toMatchObject(user);
   });
 
   checkAuthorizedRoute('user', 'me');

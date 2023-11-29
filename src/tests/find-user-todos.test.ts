@@ -1,10 +1,10 @@
-import { expect } from 'chai';
+import { beforeEach, expect, describe, it } from 'vitest';
 import { DbClient } from '../db/client';
 import { checkAuthorizedRoute } from './auth-check';
 import { clearDatabase } from './clear-db';
 import { createCaller, createTodo, createUser } from './test-client';
 import { inArray } from 'drizzle-orm';
-import { TodoEntity } from 'db/schema';
+import { TodoEntity } from '../db/schema';
 
 describe('Find user todos', () => {
   beforeEach(async () => {
@@ -17,9 +17,7 @@ describe('Find user todos', () => {
     const dbTodos = await Promise.all([...Array(5)].map(() => createTodo(userId)));
 
     const todos = await client.todo.findUserTodos();
-    expect(todos)
-      .excludingEvery(['userId', 'deletedAt'])
-      .to.be.deep.eq(dbTodos.sort((a, b) => b.updatedAt.getTime() - a.updatedAt.getTime()));
+    expect(dbTodos.sort((a, b) => b.updatedAt.getTime() - a.updatedAt.getTime())).toMatchObject(todos);
   });
 
   checkAuthorizedRoute('todo', 'findUserTodos');
@@ -37,8 +35,6 @@ describe('Find user todos', () => {
     const todos = await client.todo.findUserTodos();
 
     expect(todos).length(3);
-    expect(todos)
-      .excludingEvery(['userId', 'deletedAt'])
-      .to.be.deep.eq(dbTodos.sort((a, b) => b.updatedAt.getTime() - a.updatedAt.getTime()));
+    expect(dbTodos.sort((a, b) => b.updatedAt.getTime() - a.updatedAt.getTime())).toMatchObject(todos);
   });
 });
