@@ -13,7 +13,7 @@ describe('Find user todos', () => {
 
   it('should find user successfully', async () => {
     const { id: userId } = await createUser();
-    const client = await createCaller(userId);
+    const client = createCaller(userId);
     const dbTodos = await Promise.all([...Array(5)].map(() => createTodo(userId)));
 
     const todos = await client.todo.findUserTodos();
@@ -24,7 +24,7 @@ describe('Find user todos', () => {
 
   it('sould omit soft deleted todos', async () => {
     const { id: userId } = await createUser();
-    const client = await createCaller(userId);
+    const client = createCaller(userId);
     const [softDel1, softDel2, ...dbTodos] = await Promise.all([...Array(5)].map(() => createTodo(userId)));
 
     await DbClient.update(TodoEntity)

@@ -14,7 +14,7 @@ describe('Fetch Current user', () => {
 
   it('should fetch current user successfully', async () => {
     const { id: userId } = await createUser();
-    const client = await createCaller(userId);
+    const client = createCaller(userId);
 
     const user = await client.user.me();
     const dbUser = await DbClient.query.UserEntity.findFirst({ where: eq(UserEntity.id, userId) });
@@ -26,7 +26,7 @@ describe('Fetch Current user', () => {
 
   it('should error: deleted user', async () => {
     const { id: userId } = await createUser();
-    const client = await createCaller(userId);
+    const client = createCaller(userId);
     await DbClient.delete(UserEntity).where(eq(UserEntity.id, userId));
 
     await assertThrows(client.user.me(), 'Resource not found');

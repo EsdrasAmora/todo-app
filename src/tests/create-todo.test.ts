@@ -14,7 +14,7 @@ describe('Create Todo', () => {
 
   it('should create a todo successfully', async () => {
     const { id: userId } = await createUser();
-    const client = await createCaller(userId);
+    const client = createCaller(userId);
     const before = new Date();
     const todo = await client.todo.create({ title: 'title', description: 'description' });
     expect(todo.description).to.be.equal('description');
@@ -30,7 +30,7 @@ describe('Create Todo', () => {
 
   it('should error: empty title', async () => {
     const { id: userId } = await createUser();
-    const client = await createCaller(userId);
+    const client = createCaller(userId);
     await assertValidationError(
       client.todo.create({ title: '', description: 'description' }),
       'String must contain at least 1 character(s)',

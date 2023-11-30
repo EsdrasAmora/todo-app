@@ -14,7 +14,7 @@ describe('Update Todo', () => {
 
   it('should update a todo successfully', async () => {
     const { id: userId } = await createUser();
-    const client = await createCaller(userId);
+    const client = createCaller(userId);
     const dbTodo = await createTodo(userId);
 
     // const beforeUpdate = new Date();
@@ -46,13 +46,13 @@ describe('Update Todo', () => {
 
     const [otherUserTodo] = await DbClient.insert(TodoEntity).values({ userId: id, title: 'e' }).returning();
     const { id: userId } = await createUser();
-    const client = await createCaller(userId);
+    const client = createCaller(userId);
     await assertThrows(client.todo.update({ todoId: otherUserTodo.id }), 'Resource not found');
   });
 
   it('should error: already deleted todo', async () => {
     const { id: userId } = await createUser();
-    const client = await createCaller(userId);
+    const client = createCaller(userId);
     const dbTodo = await createTodo(userId);
 
     await DbClient.update(TodoEntity).set({ deletedAt: new Date() }).where(eq(TodoEntity.id, dbTodo.id)).execute();
@@ -62,14 +62,14 @@ describe('Update Todo', () => {
 
   it('should error: invalid uuid', async () => {
     const { id: userId } = await createUser();
-    const client = await createCaller(userId);
+    const client = createCaller(userId);
 
     await assertValidationError(client.todo.delete({ todoId: '123' }), 'Invalid uuid');
   });
 
   it('should error: empty title', async () => {
     const { id: userId } = await createUser();
-    const client = await createCaller(userId);
+    const client = createCaller(userId);
     const dbTodo = await createTodo(userId);
     await assertValidationError(
       client.todo.update({ todoId: dbTodo.id, title: '' }),

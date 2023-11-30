@@ -52,9 +52,11 @@ export async function configApi() {
       fetch: app.fetch,
       port: Env.PORT,
       hostname: 'localhost',
+      //try out this, check if hono works in this case
+      // createServer,
     },
     (address) => {
-      console.log(`Server running in port ${address.port}`);
+      console.log(`API running at port ${address.port}`);
       resolve();
     },
   ) as Server;

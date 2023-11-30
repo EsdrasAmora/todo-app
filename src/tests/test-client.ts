@@ -30,7 +30,7 @@ export async function createTodo(userId: string) {
   return result;
 }
 
-export async function createCaller(userId: string) {
+export function createCaller(userId: string) {
   const authorization = JwtService.sign({ userId });
   return appRouter.createCaller({ authorization, [contextSymbol]: true });
 }

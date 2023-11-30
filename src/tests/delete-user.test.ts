@@ -13,7 +13,7 @@ describe('Delete User', () => {
 
   it('should delete successfully', async () => {
     const { id: userId } = await createUser();
-    const client = await createCaller(userId);
+    const client = createCaller(userId);
     await Promise.all([...Array(5)].map(() => createTodo(userId)));
 
     await client.user.delete();
