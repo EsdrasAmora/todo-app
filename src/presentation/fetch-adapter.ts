@@ -5,7 +5,7 @@ import { OpenApiRouter } from 'trpc-openapi';
 import {
   CreateOpenApiNodeHttpHandlerOptions,
   createOpenApiNodeHttpHandler,
-} from 'trpc-openapi/dist/adapters/node-http/core';
+} from 'trpc-openapi/dist/adapters/node-http/core.js';
 
 export type CreateOpenApiFetchHandlerOptions<TRouter extends OpenApiRouter> = Omit<
   FetchHandlerOptions<TRouter>,

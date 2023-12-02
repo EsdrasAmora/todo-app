@@ -55,10 +55,7 @@ export async function configApi() {
       //try out this, check if hono works in this case
       // createServer,
     },
-    (address) => {
-      console.log(`API running at port ${address.port}`);
-      resolve();
-    },
+    resolve,
   ) as Server;
 
   nodejsApp.once('error', reject);

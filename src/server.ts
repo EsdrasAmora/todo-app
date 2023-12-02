@@ -1,10 +1,11 @@
+import { setupEnv, Env } from './env';
+
+//We must use dynamic imports here to allow Env and Logger to be used without DI.
 export async function main(envPath = 'test.env') {
-  //Env must be imported first so it can be used safely in top-level files.
-  const start = Date.now();
   console.log('Starting server...');
+  const start = Date.now();
   console.debug('Loading env...');
-  const { setupEnv } = await import('./env');
-  setupEnv(envPath);
+  await setupEnv(envPath);
   console.debug('Env loaded');
 
   const [, app] = await Promise.all([initDb(), initServer()]);
@@ -24,5 +25,6 @@ async function initServer() {
   const { configApi } = await import('./presentation/index');
   console.debug('Configuring API...');
   const app = await configApi();
+  console.log(`API running at port ${Env.PORT}`);
   return app;
 }

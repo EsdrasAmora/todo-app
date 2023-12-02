@@ -3,7 +3,7 @@ import { TodoEntity, UserEntity } from './db/schema';
 
 async function seed() {
   const { setupEnv } = await import('./env');
-  setupEnv('test.env');
+  await setupEnv('test.env');
   const { DbClient } = await import('./db/client');
   const { CryptoService } = await import('./shared/crypto');
 

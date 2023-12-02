@@ -9,9 +9,10 @@
   "scripts": {
     "typecheck": "tsc --noEmit",
     "dev": "tsx --watch src/index.ts",
-    "build": "tsup-node src/index.ts --minify --target esnext",
+    "build": "tsup-node src/index.ts --format esm --no-splitting --minify",
     "start": "node dist/index.js",
-    "generate": "drizzle-kit generate:pg",
+    "db:create-migration": "drizzle-kit generate:pg",
+    "db:push": "drizzle-kit push:pg",
     "lint": "eslint --ext .ts src",
     "test": "vitest",
     "test:ui": "vitest --ui",
