@@ -1,3 +1,4 @@
+import pdefer from 'p-defer';
 import { appRouter } from './router';
 import { Hono } from 'hono';
 import { serve } from '@hono/node-server';
@@ -7,10 +8,13 @@ import { createTrpcContext } from './trpc.context';
 import { swaggerUI } from '@hono/swagger-ui';
 import { openApiJsonDoc } from './openapi';
 import { createOpenApiFetchHandler } from './fetch-adapter';
+import { cors } from 'hono/cors';
 import { trpcServer } from './trpc-server';
 
 export async function configApi() {
   const app = new Hono();
+
+  app.use('*', cors({ origin: Env.CORS_ALLOW_ORIGIN }));
 
   app.use(
     '/trpc/*',
@@ -21,6 +25,10 @@ export async function configApi() {
 
   app.get('/doc', (c) => c.text(openApiJsonDoc));
   app.get('/ui', swaggerUI({ url: '/doc' }));
+  app.get('/helth-check', (c) => {
+    //TODO: add metrics like db latency
+    return c.json({ status: 'ok' });
+  });
 
   app.use('/api/*', async (c) => {
     const response = await createOpenApiFetchHandler({
@@ -39,13 +47,7 @@ export async function configApi() {
   });
 
   //use when available: https://github.com/tc39/proposal-promise-with-resolvers
-  let resolve = (_val?: any) => {};
-  let reject = (_val?: any) => {};
-
-  const serverListenPromise = new Promise((res, rej) => {
-    resolve = res;
-    reject = rej;
-  });
+  const serverListenPromise = pdefer<any>();
 
   const nodejsApp = serve(
     {
@@ -55,11 +57,11 @@ export async function configApi() {
       //try out this, check if hono works in this case
       // createServer,
     },
-    resolve,
+    serverListenPromise.resolve,
   ) as Server;
 
-  nodejsApp.once('error', reject);
-  await serverListenPromise;
+  nodejsApp.once('error', serverListenPromise.reject);
+  await serverListenPromise.promise;
 
   return nodejsApp;
 }

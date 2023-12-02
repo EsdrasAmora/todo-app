@@ -13,6 +13,7 @@ export const EnvSchemaValidation = z.object({
   DATABASE_CONNECTION_LIMIT: z.coerce.number().default(30),
   DATABASE_CONNECTION_POOL_TIMEOUT: z.coerce.number().default(15),
   NODE_ENV: z.enum(['production', 'development', 'test']).default('production'),
+  CORS_ALLOW_ORIGIN: z.string().default('*'),
 });
 
 export type EnvSchema = z.infer<typeof EnvSchemaValidation>;

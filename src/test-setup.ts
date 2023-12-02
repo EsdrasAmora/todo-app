@@ -1,19 +1,22 @@
+import pdefer, { type DeferredPromise } from 'p-defer';
 import { main } from './server';
 
-let teardownHappened = false;
+let teardownPromise: DeferredPromise<void>;
 
 //This function run BEFORE all tests, and do not share its enviroment with them
 export default async function () {
   console.log('Running global setup');
   const { app } = await main();
-  const start = Date.now();
   console.log('Finished global setup');
 
   const runTeardown = async () => {
-    if (teardownHappened) {
-      throw new Error('Teardown called twice');
+    const start = Date.now();
+    if (teardownPromise) {
+      console.warn('Teardown already running, skipping');
+      await teardownPromise.promise;
+      return;
     }
-    teardownHappened = true;
+    teardownPromise = pdefer();
     console.log('Running Teardown...');
 
     console.debug('Closing db pool');
@@ -24,12 +27,12 @@ export default async function () {
     console.debug('Db pool closed');
 
     console.debug('Closing server');
-    await new Promise<void>((resolve) =>
+    await new Promise<void>((res) =>
       app.close((err) => {
         if (err) {
           console.error(new Error('Error while closing server', { cause: err }));
         } else {
-          resolve();
+          res();
         }
       }),
     );
@@ -37,11 +40,12 @@ export default async function () {
 
     const duration = Date.now() - start;
     console.log(`Teardown finished, took ${duration}ms`);
+    teardownPromise.resolve();
   };
 
   process.on('uncaughtException', function () {
     void runTeardown().finally(() => {
-      process.exit(69);
+      setTimeout(() => process.exit(69), 10);
     });
   });
 

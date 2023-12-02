@@ -7,6 +7,6 @@ export default defineConfig({
     isolate: false,
     globalSetup: ['./src/test-setup.ts'],
     setupFiles: ['./src/test-perfile-setup.ts'],
-    teardownTimeout: 2000,
+    teardownTimeout: 5000,
   },
 });
