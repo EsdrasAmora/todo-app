@@ -2,11 +2,17 @@
 dist/
 node_modules/
 src/tests/
+src/scripts/
+coverage/
+drizzle/
+drizzle.config.ts
 .env
 .eslintignore
 .eslintrc.json
 .gitignore
 .prettierrc.json
+.editorconfig
 docker-compose.yml
+vitest.config.ts
 Dockerfile
 README.md
