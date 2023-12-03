@@ -6,19 +6,20 @@ FROM node:${NODE_VERSION}-alpine${ALPINE_VERSION} AS base
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
 RUN corepack enable
-COPY . /app
 WORKDIR /app
+COPY package.json pnpm-lock.yaml ./
+RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
 
 FROM base AS build
-RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
+COPY . .
 RUN pnpm run typecheck && pnpm run build && pnpm prune --prod
 
 FROM node:${NODE_VERSION}-alpine${ALPINE_VERSION}
 WORKDIR /home/node
-COPY --from=build /app/docker.env ./.env
 COPY --from=build /app/node_modules ./node_modules/
 COPY --from=build /app/package.json ./package.json
 COPY --from=build /app/dist ./dist/
+COPY --from=build /app/docker.env ./.env
 EXPOSE 3000
 
-CMD ["node", "dist/index.js"]
+ENTRYPOINT ["node", "dist/index.js"]
