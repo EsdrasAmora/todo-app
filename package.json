@@ -8,7 +8,7 @@
   "main": "dist/index.js",
   "scripts": {
     "typecheck": "tsc --noEmit",
-    "dev": "tsx --watch src/index.ts",
+    "dev": "tsup-node src/index.ts --watch --format esm --no-splitting --onSuccess 'node dist/index.js' ",
     "build": "tsup-node src/index.ts --format esm --no-splitting --minify",
     "start": "node dist/index.js",
     "db:create-migration": "drizzle-kit generate:pg",
@@ -46,7 +46,6 @@
     "eslint-plugin-prettier": "5.0.1",
     "prettier": "3.1.0",
     "tsup": "8.0.1",
-    "tsx": "4.6.2",
     "typescript": "5.3.2",
     "vitest": "0.34.6"
   },

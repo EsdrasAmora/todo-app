@@ -16,8 +16,8 @@ RUN pnpm run typecheck && pnpm run build && pnpm prune --prod
 
 FROM node:${NODE_VERSION}-alpine${ALPINE_VERSION}
 WORKDIR /home/node
-COPY --from=build /app/node_modules ./node_modules/
 COPY --from=build /app/package.json ./package.json
+COPY --from=build /app/node_modules ./node_modules/
 COPY --from=build /app/dist ./dist/
 COPY --from=build /app/docker.env ./.env
 EXPOSE 3000
