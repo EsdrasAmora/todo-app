@@ -1,5 +1,4 @@
 ARG NODE_VERSION="20.10.0"
-ARG PNPM_VERSION="8.10.5"
 ARG ALPINE_VERSION="3.18"
 
 FROM node:${NODE_VERSION}-alpine${ALPINE_VERSION} AS base
@@ -17,9 +16,8 @@ COPY . .
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
 RUN pnpm run typecheck && pnpm run build
 
-FROM node:${NODE_VERSION}-alpine${ALPINE_VERSION}
+FROM base AS prod
 WORKDIR /home/node
-
 COPY --from=prod-deps /app/node_modules ./node_modules
 COPY --from=build /app/dist ./dist
 COPY --from=build /app/docker.env ./.env

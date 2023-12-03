@@ -1,14 +1,11 @@
-import { ServerTeardown } from './server-teardown';
-import { main } from './server';
-
-//TODO: https://github.com/privatenumber/tsx/issues/393
+import { Server } from './server';
 
 async function run() {
-  const { app } = await main('.env');
+  const server = await Server.run('.env');
 
   //TODO: handle other signals
   process.on('SIGTERM', () => {
-    void ServerTeardown.run(app).then(() => {
+    void server.teardown().then(() => {
       process.exit(99);
     });
   });
