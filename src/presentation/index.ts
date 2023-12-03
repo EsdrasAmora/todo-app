@@ -10,11 +10,20 @@ import { openApiJsonDoc } from './openapi';
 import { createOpenApiFetchHandler } from './fetch-adapter';
 import { cors } from 'hono/cors';
 import { trpcServer } from './trpc-server';
+import { timing, setMetric, startTime, endTime } from 'hono/timing';
+import { secureHeaders } from 'hono/secure-headers';
+import { compress } from 'hono/compress';
+import { Sql } from '../db/client';
 
 export async function configApi() {
   const app = new Hono();
 
   app.use('*', cors({ origin: Env.CORS_ALLOW_ORIGIN }));
+  app.use('*', timing());
+  app.use('*', compress());
+  if (Env.NODE_ENV === 'production') {
+    app.use('*', secureHeaders());
+  }
 
   app.use(
     '/trpc/*',
@@ -25,8 +34,12 @@ export async function configApi() {
 
   app.get('/doc', (c) => c.text(openApiJsonDoc));
   app.get('/ui', swaggerUI({ url: '/doc' }));
-  app.get('/helth-check', (c) => {
+  app.get('/helth-check', async (c) => {
     //TODO: add metrics like db latency
+    setMetric(c, 'region', 'europe-west3');
+    startTime(c, 'db call');
+    console.log(await Sql`SELECT NOW()`);
+    endTime(c, 'db call');
     return c.json({ status: 'ok' });
   });
 

@@ -8,5 +8,8 @@ export default defineConfig({
     globalSetup: ['./src/test-setup.ts'],
     setupFiles: ['./src/test-perfile-setup.ts'],
     teardownTimeout: 5000,
+    alias: {
+      '@/': new URL('./src/', import.meta.url).pathname,
+    },
   },
 });
