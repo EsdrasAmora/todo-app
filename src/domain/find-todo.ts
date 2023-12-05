@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import { DbClient } from '../db/client';
-import { AuthorizedContext } from '../presentation/trpc.context';
+import { AuthorizedContext } from '../context';
 import { and, eq, isNull } from 'drizzle-orm';
 import { TodoEntity } from '../db/schema';
 import { TRPCError } from '@trpc/server';

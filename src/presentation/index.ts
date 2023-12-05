@@ -15,49 +15,34 @@ import { secureHeaders } from 'hono/secure-headers';
 import { compress } from 'hono/compress';
 import { Sql } from '../db/client';
 import { logger } from 'hono/logger';
+import { appVersion, asyncContext } from './middleware';
 import os from 'os';
 
 export async function configApi() {
   const app = new Hono();
 
-  app.use('*', cors({ origin: Env.CORS_ALLOW_ORIGIN }));
-  app.use('*', timing({ crossOrigin: true }));
-  app.use('*', logger());
-  if (Env.NODE_ENV === 'production') {
-    //TODO: fix doc
-    //chekc if hono does trough multiple .use calls
-    app.use('*', compress());
-    app.use('*', secureHeaders());
-  }
+  const compression = compress();
 
   app.use(
-    '/trpc/*',
-    trpcServer({
-      router: appRouter,
-    }),
-  );
+    '*',
+    async (c, next) => {
+      if (c.req.path === '/ui') {
+        // c.res.headers.append('Content-Type', 'text/html; charset=utf-8');
+        return next();
+      }
 
-  app.get('/doc', (c) => c.text(openApiJsonDoc));
-  app.get('/ui', swaggerUI({ url: '/doc' }));
-  app.get('/health-check', async (c) => {
-    startTime(c, 'db call', 'SELECT 1');
-    const dbTime = (await Sql`SELECT 1`)[0].now;
-    //replace with Logger
-    console.log({ dbTime });
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-    endTime(c, 'db call');
-    return c.json({
-      status: 'ok',
-      loadavg: os.loadavg().toString(),
-      sysUptime: os.uptime(),
-      processUptime: process.uptime(),
-      freemem: os.freemem() / (1024 * 1024),
-      totalmem: os.totalmem() / (1024 * 1024),
-      cpus: os.cpus().length,
-      relase: os.release(),
-      userInfo: os.userInfo(),
-    });
-  });
+      // return next();
+      await compression(c, next);
+
+      c.res.headers.append('Content-Type', 'application/json');
+    },
+    cors({ origin: Env.CORS_ALLOW_ORIGIN }),
+    timing({ crossOrigin: true }),
+    logger(),
+    appVersion(),
+    secureHeaders(),
+    asyncContext(),
+  );
 
   app.use('/api/*', async (c) => {
     const response = await createOpenApiFetchHandler({
@@ -72,7 +57,51 @@ export async function configApi() {
       },
       router: appRouter,
     });
+    // if (response.status === 404) {
+    //   return next();
+    // }
     return response;
+  });
+
+  // app.use('/api/rest/*', async (c, next) => {
+  //   console.log('BEFORE');
+  //   await next();
+  //   console.log('AFTER');
+  //   return c.text('hello', { status: 201 });
+  // });
+  //
+  // app.get('/api/rest/teste', (c) => {
+  //   console.log('AFTER TESTE');
+  //   return c.text('wtf', { status: 200 });
+  // });
+
+  app.use(
+    '/trpc/*',
+    trpcServer({
+      router: appRouter,
+    }),
+  );
+
+  app.get('/docs', (c) => c.text(openApiJsonDoc));
+  app.get('/ui', swaggerUI({ url: '/docs' }));
+  app.get('/health-check', async (c) => {
+    startTime(c, 'DB call', 'SELECT 1');
+    const dbTime = (await Sql`SELECT 1`)[0].now;
+    //TODO: replace with Logger
+    console.log({ dbTime });
+    endTime(c, 'DB call');
+    return c.json({
+      status: 'ok',
+      loadavg: os.loadavg().toString(),
+      sysUptime: os.uptime(),
+      processUptime: process.uptime(),
+      freemem: os.freemem() / (1024 * 1024),
+      totalmem: os.totalmem() / (1024 * 1024),
+      memory: process.memoryUsage(),
+      cpus: os.cpus().length,
+      relase: os.release(),
+      userInfo: os.userInfo(),
+    });
   });
 
   //use when available: https://github.com/tc39/proposal-promise-with-resolvers

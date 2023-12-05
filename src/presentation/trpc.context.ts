@@ -2,17 +2,14 @@ import { TRPCError, initTRPC } from '@trpc/server';
 import { OpenApiMeta } from 'trpc-openapi';
 import { JwtService } from '../shared/jwt';
 import { FetchCreateContextFnOptions } from '@trpc/server/adapters/fetch';
+import { BaseContext, contextSymbol } from '../context';
 
-export const contextSymbol = Symbol('context');
-export const createTrpcContext = ({ req }: FetchCreateContextFnOptions) => {
+export const createTrpcContext = ({ req }: FetchCreateContextFnOptions): BaseContext => {
   const authorization = req.headers.get('authorization');
-  return { authorization, [contextSymbol]: true } as const;
+  return { authorization, [contextSymbol]: true };
 };
 
-export type AuthorizedContext = { userId: string; [contextSymbol]: true };
-export type Context = ReturnType<typeof createTrpcContext>;
-
-export const trpc = initTRPC.context<Context>().meta<OpenApiMeta>().create();
+export const trpc = initTRPC.context<BaseContext>().meta<OpenApiMeta>().create();
 export const middleware = trpc.middleware;
 
 export const publicProcedure = trpc.procedure;
@@ -24,6 +21,6 @@ export const authorizedProcedure = trpc.procedure.use(async ({ ctx, next }) => {
   if (!decodedToken) {
     throw new TRPCError({ code: 'UNAUTHORIZED', message: 'Invalid or expired authorization header' });
   }
-  const result = await next({ ctx: { userId: decodedToken.data.userId } });
+  const result = await next({ ctx: { userId: decodedToken.data.userId, authorization: ctx.authorization } });
   return result;
 });

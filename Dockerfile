@@ -24,4 +24,4 @@ COPY --from=build /app/docker.env ./.env
 COPY --from=build /app/package.json ./package.json
 EXPOSE 3000
 
-ENTRYPOINT ["node", "dist/index.js"]
+ENTRYPOINT ["npm", "run", "start"]

@@ -1,16 +1,10 @@
+import { userSchema } from '../../model/user.model';
 import { CreateUser } from '../../domain/create-user';
 import { DeleteUser } from '../../domain/delete-user';
 import { FetchCurrentUser } from '../../domain/fetch-current-user';
 import { LoginUser } from '../../domain/login-user';
 import { authorizedProcedure, publicProcedure, trpc } from '../trpc.context';
 import { z } from 'zod';
-
-const userSchema = z.object({
-  id: z.string().uuid(),
-  createdAt: z.date(),
-  updatedAt: z.date(),
-  email: z.string().email(),
-});
 
 export const userRouter = trpc.router({
   create: publicProcedure

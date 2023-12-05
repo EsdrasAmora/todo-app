@@ -1,3 +1,4 @@
+import { todoSchema } from '../../model/todo.model';
 import { CreateTodo } from '../../domain/create-todo';
 import { DeleteTodo } from '../../domain/delete-todo';
 import { FindTodo } from '../../domain/find-todo';
@@ -5,15 +6,6 @@ import { FindUserTodos } from '../../domain/find-user-todos';
 import { UpdateTodo } from '../../domain/update-todo';
 import { authorizedProcedure, trpc } from '../trpc.context';
 import { z } from 'zod';
-
-const todoSchema = z.object({
-  id: z.string().uuid(),
-  createdAt: z.date(),
-  updatedAt: z.date(),
-  title: z.string(),
-  description: z.string().nullable(),
-  completed: z.boolean(),
-});
 
 export const todoRouter = trpc.router({
   create: authorizedProcedure

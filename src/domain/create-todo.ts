@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { AuthorizedContext } from '../presentation/trpc.context';
+import { AuthorizedContext } from '../context';
 import { DbClient } from '../db/client';
 import { TodoEntity } from '../db/schema';
 

@@ -1,5 +1,5 @@
 import { appRouter } from '../presentation/router';
-import { contextSymbol } from '../presentation/trpc.context';
+import { contextSymbol } from '../context';
 import { JwtService } from '../shared/jwt';
 import { DbClient } from '../db/client';
 import { faker } from '@faker-js/faker';
