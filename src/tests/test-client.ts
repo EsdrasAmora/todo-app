@@ -32,9 +32,15 @@ export async function createTodo(userId: string) {
 
 export function createCaller(userId: string) {
   const authorization = JwtService.sign({ userId });
-  return appRouter.createCaller({ authorization, [contextSymbol]: true });
+  return appRouter.createCaller({
+    authorization,
+    [contextSymbol]: true,
+    path: '/trpc',
+    uuid: '',
+    method: '',
+  });
 }
 
 export function createUnauthorizedCaller() {
-  return appRouter.createCaller({ authorization: null, [contextSymbol]: true });
+  return appRouter.createCaller({ [contextSymbol]: true, path: '/trpc', uuid: '', method: '' });
 }

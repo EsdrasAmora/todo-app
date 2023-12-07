@@ -1,7 +1,16 @@
 import { AsyncLocalStorage } from 'node:async_hooks';
 
-export type AuthorizedContext = { userId: string; authorization: string; [contextSymbol]: true };
-export type BaseContext = { authorization: string | null; [contextSymbol]: true };
+export type BaseContext = {
+  [contextSymbol]: true;
+  uuid: string;
+  method: string;
+  path: string;
+  authorization?: string;
+  sessionId?: string;
+  userAgent?: string;
+  ip?: string;
+};
+export type AuthorizedContext = BaseContext & { userId: string; authorization: string };
 export type Context = AuthorizedContext | BaseContext;
 export const contextSymbol = Symbol('context');
 

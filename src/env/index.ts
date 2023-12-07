@@ -1,23 +1,11 @@
-import { EnvSchemaValidation, EnvSchema } from './env-schema';
-import { existsSync } from 'node:fs';
-import { join } from 'path';
-import dotenv from 'dotenv';
-import { readFile } from 'node:fs/promises';
+import { EnvSchemaValidation } from './env-schema';
 
-export const Env = { didSetup: false } as EnvSchema & { didSetup: boolean };
-
-export async function setupEnv(filename: string) {
-  const config = await parseEnvFile(filename);
-  const validatedConfig = EnvSchemaValidation.parse(Object.assign(config, process.env));
-  Object.assign(Env, validatedConfig, { didSetup: true });
+if (process.env.IS_RUNNIG_ON_CLOUD) {
+  console.info('Fetching envs from ...');
+  await Promise.resolve();
+  console.info('envs fetched');
 }
 
-async function parseEnvFile(filename: string) {
-  const path = join(process.cwd(), filename);
-  if (!existsSync(path)) {
-    console.debug(`No .env file found at ${path}`);
-    return {};
-  }
-  const file = await readFile(path);
-  return dotenv.parse(file);
-}
+console.info('ENV initializing...');
+export const Env = EnvSchemaValidation.parse(process.env);
+console.info('ENV initialized.');

@@ -50,7 +50,7 @@ export const userRouter = trpc.router({
         method: 'DELETE',
         path: '/users',
         tags: ['User'],
-        summary: 'Delete the current user and all its Todos permanently',
+        summary: 'Delete current user and all related data',
         protect: true,
       },
     })

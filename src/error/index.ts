@@ -13,11 +13,7 @@ export class AppError extends Error {
   }
 }
 
-export function isAppError(error: any): error is AppError {
-  return error?.[AppErrorToken] ?? false;
-}
-
-//TODO: check trpc error and update this, maybe we could use trpc error directly?
+//TODO: Check TrpcError and update this, maybe we could use trpc error directly?
 export const StatusCode = {
   Success: 200,
   BadRequest: 400,
@@ -28,7 +24,10 @@ export const StatusCode = {
   Conflict: 409,
   InternalServer: 500,
   DataSource: 500,
+  Database: 500,
   BadGateway: 502,
+  UncaughtException: -1,
+  Teardown: -1,
 } as const;
 
 export type ErrorType =
@@ -39,4 +38,7 @@ export type ErrorType =
   | 'InternalServer'
   | 'Conflict'
   | 'Unauthorized'
-  | 'BadGateway';
+  | 'BadGateway'
+  | 'Database'
+  | 'Teardown'
+  | 'UncaughtException';
