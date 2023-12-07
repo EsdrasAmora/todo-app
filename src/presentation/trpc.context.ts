@@ -2,11 +2,10 @@ import { TRPCError, initTRPC } from '@trpc/server';
 import { OpenApiMeta } from 'trpc-openapi';
 import { JwtService } from '../shared/jwt';
 import { FetchCreateContextFnOptions } from '@trpc/server/adapters/fetch';
-import { BaseContext, contextSymbol } from '../context';
+import { BaseContext, ReqStore } from '../context';
 
-export const createTrpcContext = ({ req }: FetchCreateContextFnOptions): BaseContext => {
-  const authorization = req.headers.get('authorization');
-  return { authorization, [contextSymbol]: true };
+export const createTrpcContext = (_: FetchCreateContextFnOptions): BaseContext => {
+  return ReqStore.get();
 };
 
 export const trpc = initTRPC.context<BaseContext>().meta<OpenApiMeta>().create();

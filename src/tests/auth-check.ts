@@ -11,10 +11,4 @@ export function checkAuthorizedRoute<T extends RouterKeys>(key: T, method: keyof
 
     await assertThrows((client[key][method] as any)(), 'Missing authorization header');
   });
-  //TODO: not sure if i should add this
-  // it.skip('should error: unauthorized - invalid jwt', async () => {
-  //   const client = appRouter.createCaller({ authorization: 'invalidJwt', [contextSymbol]: true });
-
-  //   await assertThrows((client[key][method] as any)(), 'Missing authorization header');
-  // });
 }

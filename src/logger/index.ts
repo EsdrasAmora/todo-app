@@ -4,14 +4,10 @@ import { Env } from '../env';
 import { ReqStore } from '../context';
 import { AppError } from '../error';
 
-export type AppLayer = 'Core' | 'Api' | 'Domain' | 'Data';
-
 type BaseLogParams = {
-  layer: AppLayer;
-  method: string;
-  className: string;
-  payload?: object;
-  message?: string;
+  method?: string;
+  className?: string;
+  extra?: object;
 };
 
 type LogParams = BaseLogParams &
@@ -26,14 +22,34 @@ type LogParams = BaseLogParams &
 export class Log {
   private static logger: WinstonLogger;
   private constructor() {}
+  static {
+    this.init();
+    this.info('Logger initialized');
+  }
 
-  static init(): void {
+  private static init(): void {
     this.logger = createLogger({
       level: Env.LOGGER_LEVEL,
       transports: Env.IS_RUNNIG_ON_CLOUD
         ? [new LoggingWinston({})]
-        : [new transports.Console({ format: format.json() })],
+        : [new transports.Console({ format: format.combine(format.simple(), format.colorize()) })],
     });
+  }
+
+  static info(message: string, input?: BaseLogParams): void {
+    this.log({ ...input, message, level: 'info' });
+  }
+
+  static debug(message: string, input?: BaseLogParams): void {
+    this.log({ ...input, message, level: 'debug' });
+  }
+
+  static warn(message: string, input?: BaseLogParams): void {
+    this.log({ ...input, message, level: 'warn' });
+  }
+
+  static error(error: AppError, input?: BaseLogParams): void {
+    this.log({ ...input, error, level: 'error' });
   }
 
   static log(input: LogParams): void {
@@ -44,7 +60,7 @@ export class Log {
       return void this.logger.log({
         ...context,
         ...info,
-        //TODO: format this
+        //TODO: format this, consider doing a safe parse on it `AppError`
         message: JSON.stringify(error),
       });
     }
@@ -52,7 +68,6 @@ export class Log {
     return void this.logger.log({
       ...context,
       ...input,
-      message: `[${input.layer}] [${input.className ?? 'global'}.${input.method}] [${input.message}]`,
     });
   }
 }
