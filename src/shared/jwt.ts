@@ -1,9 +1,9 @@
 import jsonToken from 'jsonwebtoken';
 import { Env } from '../env';
 import { z } from 'zod';
+import { Log } from '../logger';
 
 export class JwtService {
-  private static readonly BEARER: string = 'Bearer';
   private static readonly jwtSchema = z.object({
     data: z.object({ userId: z.string().uuid() }),
     iat: z.number().int(),
@@ -15,13 +15,13 @@ export class JwtService {
       const splitToken = token.split(' ')[1];
       return this.jwtSchema.parse(jsonToken.verify(splitToken, Env.JWT_SECRET));
     } catch (err) {
-      console.debug('Invalid JWT token', err.message);
+      Log.warn('Invalid JWT token', err.message);
     }
     return null;
   }
 
   static sign(payload: object): string {
     const token = jsonToken.sign({ data: payload }, Env.JWT_SECRET, { expiresIn: Env.JWT_EXPIRATION_TIME });
-    return `${this.BEARER} ${token}`;
+    return `Bearer ${token}`;
   }
 }

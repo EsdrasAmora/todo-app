@@ -1,11 +1,11 @@
 import { z } from 'zod';
 
 export const EnvSchemaValidation = z.object({
-  PORT: z.coerce.number().default(3000),
+  PORT: z.coerce.number().int().default(3000),
   LOGGER_LEVEL: z.enum(['debug', 'info', 'warn', 'error']).default('info'),
   PASSWORD_MIN_LENGTH: z.coerce.number().int().default(8),
   SECRET_PASSWORD_SALT: z.string(),
-  CRYPTO_DEFAULT_PASSWORD_LENGTH: z.coerce.number(),
+  CRYPTO_DEFAULT_PASSWORD_LENGTH: z.coerce.number().int(),
   SERVER_DOMAIN: z.string().default('http://localhost:3000'),
   JWT_SECRET: z.string(),
   JWT_EXPIRATION_TIME: z.string().default('1d'),

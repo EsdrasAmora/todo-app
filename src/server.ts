@@ -3,7 +3,7 @@ import { Env } from './env';
 import { Log } from './logger/index';
 import { AppError } from './error';
 import { Sql } from './db/client';
-import { nodeHttpServer } from './presentation/index';
+import { NodeHttpServer } from './presentation/index';
 
 export class Server {
   private static teardownRunning: DeferredPromise<void> | undefined;
@@ -31,7 +31,7 @@ export class Server {
 
     Log.info('Closing server...');
     await new Promise<void>((res) =>
-      nodeHttpServer.close((err) => {
+      NodeHttpServer.close((err) => {
         if (err) {
           Log.error(new AppError('Teardown', 'Error while closing server', err));
         } else {

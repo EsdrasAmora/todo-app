@@ -69,7 +69,7 @@ app.use(
 app.get('/', (c) => c.redirect('/swagger'));
 app.get('/docs.json', (c) => c.text(openApiJsonDoc));
 app.get('/ui', apiReference({ spec: { url: '/docs.json' } }));
-//Remove swagger if the scalar is good enough
+//Remove swagger if the Scalar is good enough
 app.get('/swagger', swaggerUI({ url: '/docs.json' }));
 app.get('/health-check', async (c) => {
   startTime(c, 'DB call', 'SELECT 1');
@@ -93,18 +93,16 @@ app.get('/health-check', async (c) => {
 //use when available: https://github.com/tc39/proposal-promise-with-resolvers
 const serverListenPromise = pdefer<unknown>();
 
-export const nodeHttpServer = serve(
+export const NodeHttpServer = serve(
   {
     fetch: app.fetch,
     port: Env.PORT,
     hostname: 'localhost',
-    //try out this, check if hono works in this case
-    // createServer,
   },
   serverListenPromise.resolve,
 ) as Server;
 
-nodeHttpServer.once('error', serverListenPromise.reject);
+NodeHttpServer.once('error', serverListenPromise.reject);
 await serverListenPromise.promise;
 
 Log.info(`API running at port ${Env.PORT}`);
