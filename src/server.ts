@@ -23,15 +23,21 @@ export class Server {
     Log.info('Running Teardown...');
 
     Log.info('Closing server...');
-    await new Promise<void>((res) =>
+    await new Promise<void>((res) => {
+      const closeServerTimeout = setTimeout(() => {
+        Log.error(new AppError('Teardown', 'Server did not close in time'));
+        NodeHttpServer.removeAllListeners('close');
+        res();
+      }, Env.SERVER_CLOSE_TIMEOUT);
       NodeHttpServer.close((err) => {
+        clearTimeout(closeServerTimeout);
         if (err) {
           Log.error(new AppError('Teardown', 'Error while closing server', err));
         } else {
           res();
         }
-      }),
-    );
+      });
+    });
     Log.info('Server closed');
 
     Log.info('Closing db pool...');

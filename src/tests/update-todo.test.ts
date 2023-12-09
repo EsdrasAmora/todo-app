@@ -17,7 +17,6 @@ describe('Update Todo', () => {
     const client = createCaller(userId);
     const dbTodo = await createTodo(userId);
 
-    // const beforeUpdate = new Date();
     const todo = await client.todo.update({
       todoId: dbTodo.id,
       title: 'title',
@@ -29,9 +28,8 @@ describe('Update Todo', () => {
     expect(todo.description).to.be.equal('description');
     expect(todo.title).to.be.equal('title');
     expect(todo.completed).to.be.true;
-    // serialized date has up to seconds precision
-    // expect(todo.createdAt).to.be.lessThan(beforeUpdate);
-    // expect(todo.updatedAt).to.be.greaterThanOrEqual(beforeUpdate);
+    expect(todo.createdAt.getTime()).to.be.eq(dbTodo.createdAt.getTime());
+    expect(todo.updatedAt).to.be.greaterThan(dbTodo.updatedAt).and.to.be.greaterThan(todo.createdAt);
 
     const todoDb = await DbClient.query.TodoEntity.findFirst({ where: eq(TodoEntity.id, todo.id) });
     expect(todoDb).toMatchObject(todo);

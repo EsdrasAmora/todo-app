@@ -20,8 +20,8 @@ describe('Create Todo', () => {
     expect(todo.description).to.be.equal('description');
     expect(todo.title).to.be.equal('title');
     expect(todo.completed).to.be.false;
-    expect(todo.createdAt).to.be.greaterThan(before);
-    expect(todo.updatedAt).to.be.greaterThan(before);
+    expect(todo.createdAt).to.be.greaterThanOrEqual(before);
+    expect(todo.updatedAt).to.be.greaterThanOrEqual(before);
     const todoDb = await DbClient.query.TodoEntity.findFirst({ where: eq(TodoEntity.id, todo.id) });
     expect(todoDb).toMatchObject(todo);
   });

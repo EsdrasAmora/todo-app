@@ -18,7 +18,7 @@
     "lint": "eslint --ext .ts src",
     "test": "vitest",
     "test:ui": "vitest --ui",
-    "coverage": "vitest run --coverage"
+    "test:coverage": "vitest run --coverage"
   },
   "dependencies": {
     "@google-cloud/logging-winston": "6.0.0",
