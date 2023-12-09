@@ -1,8 +1,7 @@
-import './import-test-env';
 import { Server } from '../server';
 import { Log } from '../logger';
 
-//This function run BEFORE all tests, and do not share its enviroment with them
+//This function run BEFORE all tests and doesn't share its enviroment with them
 export default function () {
   Log.info('Running global setup');
   Log.info('Finished global setup');

@@ -7,8 +7,8 @@ import { inArray } from 'drizzle-orm';
 import { TodoEntity } from '../db/schema';
 
 describe('Find user todos', () => {
-  beforeEach(async () => {
-    await clearDatabase();
+  beforeEach(() => {
+    return clearDatabase();
   });
 
   it('should find user successfully', async () => {

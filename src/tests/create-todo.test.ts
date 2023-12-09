@@ -8,8 +8,8 @@ import { TodoEntity } from '../db/schema';
 import { eq } from 'drizzle-orm';
 
 describe('Create Todo', () => {
-  beforeEach(async () => {
-    await clearDatabase();
+  beforeEach(() => {
+    return clearDatabase();
   });
 
   it('should create a todo successfully', async () => {

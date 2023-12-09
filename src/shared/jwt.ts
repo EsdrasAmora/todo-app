@@ -13,7 +13,6 @@ export class JwtService {
   static verify(token: string) {
     try {
       const splitToken = token.split(' ')[1];
-      //TODO: check if token is expired
       return this.jwtSchema.parse(jsonToken.verify(splitToken, Env.JWT_SECRET));
     } catch (err) {
       Log.warn('Invalid JWT token', err.message);
@@ -22,7 +21,7 @@ export class JwtService {
   }
 
   static sign(payload: object): string {
-    const token = jsonToken.sign({ data: payload }, Env.JWT_SECRET, { expiresIn: Env.JWT_EXPIRATION_TIME });
+    const token = jsonToken.sign({ data: payload }, Env.JWT_SECRET, { expiresIn: 60 });
     return `Bearer ${token}`;
   }
 }

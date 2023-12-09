@@ -7,8 +7,8 @@ import { TodoEntity, UserEntity } from '../db/schema';
 import { eq } from 'drizzle-orm';
 
 describe('Delete User', () => {
-  beforeEach(async () => {
-    await clearDatabase();
+  beforeEach(() => {
+    return clearDatabase();
   });
 
   it('should delete successfully', async () => {

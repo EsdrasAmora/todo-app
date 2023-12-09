@@ -8,8 +8,8 @@ import { eq } from 'drizzle-orm';
 import { UserEntity } from '../db/schema';
 
 describe('Fetch Current user', () => {
-  beforeEach(async () => {
-    await clearDatabase();
+  beforeEach(() => {
+    return clearDatabase();
   });
 
   it('should fetch current user successfully', async () => {

@@ -5,8 +5,8 @@ import { assertThrows, assertValidationError } from './assert-helpers';
 import { Env } from '../env';
 
 describe('Create User', () => {
-  beforeEach(async () => {
-    await clearDatabase();
+  beforeEach(() => {
+    return clearDatabase();
   });
 
   it('should create a user successfully', async () => {

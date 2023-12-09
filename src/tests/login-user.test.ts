@@ -5,8 +5,8 @@ import { JwtService } from '../shared/jwt';
 import { assertThrows, isDefined } from './assert-helpers';
 
 describe('Login User', () => {
-  beforeEach(async () => {
-    await clearDatabase();
+  beforeEach(() => {
+    return clearDatabase();
   });
 
   it('should login successfully', async () => {
