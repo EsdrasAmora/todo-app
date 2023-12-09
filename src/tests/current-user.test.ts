@@ -3,7 +3,7 @@ import { DbClient } from '../db/client';
 import { assertThrows } from './assert-helpers';
 import { clearDatabase } from './clear-db';
 import { createCaller, createUser } from './test-client';
-import { checkAuthorizedRoute } from './auth-check';
+import { checkAuthenticatedRoute } from './auth-check';
 import { eq } from 'drizzle-orm';
 import { UserEntity } from '../db/schema';
 
@@ -22,7 +22,7 @@ describe('Fetch Current user', () => {
     expect(dbUser).toMatchObject(user);
   });
 
-  checkAuthorizedRoute('user', 'me');
+  checkAuthenticatedRoute('user', 'me');
 
   it('should error: deleted user', async () => {
     const { id: userId } = await createUser();

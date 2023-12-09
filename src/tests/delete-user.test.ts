@@ -2,7 +2,7 @@ import { beforeEach, expect, describe, it } from 'vitest';
 import { DbClient } from '../db/client';
 import { clearDatabase } from './clear-db';
 import { createCaller, createTodo, createUser } from './test-client';
-import { checkAuthorizedRoute } from './auth-check';
+import { checkAuthenticatedRoute } from './auth-check';
 import { TodoEntity, UserEntity } from '../db/schema';
 import { eq } from 'drizzle-orm';
 
@@ -25,5 +25,5 @@ describe('Delete User', () => {
     expect(user).to.be.undefined;
   });
 
-  checkAuthorizedRoute('user', 'delete');
+  checkAuthenticatedRoute('user', 'delete');
 });

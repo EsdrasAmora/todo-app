@@ -1,6 +1,6 @@
 import { beforeEach, expect, describe, it } from 'vitest';
 import { DbClient } from '../db/client';
-import { checkAuthorizedRoute } from './auth-check';
+import { checkAuthenticatedRoute } from './auth-check';
 import { clearDatabase } from './clear-db';
 import { createCaller, createTodo, createUser } from './test-client';
 import { inArray } from 'drizzle-orm';
@@ -20,7 +20,7 @@ describe('Find user todos', () => {
     expect(dbTodos.sort((a, b) => b.updatedAt.getTime() - a.updatedAt.getTime())).toMatchObject(todos);
   });
 
-  checkAuthorizedRoute('todo', 'findUserTodos');
+  checkAuthenticatedRoute('todo', 'findUserTodos');
 
   it('sould omit soft deleted todos', async () => {
     const { id: userId } = await createUser();

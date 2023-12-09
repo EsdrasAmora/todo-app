@@ -40,7 +40,7 @@ export class ReqStore {
     return store;
   }
 
-  static getAuthorized(): AuthenticatedContext {
+  static getAuthenticated(): AuthenticatedContext {
     const store = this.get();
     if (store[contextSymbol] !== 'AuthenticatedContext') {
       throw new Error('Context not initialized');

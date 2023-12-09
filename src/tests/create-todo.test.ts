@@ -1,7 +1,7 @@
 import { beforeEach, expect, describe, it } from 'vitest';
 import { DbClient } from '../db/client';
 import { assertValidationError } from './assert-helpers';
-import { checkAuthorizedRoute } from './auth-check';
+import { checkAuthenticatedRoute } from './auth-check';
 import { clearDatabase } from './clear-db';
 import { createCaller, createUser } from './test-client';
 import { TodoEntity } from '../db/schema';
@@ -26,7 +26,7 @@ describe('Create Todo', () => {
     expect(todoDb).toMatchObject(todo);
   });
 
-  checkAuthorizedRoute('todo', 'create');
+  checkAuthenticatedRoute('todo', 'create');
 
   it('should error: empty title', async () => {
     const { id: userId } = await createUser();

@@ -3,7 +3,7 @@ import { DbClient } from '../db/client';
 import { assertThrows, assertValidationError } from './assert-helpers';
 import { clearDatabase } from './clear-db';
 import { createCaller, createTodo, createUser } from './test-client';
-import { checkAuthorizedRoute } from './auth-check';
+import { checkAuthenticatedRoute } from './auth-check';
 import { eq } from 'drizzle-orm';
 import { TodoEntity, UserEntity } from '../db/schema';
 
@@ -37,7 +37,7 @@ describe('Update Todo', () => {
     expect(todoDb).toMatchObject(todo);
   });
 
-  checkAuthorizedRoute('todo', 'findUserTodos');
+  checkAuthenticatedRoute('todo', 'findUserTodos');
 
   it('should error: user should be only able to update its own todos', async () => {
     const [{ id }] = await DbClient.insert(UserEntity)
