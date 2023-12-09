@@ -19,15 +19,8 @@ export class Server {
       await this.teardownRunning.promise;
       return;
     }
-
     this.teardownRunning = pdefer();
     Log.info('Running Teardown...');
-
-    Log.info('Closing db pool...');
-    await Sql.end({ timeout: Env.DATABASE_SHUTDOWN_TIMEOUT }).catch((err) => {
-      Log.error(new AppError('Teardown', 'Error while closing db pool', err));
-    });
-    Log.info('Db pool closed');
 
     Log.info('Closing server...');
     await new Promise<void>((res) =>
@@ -40,6 +33,12 @@ export class Server {
       }),
     );
     Log.info('Server closed');
+
+    Log.info('Closing db pool...');
+    await Sql.end({ timeout: Env.DATABASE_POOL_SHUTDOWN_TIMEOUT }).catch((err) => {
+      Log.error(new AppError('Teardown', 'Error while closing db pool', err));
+    });
+    Log.info('Db pool closed');
 
     const duration = Date.now() - start;
     Log.info(`Teardown finished, took ${duration}ms`);

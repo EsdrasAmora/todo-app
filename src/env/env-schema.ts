@@ -12,7 +12,7 @@ export const EnvSchemaValidation = z.object({
   DATABASE_URL: z.string().url(),
   DATABASE_CONNECTION_LIMIT: z.coerce.number().int().default(30),
   DATABASE_CONNECTION_POOL_TIMEOUT: z.coerce.number().int().default(15),
-  DATABASE_SHUTDOWN_TIMEOUT: z.coerce.number().int().default(30),
+  DATABASE_POOL_SHUTDOWN_TIMEOUT: z.coerce.number().int().default(10),
   DATABASE_POOL_MAX_CONNECTIONS: z.coerce.number().int().default(10),
   DATABASE_POOL_IDLE_CONNECTION_TIMEOUT: z.coerce.number().int().default(30),
   DATABASE_POOL_ACQUIRE_CONNECTION_TIMEOUT: z.coerce.number().int().default(30),
