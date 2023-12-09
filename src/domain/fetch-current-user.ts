@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { AuthorizedContext } from '../context';
+import { AuthenticatedContext } from '../context';
 import { DbClient } from '../db/client';
 import { UserEntity } from '../db/schema';
 import { eq } from 'drizzle-orm';
@@ -8,7 +8,7 @@ import { TRPCError } from '@trpc/server';
 export class FetchCurrentUser {
   static schema = z.void();
 
-  static async execute({ userId }: AuthorizedContext) {
+  static async execute({ userId }: AuthenticatedContext) {
     const user = await DbClient.query.UserEntity.findFirst({ where: eq(UserEntity.id, userId) });
     if (!user) {
       throw new TRPCError({ code: 'NOT_FOUND', message: 'Resource not found' });

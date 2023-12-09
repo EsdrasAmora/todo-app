@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import { DbClient } from '../db/client';
-import { AuthorizedContext } from '../context';
+import { AuthenticatedContext } from '../context';
 import { and, eq, isNull } from 'drizzle-orm';
 import { TodoEntity } from '../db/schema';
 import { TRPCError } from '@trpc/server';
@@ -10,7 +10,7 @@ export class FindTodo {
     todoId: z.string().uuid(),
   });
 
-  static async execute({ todoId }: z.input<typeof this.schema>, { userId }: AuthorizedContext) {
+  static async execute({ todoId }: z.input<typeof this.schema>, { userId }: AuthenticatedContext) {
     const result = await DbClient.query.TodoEntity.findFirst({
       where: and(eq(TodoEntity.id, todoId), eq(TodoEntity.userId, userId), isNull(TodoEntity.deletedAt)),
     });

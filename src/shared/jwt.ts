@@ -13,6 +13,7 @@ export class JwtService {
   static verify(token: string) {
     try {
       const splitToken = token.split(' ')[1];
+      //TODO: check if token is expired
       return this.jwtSchema.parse(jsonToken.verify(splitToken, Env.JWT_SECRET));
     } catch (err) {
       Log.warn('Invalid JWT token', err.message);

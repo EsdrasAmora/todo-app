@@ -2,7 +2,7 @@ import { TodoEntity } from '../db/schema';
 import { and, eq, isNull } from 'drizzle-orm';
 import { z } from 'zod';
 import { DbClient } from '../db/client';
-import { AuthorizedContext } from '../context';
+import { AuthenticatedContext } from '../context';
 import { TRPCError } from '@trpc/server';
 
 export class UpdateTodo {
@@ -13,7 +13,7 @@ export class UpdateTodo {
     completed: z.boolean().optional(),
   });
 
-  static async execute({ todoId, ...data }: z.input<typeof this.schema>, { userId }: AuthorizedContext) {
+  static async execute({ todoId, ...data }: z.input<typeof this.schema>, { userId }: AuthenticatedContext) {
     const [result] = await DbClient.update(TodoEntity)
       .set({ ...data, updatedAt: new Date() })
       .where(and(eq(TodoEntity.id, todoId), eq(TodoEntity.userId, userId), isNull(TodoEntity.deletedAt)))

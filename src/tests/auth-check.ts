@@ -9,6 +9,6 @@ export function checkAuthorizedRoute<T extends RouterKeys>(key: T, method: keyof
   it('should error: unauthorized - missing header', async () => {
     const client = createUnauthorizedCaller();
 
-    await assertThrows((client[key][method] as any)(), 'Missing authorization header');
+    await assertThrows((client[key][method] as any)(), 'Invalid or expired authorization header');
   });
 }

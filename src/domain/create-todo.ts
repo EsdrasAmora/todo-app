@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { AuthorizedContext } from '../context';
+import { AuthenticatedContext } from '../context';
 import { DbClient } from '../db/client';
 import { TodoEntity } from '../db/schema';
 
@@ -9,7 +9,7 @@ export class CreateTodo {
     description: z.string().nullish(),
   });
 
-  static async execute(input: z.input<typeof this.schema>, { userId }: AuthorizedContext) {
+  static async execute(input: z.input<typeof this.schema>, { userId }: AuthenticatedContext) {
     const [result] = await DbClient.insert(TodoEntity)
       .values({ ...input, userId })
       .returning();

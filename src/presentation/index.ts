@@ -1,24 +1,24 @@
-import { Log } from '../logger';
-import pdefer from 'p-defer';
-import { appRouter } from './router';
-import { Hono } from 'hono';
 import { serve } from '@hono/node-server';
-import { Env } from '../env';
-import { Server } from 'http';
-import { createTrpcContext } from './trpc.context';
 import { swaggerUI } from '@hono/swagger-ui';
-import { openApiJsonDoc } from './openapi';
-import { createOpenApiFetchHandler } from './fetch-adapter';
-import { cors } from 'hono/cors';
-import { trpcServer } from './trpc-server';
-import { timing, startTime, endTime } from 'hono/timing';
-import { secureHeaders } from 'hono/secure-headers';
-import { compress } from 'hono/compress';
-import { Sql } from '../db/client';
-import { logger } from 'hono/logger';
-import { appVersion, asyncContext } from './middleware';
-import os from 'os';
 import { apiReference } from '@scalar/hono-api-reference';
+import { Hono } from 'hono';
+import { compress } from 'hono/compress';
+import { cors } from 'hono/cors';
+import { logger } from 'hono/logger';
+import { secureHeaders } from 'hono/secure-headers';
+import { endTime, startTime, timing } from 'hono/timing';
+import { Server } from 'http';
+import os from 'os';
+import pdefer from 'p-defer';
+import { Sql } from '../db/client';
+import { Env } from '../env';
+import { Log } from '../logger';
+import { createOpenApiFetchHandler } from './fetch-adapter';
+import { appVersion, asyncContext } from './middleware';
+import { openApiJsonDoc } from './openapi';
+import { appRouter } from './router';
+import { trpcServer } from './trpc-server';
+import { createTrpcContext } from './trpc.context';
 
 Log.info('Configuring API...');
 const app = new Hono();
@@ -43,8 +43,14 @@ app.use(
   asyncContext(),
 );
 
-app.use('/api/*', async (c) => {
-  const response = await createOpenApiFetchHandler({
+app.get('/', (c) => c.redirect('/ui'));
+app.get('/docs.json', (c) => c.text(openApiJsonDoc));
+app.get('/ui', apiReference({ spec: { url: '/docs.json' } }));
+//Remove swagger if the Scalar is good enough
+app.get('/swagger', swaggerUI({ url: '/docs.json' }));
+app.use('/trpc/*', trpcServer({ router: appRouter }));
+app.use('/api/*', (c) => {
+  return createOpenApiFetchHandler({
     req: c.req.raw,
     createContext: createTrpcContext,
     endpoint: '/api',
@@ -56,21 +62,7 @@ app.use('/api/*', async (c) => {
     },
     router: appRouter,
   });
-  return response;
 });
-
-app.use(
-  '/trpc/*',
-  trpcServer({
-    router: appRouter,
-  }),
-);
-
-app.get('/', (c) => c.redirect('/swagger'));
-app.get('/docs.json', (c) => c.text(openApiJsonDoc));
-app.get('/ui', apiReference({ spec: { url: '/docs.json' } }));
-//Remove swagger if the Scalar is good enough
-app.get('/swagger', swaggerUI({ url: '/docs.json' }));
 app.get('/health-check', async (c) => {
   startTime(c, 'DB call', 'SELECT 1');
   const dbTime = (await Sql`SELECT 1`)[0].now;
@@ -92,7 +84,6 @@ app.get('/health-check', async (c) => {
 
 //use when available: https://github.com/tc39/proposal-promise-with-resolvers
 const serverListenPromise = pdefer<unknown>();
-
 export const NodeHttpServer = serve(
   {
     fetch: app.fetch,
