@@ -1,6 +1,5 @@
 import { appRouter } from '../presentation/router';
 import { contextSymbol } from '../context';
-import { JwtService } from '../shared/jwt';
 import { DbClient } from '../db/client';
 import { faker } from '@faker-js/faker';
 import { TodoEntity, UserEntity } from '../db/schema';
@@ -31,10 +30,8 @@ export async function createTodo(userId: string) {
 }
 
 export function createCaller(userId: string) {
-  const authorization = JwtService.sign({ userId });
   return appRouter.createCaller({
     [contextSymbol]: 'AuthenticatedContext',
-    authorization,
     userId,
     path: '/trpc',
     uuid: '',

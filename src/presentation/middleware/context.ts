@@ -26,13 +26,9 @@ export function asyncContext(): MiddlewareHandler {
     const authorization = c.req.header('authorization');
     const decodedToken = authorization ? JwtService.verify(authorization) : null;
 
-    if (authorization && decodedToken) {
+    if (decodedToken) {
       return ReqStore.run(
-        Object.assign(baseContext, {
-          [contextSymbol]: 'AuthenticatedContext',
-          authorization: authorization,
-          userId: decodedToken.data.userId,
-        } as const),
+        { ...baseContext, [contextSymbol]: 'AuthenticatedContext', userId: decodedToken.data.userId } as const,
         () => {
           return next();
         },

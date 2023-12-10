@@ -15,7 +15,6 @@ export type UnauthenticatedContext = BaseContext & {
 export type AuthenticatedContext = BaseContext & {
   [contextSymbol]: 'AuthenticatedContext';
   userId: string;
-  authorization: string;
 };
 export type Context = AuthenticatedContext | UnauthenticatedContext;
 export const contextSymbol = Symbol('context');
