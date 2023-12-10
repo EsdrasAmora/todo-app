@@ -2,19 +2,24 @@
   "root": true,
   "overrides": [
     {
+      "excludedFiles": ["node_modules", ".eslintrc.json"],
       "files": ["*.ts"],
       "parser": "@typescript-eslint/parser",
       "plugins": ["@typescript-eslint", "prettier"],
       "extends": [
-        "plugin:@typescript-eslint/recommended",
-        "plugin:@typescript-eslint/recommended-requiring-type-checking",
+        "eslint:recommended",
+        "plugin:@typescript-eslint/strict-type-checked",
+        "plugin:@typescript-eslint/stylistic-type-checked",
         "prettier",
         "plugin:prettier/recommended"
       ],
+      "env": {
+        "es2022": true,
+        "node": true
+      },
       "parserOptions": {
-        "ecmaVersion": 2022,
-        "sourceType": "module",
-        "project": ["./tsconfig.json"]
+        "project": true,
+        "tsconfigRootDir": "."
       },
       "rules": {
         "prettier/prettier": [
@@ -26,6 +31,7 @@
         "array-bracket-spacing": ["error", "never"],
         "curly": ["error", "all"],
         "block-scoped-var": "error",
+        "@typescript-eslint/consistent-type-definitions": "off",
         "@typescript-eslint/no-unused-vars": [
           "error",
           {
@@ -34,6 +40,8 @@
             "ignoreRestSiblings": true
           }
         ],
+        "@typescript-eslint/no-extraneous-class": "off",
+        "@typescript-eslint/no-confusing-void-expression": "off",
         "@typescript-eslint/no-empty-function": "off",
         "@typescript-eslint/unbound-method": "off",
         "@typescript-eslint/no-empty-interface": "off",

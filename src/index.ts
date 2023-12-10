@@ -30,4 +30,4 @@ function terminate(code: number) {
   });
 }
 
-void run();
+run();

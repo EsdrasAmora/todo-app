@@ -8,6 +8,6 @@ export function appVersion(): MiddlewareHandler {
   }
   return (c, next) =>
     next().then(() => {
-      c.res.headers.append('X-API-Version', version ?? '0');
+      c.res.headers.append('X-API-Version', version);
     });
 }
