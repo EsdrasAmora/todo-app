@@ -12,7 +12,9 @@ export async function createUser() {
       passwordSeed: 'anything',
     })
     .returning();
-  return result;
+
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  return result!;
 }
 
 export async function createTodo(userId: string) {
@@ -26,7 +28,9 @@ export async function createTodo(userId: string) {
       createdAt,
     })
     .returning();
-  return result;
+
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  return result!;
 }
 
 export function createCaller(userId: string) {

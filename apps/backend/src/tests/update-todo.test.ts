@@ -1,6 +1,6 @@
 import { beforeEach, expect, describe, it } from 'vitest';
 import { DbClient } from '../db/client';
-import { assertThrows, assertValidationError } from './assert-helpers';
+import { assertThrows, assertValidationError, isDefined } from './assert-helpers';
 import { clearDatabase } from './clear-db';
 import { createCaller, createTodo, createUser } from './test-client';
 import { checkAuthenticatedRoute } from './auth-check';
@@ -38,13 +38,15 @@ describe('Update Todo', () => {
   checkAuthenticatedRoute('todo', 'findUserTodos');
 
   it('should error: user should be only able to update its own todos', async () => {
-    const [{ id }] = await DbClient.insert(UserEntity)
+    const [val] = await DbClient.insert(UserEntity)
       .values({ passwordSeed: 'a', email: 'a', hashedPassword: 'a' })
       .returning();
 
-    const [otherUserTodo] = await DbClient.insert(TodoEntity).values({ userId: id, title: 'e' }).returning();
+    isDefined(val);
+    const [otherUserTodo] = await DbClient.insert(TodoEntity).values({ userId: val.id, title: 'e' }).returning();
     const { id: userId } = await createUser();
     const client = createCaller(userId);
+    isDefined(otherUserTodo);
     await assertThrows(client.todo.update({ todoId: otherUserTodo.id }), 'Resource not found');
   });
 

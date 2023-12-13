@@ -65,7 +65,7 @@ app.use('/api/*', (c) => {
 });
 app.get('/health-check', async (c) => {
   startTime(c, 'DB call', 'SELECT 1');
-  const dbTime = (await Sql`SELECT 1`)[0].now;
+  const dbTime = (await Sql`SELECT 1`)[0]?.now;
   Log.info(dbTime);
   endTime(c, 'DB call');
   return c.json({

@@ -9,6 +9,7 @@
     "noImplicitReturns": true,
     "removeComments": true,
     "useUnknownInCatchVariables": false,
+    "noUncheckedIndexedAccess": true,
     "strict": true,
     "esModuleInterop": true,
     "outDir": "dist",

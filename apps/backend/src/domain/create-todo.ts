@@ -13,6 +13,7 @@ export class CreateTodo {
     const [result] = await DbClient.insert(TodoEntity)
       .values({ ...input, userId })
       .returning();
-    return result;
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    return result!;
   }
 }

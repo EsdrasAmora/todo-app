@@ -3,6 +3,7 @@
     "typecheck": {},
     "lint": {},
     "build": {
+      "dependsOn": ["^build"],
       "outputs": ["dist/**"]
     },
     "test": {

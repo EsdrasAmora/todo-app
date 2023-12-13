@@ -21,7 +21,8 @@ export class CreateUser {
       .values({ email: input.email, passwordSeed, hashedPassword })
       .returning();
 
-    return result;
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    return result!;
   }
 
   static schema = z.object({

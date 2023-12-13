@@ -14,5 +14,4 @@ drizzle.config.ts
 .editorconfig
 docker-compose.yml
 vitest.config.ts
-Dockerfile
-README.md
+*.md

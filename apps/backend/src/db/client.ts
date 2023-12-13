@@ -12,6 +12,6 @@ export const Sql = postgres(Env.DATABASE_URL, {
   idle_timeout: Env.DATABASE_POOL_IDLE_CONNECTION_TIMEOUT,
   connect_timeout: Env.DATABASE_POOL_ACQUIRE_CONNECTION_TIMEOUT,
 });
-const [{ now }] = await Sql`SELECT NOW()`;
-Log.info(`DB started, dbTime: ${(now as Date).toISOString()}`);
+const [date] = await Sql`SELECT NOW()`;
+Log.info(`DB started, dbTime: ${(date?.now as Date).toISOString()}`);
 export const DbClient = drizzle(Sql, { schema });

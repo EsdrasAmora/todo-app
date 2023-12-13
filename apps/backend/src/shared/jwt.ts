@@ -12,7 +12,7 @@ export class JwtService {
   static verify(token: string) {
     try {
       const splitToken = token.split(' ')[1];
-      return this.jwtSchema.parse(jsonToken.verify(splitToken, Env.JWT_SECRET));
+      return this.jwtSchema.parse(jsonToken.verify(splitToken ?? '', Env.JWT_SECRET));
     } catch (_err) {
       /* empty */
     }

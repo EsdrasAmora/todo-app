@@ -5,6 +5,7 @@ import { clearDatabase } from './clear-db';
 import { createCaller, createTodo, createUser } from './test-client';
 import { inArray } from 'drizzle-orm';
 import { TodoEntity } from '../db/schema';
+import { isDefined } from './assert-helpers';
 
 describe('Find user todos', () => {
   beforeEach(() => {
@@ -27,6 +28,8 @@ describe('Find user todos', () => {
     const client = createCaller(userId);
     const [softDel1, softDel2, ...dbTodos] = await Promise.all([...Array(5)].map(() => createTodo(userId)));
 
+    isDefined(softDel1);
+    isDefined(softDel2);
     await DbClient.update(TodoEntity)
       .set({ deletedAt: new Date() })
       .where(inArray(TodoEntity.id, [softDel1.id, softDel2.id]))

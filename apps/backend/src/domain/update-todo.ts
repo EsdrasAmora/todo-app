@@ -14,12 +14,10 @@ export class UpdateTodo {
   });
 
   static async execute({ todoId, ...data }: z.input<typeof this.schema>, { userId }: AuthenticatedContext) {
-    const result = (
-      await DbClient.update(TodoEntity)
-        .set({ ...data, updatedAt: new Date() })
-        .where(and(eq(TodoEntity.id, todoId), eq(TodoEntity.userId, userId), isNull(TodoEntity.deletedAt)))
-        .returning()
-    ).at(0);
+    const [result] = await DbClient.update(TodoEntity)
+      .set({ ...data, updatedAt: new Date() })
+      .where(and(eq(TodoEntity.id, todoId), eq(TodoEntity.userId, userId), isNull(TodoEntity.deletedAt)))
+      .returning();
     if (!result) {
       throw new TRPCError({ code: 'NOT_FOUND', message: 'Resource not found' });
     }
