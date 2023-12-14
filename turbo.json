@@ -4,7 +4,7 @@
     "lint": {},
     "build": {
       "dependsOn": ["^build"],
-      "outputs": ["dist/**"]
+      "outputs": ["dist/**", ".next/**", "!.next/cache/**"]
     },
     "test": {
       "outputs": ["coverage/**"],
@@ -16,6 +16,11 @@
     },
     "clean": {
       "cache": false
-    }
+    },
+    "potato": {},
+
+    "db:push": {},
+    "db:create-migration": {},
+    "db:seed": {}
   }
 }

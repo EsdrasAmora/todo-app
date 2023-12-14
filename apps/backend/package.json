@@ -10,15 +10,16 @@
     "typecheck": "tsc --noEmit",
     "dev": "tsup-node src/index.ts --watch --format esm --no-splitting --onSuccess 'node --env-file=.env dist/index.js' ",
     "script": "tsx --env-file=.env",
-    "seed": "npm run script -- ./src/scripts/seed",
     "build": "tsup-node src/index.ts --format esm --no-splitting --minify",
     "start": "node --env-file=.env dist/index.js",
+    "lint": "eslint src",
+    "test:iteractive": "vitest",
+    "test": "vitest --run",
+    "test:ui": "vitest --ui",
+    "test:coverage": "vitest run --coverage",
     "db:create-migration": "drizzle-kit generate:pg",
     "db:push": "drizzle-kit push:pg",
-    "lint": "eslint src",
-    "test": "vitest",
-    "test:ui": "vitest --ui",
-    "test:coverage": "vitest run --coverage"
+    "db:seed": "npm run script -- ./src/scripts/seed"
   },
   "dependencies": {
     "@google-cloud/logging-winston": "6.0.0",
