@@ -2,7 +2,7 @@ import { TRPCError } from '@trpc/server';
 import { eq } from 'drizzle-orm';
 import { z } from 'zod';
 
-import { AuthenticatedContext } from '../context';
+import type { AuthenticatedContext } from '../context';
 import { DbClient } from '../db/client';
 import { UserEntity } from '../db/schema';
 

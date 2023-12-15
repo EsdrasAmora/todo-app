@@ -1,5 +1,5 @@
-import { Server } from 'http';
 import os from 'os';
+import type { Server } from 'http';
 import { serve } from '@hono/node-server';
 import { swaggerUI } from '@hono/swagger-ui';
 import { apiReference } from '@scalar/hono-api-reference';

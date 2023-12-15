@@ -1,4 +1,4 @@
-import { MiddlewareHandler } from 'hono';
+import type { MiddlewareHandler } from 'hono';
 
 export function appVersion(): MiddlewareHandler {
   const version = process.env.npm_package_version;

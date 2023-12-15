@@ -1,9 +1,10 @@
+import type { Logger as WinstonLogger } from 'winston';
 import { LoggingWinston } from '@google-cloud/logging-winston';
-import { createLogger, format, transports, Logger as WinstonLogger } from 'winston';
+import { createLogger, format, transports } from 'winston';
 
+import type { AppError } from '../error';
 import { ReqStore } from '../context';
 import { Env } from '../env';
-import { AppError } from '../error';
 
 type BaseLogParams = {
   method?: string;

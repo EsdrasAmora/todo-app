@@ -15,7 +15,7 @@
     "clean": "rm -rf .turbo node_modules dist",
     "format": "prettier --check . --ignore-path ../../.gitignore",
     "start": "node --env-file=.env dist/index.js",
-    "lint": "eslint src",
+    "lint": "eslint src --fix",
     "test:iteractive": "vitest",
     "test": "vitest --run",
     "test:ui": "vitest --ui",

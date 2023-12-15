@@ -1,8 +1,9 @@
+import type { FetchCreateContextFnOptions } from '@trpc/server/adapters/fetch';
+import type { OpenApiMeta } from 'trpc-openapi';
 import { initTRPC, TRPCError } from '@trpc/server';
-import { FetchCreateContextFnOptions } from '@trpc/server/adapters/fetch';
-import { OpenApiMeta } from 'trpc-openapi';
 
-import { AuthenticatedContext, Context, contextSymbol, ReqStore } from '../context';
+import type { AuthenticatedContext, Context } from '../context';
+import { contextSymbol, ReqStore } from '../context';
 
 export const createTrpcContext = (_: FetchCreateContextFnOptions): Context => {
   return ReqStore.get();

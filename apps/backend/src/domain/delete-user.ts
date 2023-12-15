@@ -1,6 +1,6 @@
 import { eq } from 'drizzle-orm';
 
-import { AuthenticatedContext } from '../context';
+import type { AuthenticatedContext } from '../context';
 import { DbClient } from '../db/client';
 import { TodoEntity, UserEntity } from '../db/schema';
 

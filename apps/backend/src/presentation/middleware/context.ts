@@ -1,5 +1,5 @@
 import { randomUUID } from 'node:crypto';
-import { MiddlewareHandler } from 'hono';
+import type { MiddlewareHandler } from 'hono';
 
 import { contextSymbol, ReqStore } from '../../context';
 import { JwtService } from '../../shared/jwt';
