@@ -1,6 +1,7 @@
 import jsonToken from 'jsonwebtoken';
-import { Env } from '../env';
 import { z } from 'zod';
+
+import { Env } from '../env';
 
 export class JwtService {
   private static readonly jwtSchema = z.object({

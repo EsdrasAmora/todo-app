@@ -1,10 +1,11 @@
-import { z } from 'zod';
-import { DbClient } from '../db/client';
 import { TRPCError } from '@trpc/server';
+import { eq } from 'drizzle-orm';
+import { z } from 'zod';
+
+import { DbClient } from '../db/client';
+import { UserEntity } from '../db/schema';
 import { Env } from '../env';
 import { CryptoService } from '../shared/crypto';
-import { UserEntity } from '../db/schema';
-import { eq } from 'drizzle-orm';
 
 export class CreateUser {
   static async execute(input: z.input<typeof this.schema>) {

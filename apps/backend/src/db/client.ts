@@ -1,8 +1,9 @@
-import { Env } from '../env';
-import postgres from 'postgres';
-import * as schema from './schema';
 import { drizzle } from 'drizzle-orm/postgres-js';
+import postgres from 'postgres';
+
+import { Env } from '../env';
 import { Log } from '../logger';
+import * as schema from './schema';
 
 //TODO: Add timeouts `idle_in_transaction_session_timeout`, `statement_timeout`, `lock_timeout`
 // Add a shared readonly transaction for pipelining

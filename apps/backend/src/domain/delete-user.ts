@@ -1,7 +1,8 @@
-import { TodoEntity, UserEntity } from '../db/schema';
-import { DbClient } from '../db/client';
 import { eq } from 'drizzle-orm';
+
 import { AuthenticatedContext } from '../context';
+import { DbClient } from '../db/client';
+import { TodoEntity, UserEntity } from '../db/schema';
 
 export class DeleteUser {
   static async execute({ userId }: AuthenticatedContext) {

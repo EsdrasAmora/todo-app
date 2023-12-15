@@ -1,5 +1,6 @@
-import { Env } from '../env';
 import crypto from 'crypto';
+
+import { Env } from '../env';
 
 export class CryptoService {
   static createSalt() {

@@ -1,11 +1,12 @@
-import { beforeEach, expect, describe, it } from 'vitest';
+import { inArray } from 'drizzle-orm';
+import { beforeEach, describe, expect, it } from 'vitest';
+
 import { DbClient } from '../db/client';
+import { TodoEntity } from '../db/schema';
+import { isDefined } from './assert-helpers';
 import { checkAuthenticatedRoute } from './auth-check';
 import { clearDatabase } from './clear-db';
 import { createCaller, createTodo, createUser } from './test-client';
-import { inArray } from 'drizzle-orm';
-import { TodoEntity } from '../db/schema';
-import { isDefined } from './assert-helpers';
 
 describe('Find user todos', () => {
   beforeEach(() => {

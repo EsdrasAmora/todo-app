@@ -1,6 +1,6 @@
 import { trpc } from '../trpc.context';
-import { userRouter } from './user.router';
 import { todoRouter } from './todo.router';
+import { userRouter } from './user.router';
 
 export const appRouter = trpc.router({
   user: userRouter,

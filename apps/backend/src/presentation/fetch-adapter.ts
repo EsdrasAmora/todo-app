@@ -1,10 +1,10 @@
+import { IncomingMessage, ServerResponse } from 'http';
 import { TRPCError } from '@trpc/server';
 import { FetchHandlerOptions } from '@trpc/server/adapters/fetch';
-import { IncomingMessage, ServerResponse } from 'http';
 import { OpenApiRouter } from 'trpc-openapi';
 import {
-  CreateOpenApiNodeHttpHandlerOptions,
   createOpenApiNodeHttpHandler,
+  CreateOpenApiNodeHttpHandlerOptions,
 } from 'trpc-openapi/dist/adapters/node-http/core.js';
 
 export type CreateOpenApiFetchHandlerOptions<TRouter extends OpenApiRouter> = Omit<

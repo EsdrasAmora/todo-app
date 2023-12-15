@@ -1,5 +1,5 @@
-import { Server } from '../server';
 import { Log } from '../logger';
+import { Server } from '../server';
 
 //This function run BEFORE all tests and doesn't share its enviroment with them
 export default function () {

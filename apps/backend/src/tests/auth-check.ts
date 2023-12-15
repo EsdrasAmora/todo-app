@@ -1,6 +1,7 @@
+import { it } from 'vitest';
+
 import { assertThrows } from './assert-helpers';
 import { createUnauthorizedCaller } from './test-client';
-import { it } from 'vitest';
 
 type Router = Omit<ReturnType<typeof createUnauthorizedCaller>, 'mutation' | 'subscription' | 'query'>;
 type RouterKeys = keyof Router;

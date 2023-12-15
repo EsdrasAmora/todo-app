@@ -1,11 +1,12 @@
-import { beforeEach, expect, describe, it } from 'vitest';
+import { eq } from 'drizzle-orm';
+import { beforeEach, describe, expect, it } from 'vitest';
+
 import { DbClient } from '../db/client';
+import { TodoEntity } from '../db/schema';
 import { assertValidationError } from './assert-helpers';
 import { checkAuthenticatedRoute } from './auth-check';
 import { clearDatabase } from './clear-db';
 import { createCaller, createUser } from './test-client';
-import { TodoEntity } from '../db/schema';
-import { eq } from 'drizzle-orm';
 
 describe('Create Todo', () => {
   beforeEach(() => {

@@ -1,10 +1,11 @@
-import { z } from 'zod';
-import { DbClient } from '../db/client';
-import { JwtService } from '../shared/jwt';
 import { TRPCError } from '@trpc/server';
-import { CryptoService } from '../shared/crypto';
-import { UserEntity } from '../db/schema';
 import { eq } from 'drizzle-orm';
+import { z } from 'zod';
+
+import { DbClient } from '../db/client';
+import { UserEntity } from '../db/schema';
+import { CryptoService } from '../shared/crypto';
+import { JwtService } from '../shared/jwt';
 
 export class LoginUser {
   static schema = z.object({

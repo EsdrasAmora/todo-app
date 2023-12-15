@@ -1,8 +1,9 @@
+import { and, desc, eq, isNull } from 'drizzle-orm';
 import { z } from 'zod';
-import { DbClient } from '../db/client';
+
 import { AuthenticatedContext } from '../context';
+import { DbClient } from '../db/client';
 import { TodoEntity } from '../db/schema';
-import { isNull, desc, and, eq } from 'drizzle-orm';
 
 export class FindUserTodos {
   static schema = z.void();

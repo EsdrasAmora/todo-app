@@ -1,8 +1,10 @@
-import pdefer, { type DeferredPromise } from 'p-defer';
-import { Env } from './env';
-import { Log } from './logger/index';
-import { AppError } from './error';
+import type { DeferredPromise } from 'p-defer';
+import pdefer from 'p-defer';
+
 import { Sql } from './db/client';
+import { Env } from './env';
+import { AppError } from './error';
+import { Log } from './logger/index';
 import { NodeHttpServer } from './presentation/index';
 
 export class Server {

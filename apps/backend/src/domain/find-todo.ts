@@ -1,9 +1,10 @@
-import { z } from 'zod';
-import { DbClient } from '../db/client';
-import { AuthenticatedContext } from '../context';
-import { and, eq, isNull } from 'drizzle-orm';
-import { TodoEntity } from '../db/schema';
 import { TRPCError } from '@trpc/server';
+import { and, eq, isNull } from 'drizzle-orm';
+import { z } from 'zod';
+
+import { AuthenticatedContext } from '../context';
+import { DbClient } from '../db/client';
+import { TodoEntity } from '../db/schema';
 
 export class FindTodo {
   static schema = z.object({

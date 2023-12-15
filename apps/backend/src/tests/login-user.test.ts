@@ -1,8 +1,9 @@
-import { beforeEach, expect, describe, it } from 'vitest';
-import { createUnauthorizedCaller } from './test-client';
-import { clearDatabase } from './clear-db';
+import { beforeEach, describe, expect, it } from 'vitest';
+
 import { JwtService } from '../shared/jwt';
 import { assertThrows, isDefined } from './assert-helpers';
+import { clearDatabase } from './clear-db';
+import { createUnauthorizedCaller } from './test-client';
 
 describe('Login User', () => {
   beforeEach(() => {

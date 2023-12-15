@@ -1,11 +1,12 @@
-import { beforeEach, expect, describe, it } from 'vitest';
+import { eq } from 'drizzle-orm';
+import { beforeEach, describe, expect, it } from 'vitest';
+
 import { DbClient } from '../db/client';
+import { UserEntity } from '../db/schema';
 import { assertThrows } from './assert-helpers';
+import { checkAuthenticatedRoute } from './auth-check';
 import { clearDatabase } from './clear-db';
 import { createCaller, createUser } from './test-client';
-import { checkAuthenticatedRoute } from './auth-check';
-import { eq } from 'drizzle-orm';
-import { UserEntity } from '../db/schema';
 
 describe('Fetch Current user', () => {
   beforeEach(() => {

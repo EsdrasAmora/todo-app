@@ -1,8 +1,9 @@
-import { appRouter } from '../presentation/router';
+import { faker } from '@faker-js/faker';
+
 import { contextSymbol } from '../context';
 import { DbClient } from '../db/client';
-import { faker } from '@faker-js/faker';
 import { TodoEntity, UserEntity } from '../db/schema';
+import { appRouter } from '../presentation/router';
 
 export async function createUser() {
   const [result] = await DbClient.insert(UserEntity)

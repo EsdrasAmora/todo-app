@@ -1,11 +1,12 @@
-import { todoSchema } from '../../model/todo.model';
+import { z } from 'zod';
+
 import { CreateTodo } from '../../domain/create-todo';
 import { DeleteTodo } from '../../domain/delete-todo';
 import { FindTodo } from '../../domain/find-todo';
 import { FindUserTodos } from '../../domain/find-user-todos';
 import { UpdateTodo } from '../../domain/update-todo';
+import { todoSchema } from '../../model/todo.model';
 import { authorizedProcedure, trpc } from '../trpc.context';
-import { z } from 'zod';
 
 export const todoRouter = trpc.router({
   create: authorizedProcedure

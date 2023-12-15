@@ -1,8 +1,9 @@
-import { beforeEach, expect, describe, it } from 'vitest';
-import { createUnauthorizedCaller } from './test-client';
-import { clearDatabase } from './clear-db';
-import { assertThrows, assertValidationError } from './assert-helpers';
+import { beforeEach, describe, expect, it } from 'vitest';
+
 import { Env } from '../env';
+import { assertThrows, assertValidationError } from './assert-helpers';
+import { clearDatabase } from './clear-db';
+import { createUnauthorizedCaller } from './test-client';
 
 describe('Create User', () => {
   beforeEach(() => {

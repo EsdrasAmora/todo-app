@@ -1,4 +1,5 @@
 import { generateOpenApiDocument } from 'trpc-openapi';
+
 import { Env } from '../env';
 import { appRouter } from './router';
 

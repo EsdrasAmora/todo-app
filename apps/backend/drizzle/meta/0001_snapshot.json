@@ -67,12 +67,8 @@
           "name": "todos_user_id_users_user_id_fk",
           "tableFrom": "todos",
           "tableTo": "users",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "user_id"
-          ],
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["user_id"],
           "onDelete": "restrict",
           "onUpdate": "cascade"
         }
@@ -127,9 +123,7 @@
       "indexes": {
         "users_email_key": {
           "name": "users_email_key",
-          "columns": [
-            "email"
-          ],
+          "columns": ["email"],
           "isUnique": true
         }
       },

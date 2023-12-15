@@ -1,10 +1,11 @@
-import { beforeEach, expect, describe, it } from 'vitest';
+import { eq } from 'drizzle-orm';
+import { beforeEach, describe, expect, it } from 'vitest';
+
 import { DbClient } from '../db/client';
+import { TodoEntity, UserEntity } from '../db/schema';
+import { checkAuthenticatedRoute } from './auth-check';
 import { clearDatabase } from './clear-db';
 import { createCaller, createTodo, createUser } from './test-client';
-import { checkAuthenticatedRoute } from './auth-check';
-import { TodoEntity, UserEntity } from '../db/schema';
-import { eq } from 'drizzle-orm';
 
 describe('Delete User', () => {
   beforeEach(() => {

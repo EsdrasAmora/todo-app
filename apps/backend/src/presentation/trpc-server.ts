@@ -1,7 +1,7 @@
 import type { AnyRouter } from '@trpc/server';
 import type { FetchHandlerRequestOptions } from '@trpc/server/adapters/fetch';
-import { fetchRequestHandler } from '@trpc/server/adapters/fetch';
 import type { MiddlewareHandler } from 'hono';
+import { fetchRequestHandler } from '@trpc/server/adapters/fetch';
 
 type tRPCOptions = Omit<FetchHandlerRequestOptions<AnyRouter>, 'req' | 'endpoint'> &
   Partial<Pick<FetchHandlerRequestOptions<AnyRouter>, 'endpoint'>>;

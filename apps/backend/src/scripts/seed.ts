@@ -1,6 +1,7 @@
 import { faker } from '@faker-js/faker';
-import { TodoEntity, UserEntity } from '../db/schema';
+
 import { DbClient, Sql } from '../db/client';
+import { TodoEntity, UserEntity } from '../db/schema';
 import { CryptoService } from '../shared/crypto';
 
 console.info('Seeding database');
