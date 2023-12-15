@@ -28,8 +28,12 @@ const config = {
     "^[../]",
     "^[./]",
   ],
-  importOrderParserPlugins: ["typescript", "jsx", "decorators-legacy"],
+  importOrderParserPlugins: ["typescript", "jsx"],
   importOrderTypeScriptVersion: "4.4.0",
+  trailingComma: "all",
+  singleQuote: true,
+  printWidth: 120,
+  tabWidth: 2
 };
 
 export default config;

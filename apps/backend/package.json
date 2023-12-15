@@ -1,5 +1,6 @@
 {
   "name": "@project/backend",
+  "private": true,
   "description": "todo-app",
   "author": "Esdras Amora",
   "version": "1.0.0",
@@ -11,6 +12,8 @@
     "dev": "tsup-node src/index.ts --watch --format esm --no-splitting --onSuccess 'node --env-file=.env dist/index.js' ",
     "script": "tsx --env-file=.env",
     "build": "tsup-node src/index.ts --format esm --no-splitting --minify",
+    "clean": "rm -rf .turbo node_modules dist",
+    "format": "prettier --check . --ignore-path ../../.gitignore",
     "start": "node --env-file=.env dist/index.js",
     "lint": "eslint src",
     "test:iteractive": "vitest",
@@ -40,5 +43,11 @@
     "node": ">=20",
     "pnpm": ">=8"
   },
-  "packageManager": "pnpm@8.11.0+sha256.5858806c3b292cbec89b5533662168a957358e2bbd86431516d441dc1aface89"
+  "eslintConfig": {
+    "root": true,
+    "extends": [
+      "@repo/eslint-config/base"
+    ]
+  },
+  "prettier": "@repo/prettier-config"
 }

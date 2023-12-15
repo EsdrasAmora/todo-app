@@ -41,6 +41,9 @@
     "clean": {
       "cache": false
     },
+    "//#clean": {
+      "cache": false
+    },
     "db:push": {},
     "db:create-migration": {},
     "db:seed": {}

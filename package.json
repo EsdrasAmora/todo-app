@@ -8,6 +8,7 @@
   "type": "module",
   "scripts": {
     "build": "turbo build",
+    "clean": "rm -rf node_modules",
     "clean:workspaces": "turbo clean",
     "postinstall": "pnpm lint:ws",
     "db:push": "pnpm -F db push",
@@ -58,7 +59,7 @@
   },
   "engines": {
     "node": ">=18",
-    "pnpm": ">=7"
+    "pnpm": ">=8"
   },
-  "packageManager": "pnpm@8.11.0+sha256.5858806c3b292cbec89b5533662168a957358e2bbd86431516d441dc1aface89"
+  "packageManager": "pnpm@8.11.0"
 }
