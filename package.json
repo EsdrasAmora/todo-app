@@ -8,7 +8,7 @@
   "type": "module",
   "scripts": {
     "build": "turbo build",
-    "clean": "rm -rf node_modules",
+    "clean": "rm -rf node_modules .turbo",
     "clean:workspaces": "turbo clean",
     "postinstall": "pnpm lint:ws",
     "db:push": "pnpm -F backend db:push",
