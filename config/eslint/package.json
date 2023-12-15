@@ -14,10 +14,6 @@
     "format": "prettier --check . --ignore-path ../../.gitignore",
     "typecheck": "tsc --noEmit"
   },
-  "devDependencies": {
-    "@repo/prettier-config": "workspace:*",
-    "@repo/tsconfig": "workspace:*"
-  },
   "eslintConfig": {
     "root": true,
     "extends": [
