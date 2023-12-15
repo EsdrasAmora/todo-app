@@ -1,3 +1,3 @@
 # DB PACKAGE
 
-TODO: move drizzle stuff to here
+TODO: move db schema and migration stuff here
