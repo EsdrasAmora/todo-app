@@ -1,3 +1,5 @@
+import { Server } from 'http';
+import os from 'os';
 import { serve } from '@hono/node-server';
 import { swaggerUI } from '@hono/swagger-ui';
 import { apiReference } from '@scalar/hono-api-reference';
@@ -7,9 +9,8 @@ import { cors } from 'hono/cors';
 import { logger } from 'hono/logger';
 import { secureHeaders } from 'hono/secure-headers';
 import { endTime, startTime, timing } from 'hono/timing';
-import { Server } from 'http';
-import os from 'os';
 import pdefer from 'p-defer';
+
 import { Sql } from '../db/client';
 import { Env } from '../env';
 import { Log } from '../logger';

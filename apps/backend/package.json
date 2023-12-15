@@ -13,7 +13,7 @@
     "script": "tsx --env-file=.env",
     "build": "tsup-node src/index.ts --format esm --no-splitting --minify",
     "clean": "rm -rf .turbo node_modules dist",
-    "format": "prettier --check . --ignore-path ../../.gitignore",
+    "format": "prettier --write . --ignore-path ../../.gitignore",
     "start": "node --env-file=.env dist/index.js",
     "lint": "eslint src",
     "test:iteractive": "vitest",
