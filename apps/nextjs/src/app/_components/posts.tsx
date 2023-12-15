@@ -1,21 +1,21 @@
-"use client";
+'use client';
 
-import { useState } from "react";
+import { useState } from 'react';
 
-import type { RouterOutputs } from "@repo/api";
+import type { RouterOutputs } from '@repo/api';
 
-import { api } from "~/trpc/react";
+import { api } from '~/trpc/react';
 
 export function CreatePostForm() {
   const utils = api.useUtils();
 
-  const [title, setTitle] = useState("");
-  const [content, setContent] = useState("");
+  const [title, setTitle] = useState('');
+  const [content, setContent] = useState('');
 
   const { mutateAsync: createPost, error } = api.post.create.useMutation({
     async onSuccess() {
-      setTitle("");
-      setContent("");
+      setTitle('');
+      setContent('');
       await utils.post.all.invalidate();
     },
   });
@@ -30,8 +30,8 @@ export function CreatePostForm() {
             title,
             content,
           });
-          setTitle("");
-          setContent("");
+          setTitle('');
+          setContent('');
           await utils.post.all.invalidate();
         } catch {
           // noop
@@ -45,9 +45,7 @@ export function CreatePostForm() {
         placeholder="Title"
       />
       {error?.data?.zodError?.fieldErrors.title && (
-        <span className="mb-2 text-red-500">
-          {error.data.zodError.fieldErrors.title}
-        </span>
+        <span className="mb-2 text-red-500">{error.data.zodError.fieldErrors.title}</span>
       )}
       <input
         className="mb-2 rounded bg-white/10 p-2 text-white"
@@ -56,17 +54,13 @@ export function CreatePostForm() {
         placeholder="Content"
       />
       {error?.data?.zodError?.fieldErrors.content && (
-        <span className="mb-2 text-red-500">
-          {error.data.zodError.fieldErrors.content}
-        </span>
+        <span className="mb-2 text-red-500">{error.data.zodError.fieldErrors.content}</span>
       )}
       {}
       <button type="submit" className="rounded bg-pink-400 p-2 font-bold">
         Create
       </button>
-      {error?.data?.code === "UNAUTHORIZED" && (
-        <span className="mt-2 text-red-500">You must be logged in to post</span>
-      )}
+      {error?.data?.code === 'UNAUTHORIZED' && <span className="mt-2 text-red-500">You must be logged in to post</span>}
     </form>
   );
 }
@@ -97,9 +91,7 @@ export function PostList() {
   );
 }
 
-export function PostCard(props: {
-  post: RouterOutputs["post"]["all"][number];
-}) {
+export function PostCard(props: { post: RouterOutputs['post']['all'][number] }) {
   const utils = api.useUtils();
   const deletePost = api.post.delete.useMutation();
 
@@ -129,20 +121,8 @@ export function PostCardSkeleton(props: { pulse?: boolean }) {
   return (
     <div className="flex flex-row rounded-lg bg-white/10 p-4 transition-all hover:scale-[101%]">
       <div className="flex-grow">
-        <h2
-          className={`w-1/4 rounded bg-pink-400 text-2xl font-bold ${
-            pulse && "animate-pulse"
-          }`}
-        >
-          &nbsp;
-        </h2>
-        <p
-          className={`mt-2 w-1/3 rounded bg-current text-sm ${
-            pulse && "animate-pulse"
-          }`}
-        >
-          &nbsp;
-        </p>
+        <h2 className={`w-1/4 rounded bg-pink-400 text-2xl font-bold ${pulse && 'animate-pulse'}`}>&nbsp;</h2>
+        <p className={`mt-2 w-1/3 rounded bg-current text-sm ${pulse && 'animate-pulse'}`}>&nbsp;</p>
       </div>
     </div>
   );
