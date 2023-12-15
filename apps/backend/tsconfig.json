@@ -1,4 +1,11 @@
 {
   "extends": "@repo/tsconfig/base.json",
-  "include": ["src"]
+  "compilerOptions": {
+    "tsBuildInfoFile": "node_modules/.cache/tsbuildinfo.json",
+    "asdasd": "asd"
+    //remove this
+    // "types": ["node"],
+  },
+  "include": ["."],
+  "exclude": ["node_modules", "drizzle"]
 }

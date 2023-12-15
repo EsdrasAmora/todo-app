@@ -7,8 +7,6 @@
     "module": "ESNext",
     "moduleResolution": "Bundler",
     "lib": ["ESNext"],
-    //remove this
-    "types": ["node"],
     "noImplicitReturns": true,
     "removeComments": true,
     "useUnknownInCatchVariables": false,
@@ -27,10 +25,6 @@
     "forceConsistentCasingInFileNames": true,
     "noImplicitOverride": true,
     "useDefineForClassFields": true
-    //"noPropertyAccessFromIndexSignature": true
-    //composite: true,
-    //declarationMap: true,
-    //declaration: true,
   },
   "exclude": ["node_modules", "build", "dist", ".next", ".expo", "coverage"]
 }
