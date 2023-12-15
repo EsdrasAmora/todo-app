@@ -1,11 +1,26 @@
 {
   "name": "todo-app",
+  "private": true,
   "description": "Todo App mono repo",
   "author": "Esdras Amora",
   "version": "1.0.0",
   "license": "MIT",
   "type": "module",
-  "scripts": {},
+  "scripts": {
+    "build": "turbo build",
+    "clean:workspaces": "turbo clean",
+    "postinstall": "pnpm lint:ws",
+    "db:push": "pnpm -F db push",
+    "db:studio": "pnpm -F db studio",
+    "dev": "turbo dev --parallel",
+    "format": "turbo format --continue -- --cache --cache-location node_modules/.cache/.prettiercache",
+    "format:fix": "turbo format --continue -- --write --cache --cache-location node_modules/.cache/.prettiercache",
+    "lint": "turbo lint --continue -- --cache --cache-location node_modules/.cache/.eslintcache",
+    "lint:fix": "turbo lint --continue -- --fix --cache --cache-location node_modules/.cache/.eslintcache",
+    "lint:ws": "pnpm dlx sherif@latest",
+    "typecheck": "turbo typecheck"
+  },
+  "prettier": "@repo/prettier-config",
   "devDependencies": {
     "@faker-js/faker": "8.3.1",
     "@next/eslint-plugin-next": "14.0.4",
@@ -31,7 +46,15 @@
     "tsx": "4.6.2",
     "turbo": "1.11.2",
     "typescript": "5.3.3",
-    "vitest": "1.0.4"
+    "vitest": "1.0.4",
+    "@repo/eslint-config": "workspace:*",
+    "@repo/prettier-config": "workspace:*",
+    "@repo/tailwind-config": "workspace:*",
+    "@repo/tsconfig": "workspace:*",
+    "@types/react": "18.2.42",
+    "@types/react-dom": "18.2.17",
+    "dotenv-cli": "7.3.0",
+    "tailwindcss": "3.3.5"
   },
   "engines": {
     "node": ">=18",

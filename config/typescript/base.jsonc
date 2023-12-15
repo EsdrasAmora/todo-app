@@ -1,12 +1,13 @@
 {
+  "$schema": "https://json.schemastore.org/tsconfig",
   "compilerOptions": {
     "baseUrl": ".",
     "target": "ES2022",
     "noEmit": true,
     "module": "ESNext",
     "moduleResolution": "Bundler",
-    //set types and lib on each lib
     "lib": ["ESNext"],
+    //remove this
     "types": ["node"],
     "noImplicitReturns": true,
     "removeComments": true,
