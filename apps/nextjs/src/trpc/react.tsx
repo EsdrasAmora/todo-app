@@ -6,7 +6,10 @@ import { loggerLink, unstable_httpBatchStreamLink } from '@trpc/client';
 import { createTRPCReact } from '@trpc/react-query';
 import SuperJSON from 'superjson';
 
-import type { AppRouter } from '@repo/api';
+//TODO: replace here with our router
+// import type { AppRouter } from '@repo/api';
+
+type AppRouter = any;
 
 export const api = createTRPCReact<AppRouter>();
 
@@ -43,7 +46,11 @@ export function TRPCReactProvider(props: { children: React.ReactNode; headersPro
 }
 
 function getBaseUrl() {
-  if (typeof window !== 'undefined') return window.location.origin;
-  if (process.env.VERCEL_URL) return `https://${process.env.VERCEL_URL}`;
+  if (typeof window !== 'undefined') {
+    return window.location.origin;
+  }
+  if (process.env.VERCEL_URL) {
+    return `https://${process.env.VERCEL_URL}`;
+  }
   return `http://localhost:${process.env.PORT ?? 3000}`;
 }

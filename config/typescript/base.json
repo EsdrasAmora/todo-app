@@ -6,7 +6,7 @@
     "noEmit": true,
     "module": "ESNext",
     "moduleResolution": "Bundler",
-    "lib": ["ESNext"],
+    "lib": ["dom", "ESNext"],
     "noImplicitReturns": true,
     "removeComments": true,
     "useUnknownInCatchVariables": false,
