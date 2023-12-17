@@ -10,6 +10,7 @@
     "build": "turbo build",
     "clean": "rm -rf node_modules .turbo",
     "clean:workspaces": "turbo clean",
+    "test": "turbo test",
     "db:push": "pnpm -F backend db:push",
     "dev": "turbo dev --parallel",
     "format": "turbo format --continue -- --cache --cache-location node_modules/.cache/.prettiercache",

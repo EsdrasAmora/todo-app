@@ -1,6 +1,6 @@
-import { defineConfig } from 'vitest/dist/config.js';
+import { defineProject } from 'vitest/config';
 
-export default defineConfig({
+export default defineProject({
   test: {
     poolOptions: { threads: { singleThread: true, isolate: false } },
     //I've seen no meaninfull changes with the optimizer enabled
