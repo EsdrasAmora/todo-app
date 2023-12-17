@@ -6,6 +6,7 @@ src/scripts/
 coverage/
 drizzle/
 drizzle.config.ts
+Dockerfile
 .env
 .eslintignore
 .eslintrc.json
