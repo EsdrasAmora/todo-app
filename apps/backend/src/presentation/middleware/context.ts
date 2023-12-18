@@ -1,7 +1,7 @@
 import { randomUUID } from 'node:crypto';
 import type { MiddlewareHandler } from 'hono';
 
-import { contextSymbol, ReqStore } from '../../context';
+import { ReqStore } from '../../context';
 import { JwtService } from '../../shared/jwt';
 
 export function asyncContext(): MiddlewareHandler {
@@ -14,7 +14,7 @@ export function asyncContext(): MiddlewareHandler {
     c.res.headers.set('X-Request-UUID', uuid);
 
     const baseContext = {
-      [contextSymbol]: 'UnauthenticatedContext',
+      __type: 'UnauthenticatedContext',
       method: c.req.method,
       path: c.req.path,
       uuid,
@@ -29,7 +29,7 @@ export function asyncContext(): MiddlewareHandler {
 
     if (decodedToken) {
       return ReqStore.run(
-        { ...baseContext, [contextSymbol]: 'AuthenticatedContext', userId: decodedToken.data.userId } as const,
+        { ...baseContext, __type: 'AuthenticatedContext', userId: decodedToken.data.userId } as const,
         () => {
           return next();
         },

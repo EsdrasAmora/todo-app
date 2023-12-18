@@ -6,11 +6,10 @@ import { loggerLink, unstable_httpBatchStreamLink } from '@trpc/client';
 import { createTRPCReact } from '@trpc/react-query';
 import SuperJSON from 'superjson';
 
-//TODO: replace here with our router
-// import type { AppRouter } from '@repo/api';
+import type { AppRouter } from '@repo/backend';
 
-type AppRouter = any;
-
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+//@ts-expect-error
 export const api = createTRPCReact<AppRouter>();
 
 export function TRPCReactProvider(props: { children: React.ReactNode; headersPromise: Promise<Headers> }) {
@@ -20,10 +19,14 @@ export function TRPCReactProvider(props: { children: React.ReactNode; headersPro
     api.createClient({
       transformer: SuperJSON,
       links: [
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        //@ts-expect-error
         loggerLink({
           enabled: (op) =>
             process.env.NODE_ENV === 'development' || (op.direction === 'down' && op.result instanceof Error),
         }),
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        //@ts-expect-error
         unstable_httpBatchStreamLink({
           url: getBaseUrl() + '/api/trpc',
           async headers() {

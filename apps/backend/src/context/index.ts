@@ -10,14 +10,13 @@ export type BaseContext = {
 };
 
 export type UnauthenticatedContext = BaseContext & {
-  [contextSymbol]: 'UnauthenticatedContext';
+  __type: 'UnauthenticatedContext';
 };
 export type AuthenticatedContext = BaseContext & {
-  [contextSymbol]: 'AuthenticatedContext';
+  __type: 'AuthenticatedContext';
   userId: string;
 };
 export type Context = AuthenticatedContext | UnauthenticatedContext;
-export const contextSymbol = Symbol('context');
 
 export class ReqStore {
   private constructor() {}
@@ -41,7 +40,7 @@ export class ReqStore {
 
   static getAuthenticated(): AuthenticatedContext {
     const store = this.get();
-    if (store[contextSymbol] !== 'AuthenticatedContext') {
+    if (store.__type !== 'AuthenticatedContext') {
       throw new Error('Context not initialized');
     }
     return store;

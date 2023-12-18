@@ -1,6 +1,5 @@
 import { faker } from '@faker-js/faker';
 
-import { contextSymbol } from '../context';
 import { DbClient } from '../db/client';
 import { TodoEntity, UserEntity } from '../db/schema';
 import { appRouter } from '../presentation/router';
@@ -36,7 +35,7 @@ export async function createTodo(userId: string) {
 
 export function createCaller(userId: string) {
   return appRouter.createCaller({
-    [contextSymbol]: 'AuthenticatedContext',
+    __type: 'AuthenticatedContext',
     userId,
     path: '/trpc',
     uuid: '',
@@ -45,5 +44,5 @@ export function createCaller(userId: string) {
 }
 
 export function createUnauthorizedCaller() {
-  return appRouter.createCaller({ [contextSymbol]: 'UnauthenticatedContext', path: '/trpc', uuid: '', method: '' });
+  return appRouter.createCaller({ __type: 'UnauthenticatedContext', path: '/trpc', uuid: '', method: '' });
 }

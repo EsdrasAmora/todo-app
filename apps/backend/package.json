@@ -7,6 +7,7 @@
   "license": "MIT",
   "type": "module",
   "main": "dist/index.js",
+  "types": "src/potato.ts",
   "scripts": {
     "typecheck": "tsc --noEmit",
     "dev": "tsup-node src/index.ts --watch --format esm --no-splitting --onSuccess 'node --env-file=.env dist/index.js' ",
@@ -35,6 +36,7 @@
     "jsonwebtoken": "9.0.2",
     "p-defer": "4.0.0",
     "postgres": "3.4.3",
+    "superjson": "2.2.1",
     "trpc-openapi": "1.2.0",
     "winston": "3.11.0",
     "zod": "3.22.4"
