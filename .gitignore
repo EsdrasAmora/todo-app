@@ -1,7 +1,10 @@
 node_modules
-dist
 coverage
 docker.env
+dist/
+build/
+.next/
 .env
-
+.turbo
+nohup.out
 

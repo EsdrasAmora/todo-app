@@ -1,0 +1,42 @@
+{
+  "name": "@repo/nextjs",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "build": "pnpm with-env next build",
+    "clean": "rm -rf .next .turbo node_modules",
+    "dev": "pnpm with-env next dev",
+    "lint": "dotenv -v SKIP_ENV_VALIDATION=1 next lint",
+    "format": "prettier --check . --ignore-path ../../.gitignore",
+    "start": "pnpm with-env next start",
+    "typecheck": "tsc --noEmit",
+    "with-env": "dotenv -e ../../.env --"
+  },
+  "dependencies": {
+    "@t3-oss/env-nextjs": "0.7.1",
+    "@tanstack/react-query": "5.8.7",
+    "@tanstack/react-query-devtools": "5.8.7",
+    "@tanstack/react-query-next-experimental": "5.8.7",
+    "@trpc/client": "next",
+    "@trpc/next": "next",
+    "@trpc/react-query": "next",
+    "@trpc/server": "next",
+    "next": "14.0.3",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
+    "superjson": "2.2.1",
+    "zod": "3.22.4"
+  },
+  "devDependencies": {
+    "@repo/backend": "workspace:*"
+  },
+  "eslintConfig": {
+    "root": true,
+    "extends": [
+      "@repo/eslint-config/base",
+      "@repo/eslint-config/nextjs",
+      "@repo/eslint-config/react"
+    ]
+  },
+  "prettier": "@repo/prettier-config"
+}

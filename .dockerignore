@@ -6,6 +6,7 @@ src/scripts/
 coverage/
 drizzle/
 drizzle.config.ts
+Dockerfile
 .env
 .eslintignore
 .eslintrc.json
@@ -14,5 +15,4 @@ drizzle.config.ts
 .editorconfig
 docker-compose.yml
 vitest.config.ts
-Dockerfile
-README.md
+*.md

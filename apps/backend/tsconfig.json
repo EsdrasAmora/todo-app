@@ -1,0 +1,15 @@
+{
+  "extends": "@repo/tsconfig/base.json",
+  "compilerOptions": {
+    "baseUrl": "src",
+    "tsBuildInfoFile": "node_modules/.cache/tsbuildinfo.json",
+    "noEmit": false,
+    "moduleResolution": "Bundler",
+    "skipLibCheck": true,
+    // "noImplicitOverride": false
+    "composite": true
+    // "declaration": true,
+    // "declarationMap": false
+  },
+  "exclude": ["node_modules"]
+}

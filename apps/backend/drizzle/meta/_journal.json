@@ -1,0 +1,20 @@
+{
+  "version": "5",
+  "dialect": "pg",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "5",
+      "when": 1700941892095,
+      "tag": "0000_supreme_skullbuster",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "5",
+      "when": 1701145391134,
+      "tag": "0001_stale_amphibian",
+      "breakpoints": true
+    }
+  ]
+}
