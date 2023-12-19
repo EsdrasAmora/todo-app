@@ -7,7 +7,6 @@ export type { AppRouter } from 'presentation/router';
  * Inference helpers for input types
  * @example type HelloInput = RouterInputs['example']['hello']
  **/
-
 export type RouterInputs = inferRouterInputs<AppRouter>;
 
 /**
