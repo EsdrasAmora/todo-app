@@ -11,7 +11,7 @@
     "clean": "rm -rf node_modules .turbo",
     "clean:workspaces": "turbo clean",
     "test": "turbo test",
-    "db:push": "pnpm -F backend db:push",
+    "db:codegen": "pnpm -F db codegen",
     "dev": "turbo dev --parallel",
     "format": "turbo format --continue -- --cache --cache-location node_modules/.cache/.prettiercache",
     "format:fix": "turbo format --continue -- --write --cache --cache-location node_modules/.cache/.prettiercache",

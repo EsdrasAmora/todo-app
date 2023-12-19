@@ -140,6 +140,9 @@ importers:
       '@hono/swagger-ui':
         specifier: 0.2.0
         version: 0.2.0(hono@3.11.7)
+      '@repo/db':
+        specifier: workspace:*
+        version: link:../../packages/db
       '@scalar/hono-api-reference':
         specifier: 0.3.0
         version: 0.3.0(@codemirror/lang-html@6.4.7)(@codemirror/lang-java@6.0.1)(@codemirror/lang-javascript@6.2.1)(@codemirror/lang-json@6.0.1)(@codemirror/lang-python@6.1.3)(@codemirror/language@6.9.3)(@codemirror/legacy-modes@6.3.3)(@codemirror/state@6.3.3)(@codemirror/view@6.22.3)(@lezer/common@1.1.2)(@lezer/highlight@1.2.0)(@lezer/lr@1.3.14)(@uiw/codemirror-themes@4.21.21)(codemirror@6.0.1)(hono@3.11.7)(nanoid@5.0.4)(postcss@8.4.32)(typescript@5.3.3)(unified@11.0.4)(vue@3.3.12)

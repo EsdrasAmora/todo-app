@@ -8,6 +8,7 @@
   "scripts": {
     "clean": "rm -rf .turbo node_modules",
     "lint": "eslint .",
+    "codegen": "kysely-codegen --dialect postgres --camel-case --env-file ../../.env.local  --out-file ./index.ts",
     "format": "prettier --check . --ignore-path ../../.gitignore",
     "typecheck": "tsc --noEmit"
   },

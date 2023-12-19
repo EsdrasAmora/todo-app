@@ -2,7 +2,8 @@ import { CamelCasePlugin, Kysely } from 'kysely';
 import { PostgresJSDialect } from 'kysely-postgres-js';
 import postgres from 'postgres';
 
-import type { DB } from './db-schema';
+import type { DB } from '@repo/db';
+
 import { Env } from '../env';
 import { Log } from '../logger';
 
