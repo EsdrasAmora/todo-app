@@ -15,8 +15,9 @@
     "TODO": "add a migration name parameter to create",
     "create-migration": "atlas migrate diff --env local",
     "web": "atlas schema inspect --web --env local",
-    "run-pending-migrations": "atlas migrate apply --env local",
+    "apply-pending-migrations": "atlas migrate apply --env local",
     "lint-migrations": "atlas migrate lint --env local",
+    "atlas-cloud-push": "atlas migrate push app --env local",
     "format": "prettier --check . --ignore-path ../../.gitignore",
     "typecheck": "tsc --noEmit"
   },
