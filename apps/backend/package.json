@@ -23,7 +23,8 @@
     "test:coverage": "vitest run --coverage",
     "db:create-migration": "drizzle-kit generate:pg",
     "db:push": "drizzle-kit push:pg",
-    "db:seed": "npm run script -- ./src/scripts/seed"
+    "db:seed": "npm run script -- ./src/scripts/seed",
+    "potato": "kysely-codegen"
   },
   "dependencies": {
     "@google-cloud/logging-winston": "6.0.0",
@@ -34,6 +35,8 @@
     "drizzle-orm": "0.29.1",
     "hono": "3.11.7",
     "jsonwebtoken": "9.0.2",
+    "kysely": "0.26.3",
+    "kysely-postgres-js": "2.0.0",
     "p-defer": "4.0.0",
     "postgres": "3.4.3",
     "superjson": "2.2.1",

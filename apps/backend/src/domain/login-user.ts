@@ -1,9 +1,7 @@
 import { TRPCError } from '@trpc/server';
-import { eq } from 'drizzle-orm';
 import { z } from 'zod';
 
-import { DbClient } from '../db/client';
-import { UserEntity } from '../db/schema';
+import { Database } from '../db/client';
 import { CryptoService } from '../shared/crypto';
 import { JwtService } from '../shared/jwt';
 
@@ -14,7 +12,7 @@ export class LoginUser {
   });
 
   static async execute(input: z.input<typeof this.schema>) {
-    const user = await DbClient.query.UserEntity.findFirst({ where: eq(UserEntity.email, input.email) });
+    const user = await Database.selectFrom('users').selectAll().where('email', '=', input.email).executeTakeFirst();
     if (!user) {
       throw new TRPCError({ code: 'NOT_FOUND', message: 'User not found' });
     }

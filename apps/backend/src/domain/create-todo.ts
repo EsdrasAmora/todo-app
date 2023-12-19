@@ -1,8 +1,7 @@
 import { z } from 'zod';
 
 import type { AuthenticatedContext } from '../context';
-import { DbClient } from '../db/client';
-import { TodoEntity } from '../db/schema';
+import { Database } from '../db/client';
 
 export class CreateTodo {
   static schema = z.object({
@@ -10,11 +9,10 @@ export class CreateTodo {
     description: z.string().nullish(),
   });
 
-  static async execute(input: z.input<typeof this.schema>, { userId }: AuthenticatedContext) {
-    const [result] = await DbClient.insert(TodoEntity)
+  static execute(input: z.input<typeof this.schema>, { userId }: AuthenticatedContext) {
+    return Database.insertInto('todos')
       .values({ ...input, userId })
-      .returning();
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    return result!;
+      .returningAll()
+      .executeTakeFirstOrThrow();
   }
 }

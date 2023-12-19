@@ -1,8 +1,6 @@
-import { eq } from 'drizzle-orm';
 import { beforeEach, describe, expect, it } from 'vitest';
 
-import { DbClient } from '../db/client';
-import { TodoEntity, UserEntity } from '../db/schema';
+import { Database } from '../db/client';
 import { checkAuthenticatedRoute } from './auth-check';
 import { clearDatabase } from './clear-db';
 import { createCaller, createTodo, createUser } from './test-client';
@@ -19,10 +17,10 @@ describe('Delete User', () => {
 
     await client.user.delete();
 
-    const todos = await DbClient.query.TodoEntity.findMany({ where: eq(TodoEntity.userId, userId) });
+    const todos = await Database.selectFrom('todos').selectAll().where('userId', '=', userId).execute();
     expect(todos).to.be.empty;
 
-    const user = await DbClient.query.UserEntity.findFirst({ where: eq(UserEntity.id, userId) });
+    const user = await Database.selectFrom('users').selectAll().where('id', '=', userId).executeTakeFirst();
     expect(user).to.be.undefined;
   });
 

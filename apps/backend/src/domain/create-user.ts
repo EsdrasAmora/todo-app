@@ -1,15 +1,16 @@
 import { TRPCError } from '@trpc/server';
-import { eq } from 'drizzle-orm';
 import { z } from 'zod';
 
-import { DbClient } from '../db/client';
-import { UserEntity } from '../db/schema';
+import { Database } from '../db/client';
 import { Env } from '../env';
 import { CryptoService } from '../shared/crypto';
 
 export class CreateUser {
   static async execute(input: z.input<typeof this.schema>) {
-    const sameEmailUser = await DbClient.query.UserEntity.findFirst({ where: eq(UserEntity.email, input.email) });
+    const sameEmailUser = await Database.selectFrom('users')
+      .where('email', '=', input.email)
+      .select('email')
+      .executeTakeFirst();
 
     if (sameEmailUser) {
       throw new TRPCError({ code: 'CONFLICT', message: 'Email already in use' });
@@ -17,13 +18,12 @@ export class CreateUser {
 
     const passwordSeed = CryptoService.createSalt();
     const hashedPassword = CryptoService.hashSaltPassword(input.password, passwordSeed);
-
-    const [result] = await DbClient.insert(UserEntity)
+    const result = await Database.insertInto('users')
       .values({ email: input.email, passwordSeed, hashedPassword })
-      .returning();
+      .returningAll()
+      .executeTakeFirstOrThrow();
 
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    return result!;
+    return result;
   }
 
   static schema = z.object({

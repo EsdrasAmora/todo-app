@@ -1,9 +1,7 @@
-import { eq } from 'drizzle-orm';
 import { beforeEach, describe, expect, it } from 'vitest';
 
-import { DbClient } from '../db/client';
-import { TodoEntity, UserEntity } from '../db/schema';
-import { assertThrows, assertValidationError, isDefined } from './assert-helpers';
+import { Database } from '../db/client';
+import { assertThrows, assertValidationError } from './assert-helpers';
 import { checkAuthenticatedRoute } from './auth-check';
 import { clearDatabase } from './clear-db';
 import { createCaller, createTodo, createUser } from './test-client';
@@ -32,22 +30,23 @@ describe('Update Todo', () => {
     expect(todo.createdAt.getTime()).to.be.eq(dbTodo.createdAt.getTime());
     expect(todo.updatedAt).to.be.greaterThan(dbTodo.updatedAt).and.to.be.greaterThan(todo.createdAt);
 
-    const todoDb = await DbClient.query.TodoEntity.findFirst({ where: eq(TodoEntity.id, todo.id) });
+    const todoDb = await Database.selectFrom('todos').selectAll().where('id', '=', todo.id).executeTakeFirstOrThrow();
     expect(todoDb).toMatchObject(todo);
   });
 
   checkAuthenticatedRoute('todo', 'findUserTodos');
 
   it('should error: user should be only able to update its own todos', async () => {
-    const [val] = await DbClient.insert(UserEntity)
+    const val = await Database.insertInto('users')
       .values({ passwordSeed: 'a', email: 'a', hashedPassword: 'a' })
-      .returning();
-
-    isDefined(val);
-    const [otherUserTodo] = await DbClient.insert(TodoEntity).values({ userId: val.id, title: 'e' }).returning();
+      .returning('id')
+      .executeTakeFirstOrThrow();
+    const otherUserTodo = await Database.insertInto('todos')
+      .values({ userId: val.id, title: 'e' })
+      .returning('id')
+      .executeTakeFirstOrThrow();
     const { id: userId } = await createUser();
     const client = createCaller(userId);
-    isDefined(otherUserTodo);
     await assertThrows(client.todo.update({ todoId: otherUserTodo.id }), 'Resource not found');
   });
 
@@ -55,9 +54,10 @@ describe('Update Todo', () => {
     const { id: userId } = await createUser();
     const client = createCaller(userId);
     const dbTodo = await createTodo(userId);
-
-    await DbClient.update(TodoEntity).set({ deletedAt: new Date() }).where(eq(TodoEntity.id, dbTodo.id)).execute();
-
+    await Database.updateTable('todos')
+      .set({ deletedAt: new Date() })
+      .where('id', '=', dbTodo.id)
+      .executeTakeFirstOrThrow();
     await assertThrows(client.todo.delete({ todoId: dbTodo.id }), 'Resource not found');
   });
 

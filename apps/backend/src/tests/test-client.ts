@@ -1,25 +1,24 @@
 import { faker } from '@faker-js/faker';
 
-import { DbClient } from '../db/client';
-import { TodoEntity, UserEntity } from '../db/schema';
+import { Database } from '../db/client';
 import { appRouter } from '../presentation/router';
 
 export async function createUser() {
-  const [result] = await DbClient.insert(UserEntity)
+  const result = await Database.insertInto('users')
     .values({
       email: faker.internet.email(),
       hashedPassword: 'anything',
       passwordSeed: 'anything',
     })
-    .returning();
+    .returningAll()
+    .executeTakeFirstOrThrow();
 
-  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-  return result!;
+  return result;
 }
 
 export async function createTodo(userId: string) {
   const createdAt = faker.date.past();
-  const [result] = await DbClient.insert(TodoEntity)
+  const result = await Database.insertInto('todos')
     .values({
       title: faker.lorem.sentence(),
       description: faker.lorem.paragraph(),
@@ -27,10 +26,10 @@ export async function createTodo(userId: string) {
       updatedAt: new Date(createdAt.getTime() + 10 * 60 * 1000),
       createdAt,
     })
-    .returning();
+    .returningAll()
+    .executeTakeFirstOrThrow();
 
-  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-  return result!;
+  return result;
 }
 
 export function createCaller(userId: string) {

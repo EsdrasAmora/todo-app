@@ -1,12 +1,11 @@
 import { faker } from '@faker-js/faker';
 
-import { DbClient, Sql } from '../db/client';
-import { TodoEntity, UserEntity } from '../db/schema';
+import { Database, Sql } from '../db/client';
 import { CryptoService } from '../shared/crypto';
 
 console.info('Seeding database');
 let flag = false;
-const users = await DbClient.insert(UserEntity)
+const users = await Database.insertInto('users')
   .values(
     [...new Array(5)].map(() => {
       const password = faker.internet.password();
@@ -23,9 +22,10 @@ const users = await DbClient.insert(UserEntity)
       };
     }),
   )
-  .returning();
+  .returningAll()
+  .execute();
 
-await DbClient.insert(TodoEntity)
+await Database.insertInto('todos')
   .values(
     [...new Array(40)].map(() => ({
       userId: faker.helpers.arrayElement(users).id,
@@ -36,5 +36,5 @@ await DbClient.insert(TodoEntity)
   .execute();
 
 // If you don't close the it will wait for the connection to timeout
-await Sql.end();
+await Database.destroy();
 console.info('Database seeded successfully');

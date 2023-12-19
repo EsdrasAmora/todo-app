@@ -1,8 +1,6 @@
-import { inArray } from 'drizzle-orm';
 import { beforeEach, describe, expect, it } from 'vitest';
 
-import { DbClient } from '../db/client';
-import { TodoEntity } from '../db/schema';
+import { Database } from '../db/client';
 import { isDefined } from './assert-helpers';
 import { checkAuthenticatedRoute } from './auth-check';
 import { clearDatabase } from './clear-db';
@@ -31,9 +29,9 @@ describe('Find user todos', () => {
 
     isDefined(softDel1);
     isDefined(softDel2);
-    await DbClient.update(TodoEntity)
+    await Database.updateTable('todos')
       .set({ deletedAt: new Date() })
-      .where(inArray(TodoEntity.id, [softDel1.id, softDel2.id]))
+      .where('id', 'in', [softDel1.id, softDel2.id])
       .execute();
 
     const todos = await client.todo.findUserTodos();

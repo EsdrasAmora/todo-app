@@ -1,8 +1,6 @@
-import { eq } from 'drizzle-orm';
 import { beforeEach, describe, expect, it } from 'vitest';
 
-import { DbClient } from '../db/client';
-import { TodoEntity } from '../db/schema';
+import { Database } from '../db/client';
 import { assertValidationError } from './assert-helpers';
 import { checkAuthenticatedRoute } from './auth-check';
 import { clearDatabase } from './clear-db';
@@ -23,7 +21,7 @@ describe('Create Todo', () => {
     expect(todo.completed).to.be.false;
     expect(todo.createdAt).to.be.greaterThanOrEqual(before);
     expect(todo.updatedAt).to.be.greaterThanOrEqual(before);
-    const todoDb = await DbClient.query.TodoEntity.findFirst({ where: eq(TodoEntity.id, todo.id) });
+    const todoDb = await Database.selectFrom('todos').selectAll().where('id', '=', todo.id).executeTakeFirstOrThrow();
     expect(todoDb).toMatchObject(todo);
   });
 

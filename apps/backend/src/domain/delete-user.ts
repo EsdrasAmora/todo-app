@@ -1,16 +1,11 @@
-import { eq } from 'drizzle-orm';
-
 import type { AuthenticatedContext } from '../context';
-import { DbClient } from '../db/client';
-import { TodoEntity, UserEntity } from '../db/schema';
+import { Database } from '../db/client';
 
 export class DeleteUser {
-  static async execute({ userId }: AuthenticatedContext) {
-    await DbClient.transaction((tx) => {
-      return Promise.all([
-        tx.delete(TodoEntity).where(eq(TodoEntity.userId, userId)),
-        tx.delete(UserEntity).where(eq(UserEntity.id, userId)),
-      ]);
+  static execute({ userId }: AuthenticatedContext) {
+    return Database.transaction().execute(async (trx) => {
+      await trx.deleteFrom('todos').where('userId', '=', userId).execute();
+      await trx.deleteFrom('users').where('id', '=', userId).execute();
     });
   }
 }

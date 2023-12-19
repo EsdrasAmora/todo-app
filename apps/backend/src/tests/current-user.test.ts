@@ -1,8 +1,6 @@
-import { eq } from 'drizzle-orm';
 import { beforeEach, describe, expect, it } from 'vitest';
 
-import { DbClient } from '../db/client';
-import { UserEntity } from '../db/schema';
+import { Database } from '../db/client';
 import { assertThrows } from './assert-helpers';
 import { checkAuthenticatedRoute } from './auth-check';
 import { clearDatabase } from './clear-db';
@@ -18,7 +16,7 @@ describe('Fetch Current user', () => {
     const client = createCaller(userId);
 
     const user = await client.user.me();
-    const dbUser = await DbClient.query.UserEntity.findFirst({ where: eq(UserEntity.id, userId) });
+    const dbUser = await Database.selectFrom('users').selectAll().where('id', '=', userId).executeTakeFirst();
 
     expect(dbUser).toMatchObject(user);
   });
@@ -28,7 +26,7 @@ describe('Fetch Current user', () => {
   it('should error: deleted user', async () => {
     const { id: userId } = await createUser();
     const client = createCaller(userId);
-    await DbClient.delete(UserEntity).where(eq(UserEntity.id, userId));
+    await Database.deleteFrom('users').where('id', '=', userId).executeTakeFirstOrThrow();
 
     await assertThrows(client.user.me(), 'Resource not found');
   });

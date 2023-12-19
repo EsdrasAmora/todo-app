@@ -1,16 +1,14 @@
 import { TRPCError } from '@trpc/server';
-import { eq } from 'drizzle-orm';
 import { z } from 'zod';
 
 import type { AuthenticatedContext } from '../context';
-import { DbClient } from '../db/client';
-import { UserEntity } from '../db/schema';
+import { Database } from '../db/client';
 
 export class FetchCurrentUser {
   static schema = z.void();
 
   static async execute({ userId }: AuthenticatedContext) {
-    const user = await DbClient.query.UserEntity.findFirst({ where: eq(UserEntity.id, userId) });
+    const user = await Database.selectFrom('users').selectAll().where('id', '=', userId).executeTakeFirst();
     if (!user) {
       throw new TRPCError({ code: 'NOT_FOUND', message: 'Resource not found' });
     }

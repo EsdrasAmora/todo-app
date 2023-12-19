@@ -1,10 +1,8 @@
 import { TRPCError } from '@trpc/server';
-import { and, eq, isNull } from 'drizzle-orm';
 import { z } from 'zod';
 
 import type { AuthenticatedContext } from '../context';
-import { DbClient } from '../db/client';
-import { TodoEntity } from '../db/schema';
+import { Database } from '../db/client';
 
 export class DeleteTodo {
   static schema = z.object({
@@ -12,11 +10,14 @@ export class DeleteTodo {
   });
 
   static async execute({ todoId }: z.input<typeof this.schema>, { userId }: AuthenticatedContext) {
-    const { count } = await DbClient.update(TodoEntity)
+    const result = await Database.updateTable('todos')
       .set({ deletedAt: new Date() })
-      .where(and(eq(TodoEntity.id, todoId), eq(TodoEntity.userId, userId), isNull(TodoEntity.deletedAt)))
+      .where('id', '=', todoId)
+      .where('userId', '=', userId)
+      .where('deletedAt', 'is', null)
+      .returning('id')
       .execute();
-    if (count === 0) {
+    if (result.length === 0) {
       throw new TRPCError({ code: 'NOT_FOUND', message: 'Resource not found' });
     }
   }
