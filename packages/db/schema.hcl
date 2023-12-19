@@ -28,6 +28,11 @@ table "todos" {
     type    = boolean
     default = false
   }
+  column "foobar" {
+    null    = false
+    type    = boolean
+    default = false
+  }
   column "deleted_at" {
     null = true
     type = timestamptz
