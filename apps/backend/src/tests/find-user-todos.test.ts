@@ -11,10 +11,12 @@ describe('Find user todos', () => {
     return clearDatabase();
   });
 
-  it('should find user successfully', async () => {
+  it('should find only the current user todos', async () => {
     const { id: userId } = await createUser();
+    const { id: otherUserId } = await createUser();
     const client = createCaller(userId);
     const dbTodos = await Promise.all([...Array(5)].map(() => createTodo(userId)));
+    await Promise.all([...Array(2)].map(() => createTodo(otherUserId)));
 
     const todos = await client.todo.findUserTodos();
     expect(dbTodos.sort((a, b) => b.updatedAt.getTime() - a.updatedAt.getTime())).toMatchObject(todos);

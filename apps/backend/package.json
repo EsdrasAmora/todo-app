@@ -19,10 +19,9 @@
     "lint": "eslint src",
     "test:iteractive": "vitest",
     "test": "vitest --run",
-    "test:ui": "vitest --ui",
+    "test:ui": "vitest --ui --coverage",
     "test:coverage": "vitest run --coverage",
-    "db:seed": "npm run script -- ./src/scripts/seed",
-    "potato": "kysely-codegen"
+    "db:seed": "npm run script -- ./src/scripts/seed"
   },
   "dependencies": {
     "@google-cloud/logging-winston": "6.0.0",
