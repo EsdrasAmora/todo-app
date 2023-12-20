@@ -1,11 +1,5 @@
 import { EnvSchemaValidation } from './env-schema';
 
-if (process.env.IS_RUNNIG_ON_CLOUD) {
-  console.info('Fetching envs from ...');
-  await Promise.resolve();
-  console.info('envs fetched');
-}
-
 if (process.env.VITEST) {
   console.info('Importing test.env');
   const { join } = await import('path');

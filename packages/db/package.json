@@ -12,7 +12,6 @@
     "introspect": "atlas schema inspect -u \"postgresql://postgres_user:postgres_password@localhost:5432/todo_app_db?sslmode=disable\" --format '{{ sql . }}' > schema.sql",
     "push": "atlas schema apply --env local",
     "db:clean": "atlas schema clean --env local",
-    "TODO": "add a migration name parameter to create",
     "create-migration": "atlas migrate diff --env local",
     "web": "atlas schema inspect --web --env local",
     "apply-pending-migrations": "atlas migrate apply --env local",

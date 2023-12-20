@@ -1,7 +1,8 @@
 import type { inferRouterInputs, inferRouterOutputs } from '@trpc/server';
-import type { AppRouter } from 'presentation/router';
 
-export type { AppRouter } from 'presentation/router';
+import type { AppRouter } from './presentation/router';
+
+export type { AppRouter } from './presentation/router';
 
 /**
  * Inference helpers for input types
