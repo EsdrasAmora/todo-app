@@ -1,33 +1,25 @@
-import { beforeEach, describe, expect, it } from 'vitest';
+import { beforeEach, describe, expect } from 'vitest';
 
 import { Database } from '../db/client';
 import { assertThrows } from './assert-helpers';
 import { checkAuthenticatedRoute } from './auth-check';
 import { clearDatabase } from './clear-db';
-import { createCaller, createUser } from './test-client';
+import { authTest } from './test-client';
 
 describe('Fetch Current user', () => {
   beforeEach(() => {
     return clearDatabase();
   });
 
-  it('should fetch current user successfully', async () => {
-    const { id: userId } = await createUser();
-    const client = createCaller(userId);
-
-    const user = await client.user.me();
-    const dbUser = await Database.selectFrom('users').selectAll().where('id', '=', userId).executeTakeFirst();
-
-    expect(dbUser).toMatchObject(user);
+  authTest('should fetch current user successfully', async ({ auth: { client, user } }) => {
+    const result = await client.user.me();
+    expect(user).toMatchObject(result);
   });
 
   checkAuthenticatedRoute('user', 'me');
 
-  it('should error: deleted user', async () => {
-    const { id: userId } = await createUser();
-    const client = createCaller(userId);
-    await Database.deleteFrom('users').where('id', '=', userId).executeTakeFirstOrThrow();
-
+  authTest('should error: deleted user', async ({ auth: { client, user } }) => {
+    await Database.deleteFrom('users').where('id', '=', user.id).executeTakeFirstOrThrow();
     await assertThrows(client.user.me(), 'Resource not found');
   });
 });

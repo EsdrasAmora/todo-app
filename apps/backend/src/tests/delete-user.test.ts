@@ -1,27 +1,24 @@
-import { beforeEach, describe, expect, it } from 'vitest';
+import { beforeEach, describe, expect } from 'vitest';
 
 import { Database } from '../db/client';
 import { checkAuthenticatedRoute } from './auth-check';
 import { clearDatabase } from './clear-db';
-import { createCaller, createTodo, createUser } from './test-client';
+import { authTest, createTodos } from './test-client';
 
 describe('Delete User', () => {
   beforeEach(() => {
     return clearDatabase();
   });
 
-  it('should delete successfully', async () => {
-    const { id: userId } = await createUser();
-    const client = createCaller(userId);
-    await Promise.all([...Array(5)].map(() => createTodo(userId)));
+  authTest('should delete successfully', async ({ auth: { user, client } }) => {
+    await createTodos(user.id, 5);
 
     await client.user.delete();
 
-    const todos = await Database.selectFrom('todos').selectAll().where('userId', '=', userId).execute();
+    const todos = await Database.selectFrom('todos').selectAll().where('userId', '=', user.id).execute();
     expect(todos).to.be.empty;
-
-    const user = await Database.selectFrom('users').selectAll().where('id', '=', userId).executeTakeFirst();
-    expect(user).to.be.undefined;
+    const result = await Database.selectFrom('users').selectAll().where('id', '=', user.id).executeTakeFirst();
+    expect(result).to.be.undefined;
   });
 
   //TODO: remove latter

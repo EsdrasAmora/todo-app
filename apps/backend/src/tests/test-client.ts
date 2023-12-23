@@ -1,4 +1,5 @@
 import { faker } from '@faker-js/faker';
+import { test } from 'vitest';
 
 import { Database } from '../db/client';
 import { appRouter } from '../presentation/router';
@@ -32,6 +33,24 @@ export async function createTodo(userId: string) {
   return result;
 }
 
+export async function createTodos(userId: string, amount: number) {
+  const createdAt = faker.date.past();
+  const result = await Database.insertInto('todos')
+    .values(
+      [...Array(amount)].map(() => ({
+        title: faker.lorem.sentence(),
+        description: faker.lorem.paragraph(),
+        userId,
+        updatedAt: new Date(createdAt.getTime() + 10 * 60 * 1000),
+        createdAt,
+      })),
+    )
+    .returningAll()
+    .execute();
+
+  return result;
+}
+
 export function createCaller(userId: string) {
   return appRouter.createCaller({
     __type: 'AuthenticatedContext',
@@ -45,3 +64,20 @@ export function createCaller(userId: string) {
 export function createUnauthorizedCaller() {
   return appRouter.createCaller({ __type: 'UnauthenticatedContext', path: '/trpc', uuid: '', method: '' });
 }
+
+interface MyFixtures {
+  auth: {
+    client: ReturnType<typeof createCaller>;
+    user: AwaitedReturn<typeof createUser>;
+  };
+}
+
+export const authTest = test.extend<MyFixtures>({
+  // eslint-disable-next-line no-empty-pattern
+  auth: async ({}, use) => {
+    const user = await createUser();
+    const client = createCaller(user.id);
+
+    await use({ client, user });
+  },
+});

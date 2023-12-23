@@ -1,19 +1,17 @@
-import { beforeEach, describe, expect, it } from 'vitest';
+import { beforeEach, describe, expect } from 'vitest';
 
 import { Database } from '../db/client';
 import { assertValidationError } from './assert-helpers';
 import { checkAuthenticatedRoute } from './auth-check';
 import { clearDatabase } from './clear-db';
-import { createCaller, createUser } from './test-client';
+import { authTest } from './test-client';
 
 describe('Create Todo', () => {
   beforeEach(() => {
     return clearDatabase();
   });
 
-  it('should create a todo successfully', async () => {
-    const { id: userId } = await createUser();
-    const client = createCaller(userId);
+  authTest('should create a todo successfully', async ({ auth: { client } }) => {
     const before = new Date();
     const todo = await client.todo.create({ title: 'title', description: 'description' });
     expect(todo.description).to.be.equal('description');
@@ -27,9 +25,7 @@ describe('Create Todo', () => {
 
   checkAuthenticatedRoute('todo', 'create');
 
-  it('should error: empty title', async () => {
-    const { id: userId } = await createUser();
-    const client = createCaller(userId);
+  authTest('should error: empty title', async ({ auth: { client } }) => {
     await assertValidationError(
       client.todo.create({ title: '', description: 'description' }),
       'String must contain at least 1 character(s)',
