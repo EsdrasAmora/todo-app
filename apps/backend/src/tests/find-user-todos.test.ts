@@ -1,33 +1,30 @@
-import { beforeEach, describe, expect, it } from 'vitest';
+import { beforeEach, describe, expect } from 'vitest';
 
 import { Database } from '../db/client';
 import { isDefined } from './assert-helpers';
 import { checkAuthenticatedRoute } from './auth-check';
 import { clearDatabase } from './clear-db';
-import { createCaller, createTodo, createUser } from './test-client';
+import { authTest, createTodos, createUser } from './test-client';
 
 describe('Find user todos', () => {
   beforeEach(() => {
     return clearDatabase();
   });
 
-  it('should find only the current user todos', async () => {
-    const { id: userId } = await createUser();
+  authTest('should find only the current user todos', async ({ auth: { user, client } }) => {
     const { id: otherUserId } = await createUser();
-    const client = createCaller(userId);
-    const dbTodos = await Promise.all([...Array(5)].map(() => createTodo(userId)));
-    await Promise.all([...Array(2)].map(() => createTodo(otherUserId)));
+    const dbTodos = await createTodos(user.id, 5);
+    await createTodos(otherUserId, 2);
 
     const todos = await client.todo.findUserTodos();
+    expect(todos).length(5);
     expect(dbTodos.sort((a, b) => b.updatedAt.getTime() - a.updatedAt.getTime())).toMatchObject(todos);
   });
 
   checkAuthenticatedRoute('todo', 'findUserTodos');
 
-  it('sould omit soft deleted todos', async () => {
-    const { id: userId } = await createUser();
-    const client = createCaller(userId);
-    const [softDel1, softDel2, ...dbTodos] = await Promise.all([...Array(5)].map(() => createTodo(userId)));
+  authTest('sould omit soft deleted todos', async ({ auth: { client, user } }) => {
+    const [softDel1, softDel2, ...dbTodos] = await createTodos(user.id, 5);
 
     isDefined(softDel1);
     isDefined(softDel2);

@@ -34,26 +34,16 @@ describe('Create User', () => {
     await assertValidationError(result, 'Invalid email');
   });
 
-  describe('should error: invalid password', () => {
-    it('should be missing a uppercase letter', async () => {
-      const client = createUnauthorizedCaller();
-      const result = client.user.create({ email: 'foo@bar.com', password: 'invalidpassword1' });
-      await assertValidationError(result, 'Must contain at least one uppercase letter');
-    });
-    it('should be missing a lowercasse letter', async () => {
-      const client = createUnauthorizedCaller();
-      const result = client.user.create({ email: 'foo@bar.com', password: 'INVALIDPASSWORD1' });
-      await assertValidationError(result, 'Must contain at least one lowercase letter');
-    });
-    it('should be missing a digit', async () => {
-      const client = createUnauthorizedCaller();
-      const result = client.user.create({ email: 'foo@bar.com', password: 'InvalidPassowrd' });
-      await assertValidationError(result, 'Must contain at least one digit');
-    });
-    it('should be less than the mininun lenght', async () => {
-      const client = createUnauthorizedCaller();
-      const result = client.user.create({ email: 'foo@bar.com', password: 'A1b' });
-      await assertValidationError(result, `String must contain at least ${Env.PASSWORD_MIN_LENGTH} character(s)`);
-    });
+  const passwordValidationCases = it.each([
+    ['invalidpassword1', 'Must contain at least one uppercase letter'],
+    ['INVALIDPASSWORD1', 'Must contain at least one lowercase letter'],
+    ['InvalidPassowrd', 'Must contain at least one digit'],
+    ['A1b', `String must contain at least ${Env.PASSWORD_MIN_LENGTH} character(s)`],
+  ]);
+
+  passwordValidationCases('passwordValidation(%s) -> %s', async (password, errorMessage) => {
+    const client = createUnauthorizedCaller();
+    const result = client.user.create({ email: 'foo@bar.com', password });
+    await assertValidationError(result, errorMessage);
   });
 });
