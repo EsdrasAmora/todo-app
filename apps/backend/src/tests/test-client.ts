@@ -1,7 +1,8 @@
+import type { TestAPI } from 'vitest';
 import { faker } from '@faker-js/faker';
 import { test } from 'vitest';
 
-import { Database } from '../db/client';
+import { Database } from '../db';
 import { appRouter } from '../presentation/router';
 
 export async function createUser() {
@@ -65,19 +66,27 @@ export function createUnauthorizedCaller() {
   return appRouter.createCaller({ __type: 'UnauthenticatedContext', path: '/trpc', uuid: '', method: '' });
 }
 
-interface MyFixtures {
+interface AppFixtures {
   auth: {
     client: ReturnType<typeof createCaller>;
     user: AwaitedReturn<typeof createUser>;
   };
+  unAuth: {
+    client: ReturnType<typeof createUnauthorizedCaller>;
+  };
 }
 
-export const authTest = test.extend<MyFixtures>({
+export const appTest: TestAPI<AppFixtures> = test.extend({
   // eslint-disable-next-line no-empty-pattern
   auth: async ({}, use) => {
     const user = await createUser();
     const client = createCaller(user.id);
 
     await use({ client, user });
+  },
+  // eslint-disable-next-line no-empty-pattern
+  unAuth: async ({}, use) => {
+    const client = createUnauthorizedCaller();
+    await use({ client });
   },
 });

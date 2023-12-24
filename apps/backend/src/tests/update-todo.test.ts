@@ -1,18 +1,18 @@
 import { randomUUID } from 'crypto';
 import { beforeEach, describe, expect } from 'vitest';
 
-import { Database } from '../db/client';
+import { Database } from '../db';
 import { assertThrows, assertValidationError } from './assert-helpers';
 import { checkAuthenticatedRoute } from './auth-check';
 import { clearDatabase } from './clear-db';
-import { authTest, createTodo } from './test-client';
+import { appTest, createTodo } from './test-client';
 
 describe('Update Todo', () => {
   beforeEach(() => {
     return clearDatabase();
   });
 
-  authTest('should update a todo successfully', async ({ auth: { user, client } }) => {
+  appTest('should update a todo successfully', async ({ auth: { user, client } }) => {
     const dbTodo = await createTodo(user.id);
 
     const todo = await client.todo.update({
@@ -35,7 +35,7 @@ describe('Update Todo', () => {
 
   checkAuthenticatedRoute('todo', 'findUserTodos');
 
-  authTest('should error: user should be only able to update its own todos', async ({ auth: { client } }) => {
+  appTest('should error: user should be only able to update its own todos', async ({ auth: { client } }) => {
     const otherUser = await Database.insertInto('users')
       .values({ passwordSeed: 'a', email: 'a', hashedPassword: 'a' })
       .returning('id')
@@ -47,11 +47,11 @@ describe('Update Todo', () => {
     await assertThrows(client.todo.update({ todoId: otherUserTodo.id }), 'Resource not found');
   });
 
-  authTest("should error: Todo doesn't exists", async ({ auth: { client } }) => {
+  appTest("should error: Todo doesn't exists", async ({ auth: { client } }) => {
     await assertThrows(client.todo.update({ todoId: randomUUID() }), 'Resource not found');
   });
 
-  authTest('should error: already deleted todo', async ({ auth: { client, user } }) => {
+  appTest('should error: already deleted todo', async ({ auth: { client, user } }) => {
     const dbTodo = await createTodo(user.id);
     await Database.updateTable('todos')
       .set({ deletedAt: new Date() })
@@ -60,11 +60,11 @@ describe('Update Todo', () => {
     await assertThrows(client.todo.delete({ todoId: dbTodo.id }), 'Resource not found');
   });
 
-  authTest('should error: invalid uuid', async ({ auth: { client } }) => {
+  appTest('should error: invalid uuid', async ({ auth: { client } }) => {
     await assertValidationError(client.todo.delete({ todoId: '123' }), 'Invalid uuid');
   });
 
-  authTest('should error: empty title', async ({ auth: { client, user } }) => {
+  appTest('should error: empty title', async ({ auth: { client, user } }) => {
     const dbTodo = await createTodo(user.id);
     await assertValidationError(
       client.todo.update({ todoId: dbTodo.id, title: '' }),

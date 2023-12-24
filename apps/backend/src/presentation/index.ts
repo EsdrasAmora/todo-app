@@ -11,7 +11,7 @@ import { secureHeaders } from 'hono/secure-headers';
 import { endTime, startTime, timing } from 'hono/timing';
 import pdefer from 'p-defer';
 
-import { Sql } from '../db/client';
+import { Sql } from '../db';
 import { Env } from '../env';
 import { Log } from '../logger';
 import { createOpenApiFetchHandler } from './fetch-adapter';

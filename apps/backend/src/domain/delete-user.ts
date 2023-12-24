@@ -1,5 +1,5 @@
 import type { AuthenticatedContext } from '../context';
-import { Database } from '../db/client';
+import { Database } from '../db';
 
 export class DeleteUser {
   static execute({ userId }: AuthenticatedContext) {

@@ -1,16 +1,16 @@
 import { beforeEach, describe, expect } from 'vitest';
 
-import { Database } from '../db/client';
+import { Database } from '../db';
 import { checkAuthenticatedRoute } from './auth-check';
 import { clearDatabase } from './clear-db';
-import { authTest, createTodos } from './test-client';
+import { appTest, createTodos } from './test-client';
 
 describe('Delete User', () => {
   beforeEach(() => {
     return clearDatabase();
   });
 
-  authTest('should delete successfully', async ({ auth: { user, client } }) => {
+  appTest('should delete successfully', async ({ auth: { user, client } }) => {
     await createTodos(user.id, 5);
 
     await client.user.delete();

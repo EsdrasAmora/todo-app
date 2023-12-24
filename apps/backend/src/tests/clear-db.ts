@@ -1,6 +1,6 @@
 import type { DB } from '@repo/db';
 
-import { Sql } from '../db/client';
+import { Sql } from '../db';
 
 const buildDeleteStatement = (tablenames: string[]) => `TRUNCATE TABLE ${tablenames.join(', ')} CASCADE;`;
 

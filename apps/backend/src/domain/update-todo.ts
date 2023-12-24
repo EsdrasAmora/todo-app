@@ -2,7 +2,7 @@ import { TRPCError } from '@trpc/server';
 import { z } from 'zod';
 
 import type { AuthenticatedContext } from '../context';
-import { Database } from '../db/client';
+import { Database } from '../db';
 
 export class UpdateTodo {
   static schema = z.object({
