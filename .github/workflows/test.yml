@@ -5,6 +5,8 @@ on:
       - main
       - develop
       - 'release/**'
+# https://turbo.build/repo/docs/ci/github-actions
+# https://pnpm.io/continuous-integration#github-actions
 jobs:
   test:
     services:
@@ -21,6 +23,9 @@ jobs:
           --health-retries 5
         ports:
           - 5432:5432
+    env:
+      TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
+      TURBO_TEAM: ${{ vars.TURBO_TEAM }}
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
@@ -40,7 +45,7 @@ jobs:
           cache: 'pnpm'
 
       - name: Install dependencies
-        run: pnpm install
+        run: pnpm install --frozen-lockfile
 
       - name: Check types
         run: pnpm run typecheck
@@ -56,3 +61,6 @@ jobs:
 
       - name: Running tests
         run: pnpm run test
+
+        # add turbo cache
+        # add vitest coverage
