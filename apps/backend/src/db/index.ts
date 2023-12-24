@@ -16,9 +16,7 @@ export const Sql = postgres(Env.DATABASE_URL, {
   connect_timeout: Env.DATABASE_POOL_ACQUIRE_CONNECTION_TIMEOUT,
 });
 export const Database = new Kysely<DB>({
-  dialect: new PostgresJSDialect({
-    postgres: Sql,
-  }),
+  dialect: new PostgresJSDialect({ postgres: Sql }),
   plugins: [new CamelCasePlugin()],
 });
 const [date] = await Sql`SELECT NOW()`;

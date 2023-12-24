@@ -1,7 +1,7 @@
 import { TRPCError } from '@trpc/server';
 import { z } from 'zod';
 
-import { Database } from '../db/client';
+import { Database } from '../db';
 import { Env } from '../env';
 import { CryptoService } from '../shared/crypto';
 

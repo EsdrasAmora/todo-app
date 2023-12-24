@@ -1,7 +1,7 @@
 import type { DeferredPromise } from 'p-defer';
 import pdefer from 'p-defer';
 
-import { Sql } from './db/client';
+import { Sql } from './db';
 import { Env } from './env';
 import { AppError } from './error';
 import { Log } from './logger/index';

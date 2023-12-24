@@ -1,17 +1,17 @@
 import { beforeEach, describe, expect } from 'vitest';
 
-import { Database } from '../db/client';
+import { Database } from '../db';
 import { isDefined } from './assert-helpers';
 import { checkAuthenticatedRoute } from './auth-check';
 import { clearDatabase } from './clear-db';
-import { authTest, createTodos, createUser } from './test-client';
+import { appTest, createTodos, createUser } from './test-client';
 
 describe('Find user todos', () => {
   beforeEach(() => {
     return clearDatabase();
   });
 
-  authTest('should find only the current user todos', async ({ auth: { user, client } }) => {
+  appTest('should find only the current user todos', async ({ auth: { user, client } }) => {
     const { id: otherUserId } = await createUser();
     const dbTodos = await createTodos(user.id, 5);
     await createTodos(otherUserId, 2);
@@ -23,7 +23,7 @@ describe('Find user todos', () => {
 
   checkAuthenticatedRoute('todo', 'findUserTodos');
 
-  authTest('sould omit soft deleted todos', async ({ auth: { client, user } }) => {
+  appTest('sould omit soft deleted todos', async ({ auth: { client, user } }) => {
     const [softDel1, softDel2, ...dbTodos] = await createTodos(user.id, 5);
 
     isDefined(softDel1);

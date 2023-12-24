@@ -1,6 +1,6 @@
 import { faker } from '@faker-js/faker';
 
-import { Database } from '../db/client';
+import { Database } from '../db';
 import { CryptoService } from '../shared/crypto';
 
 console.info('Seeding database');

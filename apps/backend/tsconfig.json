@@ -4,8 +4,8 @@
     "tsBuildInfoFile": "node_modules/.cache/tsbuildinfo.json",
     "noEmit": false,
     "moduleResolution": "Bundler",
-    "skipLibCheck": true
-    // "composite": true
+    "skipLibCheck": true,
+    "composite": true
     // "declaration": true,
     // "declarationMap": false
   },
