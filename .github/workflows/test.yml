@@ -7,6 +7,8 @@ on:
       - 'release/**'
 # https://turbo.build/repo/docs/ci/github-actions
 # https://pnpm.io/continuous-integration#github-actions
+# https://docs.docker.com/engine/reference/commandline/create/#options
+#TODO: only run format, lint and tests where necessary. Add vitest coverage
 jobs:
   test:
     services:
@@ -18,9 +20,10 @@ jobs:
           POSTGRES_DB: todo_app_db
         options: >-
           --health-cmd pg_isready
-          --health-interval 10s
+          --health-interval 5s
           --health-timeout 5s
           --health-retries 5
+          --tmpfs /var/lib/postgresql/data
         ports:
           - 5432:5432
     env:
@@ -61,6 +64,3 @@ jobs:
 
       - name: Running tests
         run: pnpm run test
-
-        # add turbo cache
-        # add vitest coverage
