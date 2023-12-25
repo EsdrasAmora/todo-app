@@ -2,21 +2,47 @@
 
 ## Getting Started
 
-Make sure to have Docker desktop installed and that nothing else is running at http://localhost:3000.  
-Run `docker compose up -d --build` (root privileges may be necessary), migrate the database `pnpm migrate:dev`, then visit http://localhost:3000.  
-Use the swagger UI to make requests against the web server.  
-\*\*Obs: it was developed and tested only on Linux (EndevaourOS).
-If the server cannot find the database with errors like `Can't reach database server at: '172.17.0.1':'5432'`, [check this article](https://medium.com/@TimvanBaarsen/how-to-connect-to-the-docker-host-from-inside-a-docker-container-112b4c71bc66)
+### Requirements
 
-## Developing and Testing
+Make sure you have the following dependencies installed on your enviroment:
 
-Create a .env file with the contents of the test.env file  
-You must have NodeJS LTS version and PNPM 7 or 8 installed.  
-Run `pnpm install` to install the packages, start the database with `docker compose up database -d`, and migrate the database `pnpm migrate:dev`.  
-Then run `pnpm test` to run the tests.  
-Or run `pnpm dev` to run the code with file watch.
+1. nodejs - Use [fnm](https://github.com/Schniz/fnm) to install the latest LTS version, same as in .npmrc
+1. [docker](https://docs.docker.com/get-docker/)
+1. [pnpm](https://pnpm.io/installation)
+1. [atlas](https://atlasgo.io/getting-started) - Database Schema and Migration management Tool
 
-## Architerure
+### Running tests and development mode
 
-The main idea here is to colocate use cases with schema definitions, keeping the presentation layer skinny as possible.  
-The use cases being so simple and using an ORM, Drizzle, make an extra data layer unnecessary.
+Run all command in the root directory
+
+```bash
+# install dependencies
+pnpm i
+# run the database in background
+docker compose up -d
+# migrate the database
+pnpm db:schema-push
+# run tests
+pnpm test
+# run all apps in watch mode
+pnpm dev
+# go to http://localhost:3000
+```
+
+## Monorepo
+
+1.  dev dependencies
+    1. all dev dependencies should be installed in root package.json to avoid version mismatches and other headaches.
+1.  directories
+    1. config
+       1. Place here code that _should_ be shared across **ALL** packages. They should be imported in the root package.json.
+    1. packages
+       1. Place here code that _can_ be shared across **multiple** packages. Avoid doing it for just organization purposes.
+    1. apps
+       1. These are the deployable code units.
+1.  cache (turbo cache)
+    1. if something is cached but shouldn't be, try to run `pnpm run clean:workspace`
+1.  test
+    1. we using Vitest for unit and integration tests, and playwright for E2E tests.
+1.  deploy
+    1. We using terraform to create the infrastructure and GitHub Actions for CI and CD pipelines.

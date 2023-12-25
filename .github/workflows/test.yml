@@ -8,7 +8,8 @@ on:
 # https://turbo.build/repo/docs/ci/github-actions
 # https://pnpm.io/continuous-integration#github-actions
 # https://docs.docker.com/engine/reference/commandline/create/#options
-#TODO: only run format, lint and tests where necessary. Add vitest coverage
+#TODO: only run format, lint and tests where necessary. Add vitest coverage.
+#Try using https://turbo.build/repo/docs/core-concepts/monorepos/skipping-tasks to skip all steps
 jobs:
   test:
     services:
