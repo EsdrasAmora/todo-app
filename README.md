@@ -27,6 +27,10 @@ pnpm test
 # run all apps in watch mode
 pnpm dev
 # go to http://localhost:3000
+#optionally seed the database:
+pnpm db:seed
+```
+
 ```
 
 ## Monorepo
@@ -46,3 +50,4 @@ pnpm dev
     1. we using Vitest for unit and integration tests, and playwright for E2E tests.
 1.  deploy
     1. We using terraform to create the infrastructure and GitHub Actions for CI and CD pipelines.
+```

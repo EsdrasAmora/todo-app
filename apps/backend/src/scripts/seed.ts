@@ -4,17 +4,12 @@ import { Database } from '../db';
 import { CryptoService } from '../shared/crypto';
 
 console.info('Seeding database');
-let flag = false;
 const users = await Database.insertInto('users')
   .values(
-    [...new Array(5)].map(() => {
-      const password = faker.internet.password();
+    [...new Array(5)].map((_, i) => {
+      const password = i === 0 ? 'ABCDabcd!@#$1234' : faker.internet.password();
       const salt = CryptoService.createSalt();
-      const email = faker.internet.email();
-      if (!flag) {
-        console.log(password, email);
-        flag = true;
-      }
+      const email = i === 0 ? 'test.taqtile@gmail.com' : faker.internet.email();
       return {
         email,
         hashedPassword: CryptoService.hashSaltPassword(password, salt),

@@ -1,0 +1,26 @@
+{
+  "name": "frontend",
+  "version": "0.0.1",
+  "scripts": {
+    "dev": "vite dev",
+    "build": "vite build",
+    "preview": "vite preview",
+    "test": "npm run test:integration && npm run test:unit",
+    "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
+    "check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
+    "test:integration": "playwright test",
+    "test:unit": "vitest"
+  },
+  "type": "module",
+  "dependencies": {
+    "@fontsource-variable/manrope": "^5.0.18",
+    "@repo/backend": "workspace:*",
+    "@trpc/client": "10.45.0",
+    "@trpc/server": "10.45.0",
+    "open-props": "1.6.16",
+    "superjson": "2.2.1"
+  },
+  "devDependencies": {
+    "typescript-svelte-plugin": "^0.3.36"
+  }
+}

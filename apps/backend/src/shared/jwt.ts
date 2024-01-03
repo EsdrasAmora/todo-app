@@ -15,13 +15,14 @@ export class JwtService {
       const splitToken = token.split(' ')[1];
       return this.jwtSchema.parse(jsonToken.verify(splitToken ?? '', Env.JWT_SECRET));
     } catch (_err) {
+      //check TokenExpiredError
       /* empty */
     }
     return null;
   }
 
   static sign(payload: object): string {
-    const token = jsonToken.sign({ data: payload }, Env.JWT_SECRET, { expiresIn: 60 });
+    const token = jsonToken.sign({ data: payload }, Env.JWT_SECRET, { expiresIn: Env.JWT_EXPIRATION_TIME });
     return `Bearer ${token}`;
   }
 }
