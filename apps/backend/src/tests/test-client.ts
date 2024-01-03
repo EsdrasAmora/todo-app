@@ -1,9 +1,10 @@
-import type { TestAPI } from 'vitest';
+import type { Mock, TestAPI } from 'vitest';
 import { faker } from '@faker-js/faker';
-import { test } from 'vitest';
+import { test, vi } from 'vitest';
 
 import { Database } from '../db';
 import { appRouter } from '../presentation/router';
+import { trpc } from '../presentation/trpc.context';
 
 export async function createUser() {
   const result = await Database.insertInto('users')
@@ -52,18 +53,34 @@ export async function createTodos(userId: string, amount: number) {
   return result;
 }
 
+const trpcCaller = trpc.createCallerFactory(appRouter);
 export function createCaller(userId: string) {
-  return appRouter.createCaller({
+  return trpcCaller({
     __type: 'AuthenticatedContext',
     userId,
     path: '/trpc',
     uuid: '',
     method: '',
+    setCookie: () => {},
+    setHeader: () => {},
   });
 }
 
+type _x = Mock;
+
 export function createUnauthorizedCaller() {
-  return appRouter.createCaller({ __type: 'UnauthenticatedContext', path: '/trpc', uuid: '', method: '' });
+  const spies = {
+    setCookie: vi.fn(),
+    setHeader: vi.fn(),
+  };
+  const client = trpcCaller({
+    __type: 'UnauthenticatedContext',
+    path: '/trpc',
+    uuid: '',
+    method: '',
+    ...spies,
+  });
+  return { client, spies };
 }
 
 interface AppFixtures {
@@ -71,9 +88,7 @@ interface AppFixtures {
     client: ReturnType<typeof createCaller>;
     user: AwaitedReturn<typeof createUser>;
   };
-  unAuth: {
-    client: ReturnType<typeof createUnauthorizedCaller>;
-  };
+  unAuth: ReturnType<typeof createUnauthorizedCaller>;
 }
 
 export const appTest: TestAPI<AppFixtures> = test.extend({
@@ -86,7 +101,7 @@ export const appTest: TestAPI<AppFixtures> = test.extend({
   },
   // eslint-disable-next-line no-empty-pattern
   unAuth: async ({}, use) => {
-    const client = createUnauthorizedCaller();
-    await use({ client });
+    const result = createUnauthorizedCaller();
+    await use(result);
   },
 });

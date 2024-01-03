@@ -2,7 +2,7 @@ import type { createUnauthorizedCaller } from './test-client';
 import { assertThrows } from './assert-helpers';
 import { appTest } from './test-client';
 
-type Router = Omit<ReturnType<typeof createUnauthorizedCaller>, 'mutation' | 'subscription' | 'query'>;
+type Router = Omit<ReturnType<typeof createUnauthorizedCaller>['client'], 'mutation' | 'subscription' | 'query'>;
 type RouterKeys = keyof Router;
 
 export function checkAuthenticatedRoute<T extends RouterKeys>(key: T, method: keyof Router[T]) {

@@ -1,6 +1,7 @@
 import { TRPCError } from '@trpc/server';
 import { z } from 'zod';
 
+import type { Context } from '../context';
 import { Database } from '../db';
 import { CryptoService } from '../shared/crypto';
 import { JwtService } from '../shared/jwt';
@@ -11,7 +12,7 @@ export class LoginUser {
     password: z.string(),
   });
 
-  static async execute(input: z.input<typeof this.schema>) {
+  static async execute(input: z.input<typeof this.schema>, { setCookie }: Context) {
     const user = await Database.selectFrom('users').selectAll().where('email', '=', input.email).executeTakeFirst();
     if (!user) {
       throw new TRPCError({ code: 'NOT_FOUND', message: 'User not found' });
@@ -19,6 +20,8 @@ export class LoginUser {
     if (CryptoService.hashSaltPassword(input.password, user.passwordSeed) !== user.hashedPassword) {
       throw new TRPCError({ code: 'BAD_REQUEST', message: 'Invalid credentials' });
     }
-    return { authorization: JwtService.sign({ userId: user.id }) };
+    const token = JwtService.sign({ userId: user.id });
+    setCookie('authorization', token);
+    return { authorization: token };
   }
 }

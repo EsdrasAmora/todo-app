@@ -7,6 +7,8 @@ export type BaseContext = {
   sessionId?: string;
   userAgent?: string;
   ip?: string;
+  setCookie: (name: string, value: string) => void;
+  setHeader: (name: string, value: string) => void;
 };
 
 export type UnauthenticatedContext = BaseContext & {

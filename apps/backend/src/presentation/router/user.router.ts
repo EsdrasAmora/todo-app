@@ -37,7 +37,7 @@ export const userRouter = trpc.router({
     })
     .input(LoginUser.schema)
     .output(z.object({ authorization: z.string() }))
-    .mutation(({ input }) => LoginUser.execute(input)),
+    .mutation(({ input, ctx }) => LoginUser.execute(input, ctx)),
   me: authorizedProcedure
     .meta({
       openapi: {
