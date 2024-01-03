@@ -10,7 +10,7 @@ describe('Login User', () => {
     return clearDatabase();
   });
 
-  appTest('should login successfully', async ({ unAuth: { client } }) => {
+  appTest('should login successfully', async ({ unAuth: { client, spies } }) => {
     const before = new Date();
     const user = await client.user.create({ email: 'temp@bar.com', password: 'ValidPassword12' });
     const result = await client.user.login({ email: 'temp@bar.com', password: 'ValidPassword12' });
@@ -18,6 +18,7 @@ describe('Login User', () => {
     isDefined(decodedToken);
     expect(decodedToken.data.userId).to.be.eq(user.id);
     expect(decodedToken.iat * 1000).to.be.approximately(before.getTime(), 1000);
+    expect(spies.setCookie.mock.calls[0]).to.be.deep.eq(['authorization', result.authorization]);
   });
 
   appTest('should error: email not found', async ({ unAuth: { client } }) => {

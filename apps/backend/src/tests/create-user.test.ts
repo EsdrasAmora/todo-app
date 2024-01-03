@@ -39,7 +39,7 @@ describe('Create User', () => {
   ]);
 
   passwordValidationCases('passwordValidation(%s) -> %s', async (password, errorMessage) => {
-    const client = createUnauthorizedCaller();
+    const { client } = createUnauthorizedCaller();
     const result = client.user.create({ email: 'foo@bar.com', password });
     await assertValidationError(result, errorMessage);
   });
