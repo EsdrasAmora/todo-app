@@ -6,7 +6,7 @@ import { fileURLToPath } from 'url';
 
 /** @type { PrettierConfig | SortImportsConfig | TailwindConfig } */
 const config = {
-  plugins: ['@ianvs/prettier-plugin-sort-imports', 'prettier-plugin-tailwindcss'],
+  plugins: ['@ianvs/prettier-plugin-sort-imports', 'prettier-plugin-tailwindcss', 'prettier-plugin-svelte'],
   tailwindConfig: fileURLToPath(new URL('../../config/tailwind/index.ts', import.meta.url)),
   importOrder: [
     '<TYPES>',
@@ -25,6 +25,7 @@ const config = {
   ],
   importOrderParserPlugins: ['typescript', 'jsx'],
   importOrderTypeScriptVersion: '4.4.0',
+  overrides: [{ files: '*.svelte', options: { parser: 'svelte' } }],
   trailingComma: 'all',
   singleQuote: true,
   printWidth: 120,

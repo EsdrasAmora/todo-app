@@ -15,6 +15,9 @@ RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
 
 FROM build AS backend-build
 RUN pnpm --filter=backend run typecheck && pnpm --filter=backend run build
+# dev dependencies are not beeing pruned properly
+# https://github.com/pnpm/pnpm/issues/6300
+# https://github.com/pnpm/pnpm/issues/6437
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm deploy --filter=backend --prod /prod/app1
 
 FROM base AS prod

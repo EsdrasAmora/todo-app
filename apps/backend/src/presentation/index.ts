@@ -34,7 +34,7 @@ app.use(
     }
     await compression(c, next);
     // this may should be somewhere else
-    c.res.headers.append('Content-Type', 'application/json');
+    // c.res.headers.append('Content-Type', 'application/json');
   },
   cors({ origin: Env.CORS_ALLOW_ORIGIN }),
   timing({ crossOrigin: true }),
@@ -44,12 +44,16 @@ app.use(
   asyncContext(),
 );
 
-app.get('/', (c) => c.redirect('/ui'));
+app.get('/', (c) => c.redirect('/swagger'));
 app.get('/docs.json', (c) => c.text(openApiJsonDoc));
 app.get('/ui', apiReference({ spec: { url: '/docs.json' } }));
 //Remove swagger if the Scalar is good enough
 app.get('/swagger', swaggerUI({ url: '/docs.json' }));
-app.use('/trpc/*', trpcServer({ router: appRouter }));
+app.use(
+  '/trpc/*',
+  //TODO: fix here
+  trpcServer({ router: appRouter, createContext: createTrpcContext, onError: undefined, batching: undefined }),
+);
 app.use('/api/*', (c) => {
   return createOpenApiFetchHandler({
     req: c.req.raw,

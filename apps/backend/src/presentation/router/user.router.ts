@@ -26,6 +26,12 @@ export const userRouter = trpc.router({
         method: 'POST',
         path: '/login',
         tags: ['User'],
+        example: {
+          request: {
+            email: 'test.taqtile@gmail.com',
+            password: 'ABCDabcd!@#$1234',
+          },
+        },
         summary: 'Login user',
       },
     })
@@ -44,7 +50,7 @@ export const userRouter = trpc.router({
     })
     .input(FetchCurrentUser.schema)
     .output(userSchema)
-    .mutation(({ ctx }) => FetchCurrentUser.execute(ctx)),
+    .query(({ ctx }) => FetchCurrentUser.execute(ctx)),
   delete: authorizedProcedure
     .meta({
       openapi: {

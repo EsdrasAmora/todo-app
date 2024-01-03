@@ -6,8 +6,6 @@
     "moduleResolution": "Bundler",
     "skipLibCheck": true,
     "composite": true
-    // "declaration": true,
-    // "declarationMap": false
   },
   "include": ["src", "vitest.config.ts"],
   "exclude": ["node_modules", "coverage", "dist"]

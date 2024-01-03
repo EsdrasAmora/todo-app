@@ -60,7 +60,7 @@ export const todoRouter = trpc.router({
     })
     .input(FindTodo.schema)
     .output(todoSchema)
-    .mutation(({ input, ctx }) => FindTodo.execute(input, ctx)),
+    .query(({ input, ctx }) => FindTodo.execute(input, ctx)),
   findUserTodos: authorizedProcedure
     .meta({
       openapi: {
@@ -73,5 +73,5 @@ export const todoRouter = trpc.router({
     })
     .input(FindUserTodos.schema)
     .output(todoSchema.array())
-    .mutation(({ ctx }) => FindUserTodos.execute(ctx)),
+    .query(({ ctx }) => FindUserTodos.execute(ctx)),
 });

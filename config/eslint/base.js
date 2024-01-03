@@ -32,7 +32,17 @@ const config = {
   parserOptions: {
     project: true,
     tsconfigRootDir: '.',
+    extraFileExtensions: ['.svelte'],
   },
+  overrides: [
+    {
+      files: ['*.svelte'],
+      parser: 'svelte-eslint-parser',
+      parserOptions: {
+        parser: '@typescript-eslint/parser',
+      },
+    },
+  ],
   reportUnusedDisableDirectives: true,
   rules: {
     'turbo/no-undeclared-env-vars': 'off',
@@ -65,7 +75,6 @@ const config = {
     '@typescript-eslint/no-unsafe-return': 'off',
     '@typescript-eslint/no-explicit-any': 'off',
     '@typescript-eslint/no-unsafe-argument': 'off',
-
     '@typescript-eslint/consistent-type-imports': [
       'warn',
       { prefer: 'type-imports', fixStyle: 'separate-type-imports' },
