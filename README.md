@@ -28,7 +28,7 @@ pnpm test
 pnpm dev
 # Access the backend at http://localhost:3000 and the frontend at http://localhost:5173
 # Optionally seed the database:
-pnpm db:seed
+pnpm backend:seed
 ```
 
 ## Monorepo
