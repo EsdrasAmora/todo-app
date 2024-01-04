@@ -63,5 +63,5 @@ jobs:
       - name: Push schema to test db
         run: pnpm run db:schema-push
 
-      - name: Running tests
-        run: pnpm run test
+      - name: Run backend tests
+        run: pnpm run backend:test
