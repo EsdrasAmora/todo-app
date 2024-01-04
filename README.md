@@ -13,7 +13,7 @@ Make sure you have the following dependencies installed on your enviroment:
 
 ### Running tests and development mode
 
-Run all command in the root directory
+Run all the following commands in the root directory
 
 ```bash
 # install dependencies
@@ -26,11 +26,9 @@ pnpm db:schema-push
 pnpm test
 # run all apps in watch mode
 pnpm dev
-# go to http://localhost:3000
-#optionally seed the database:
+# Access the backend at http://localhost:3000 and the frontend at http://localhost:5173
+# Optionally seed the database:
 pnpm db:seed
-```
-
 ```
 
 ## Monorepo
@@ -50,4 +48,3 @@ pnpm db:seed
     1. we using Vitest for unit and integration tests, and playwright for E2E tests.
 1.  deploy
     1. We using terraform to create the infrastructure and GitHub Actions for CI and CD pipelines.
-```
