@@ -1,9 +1,9 @@
 import { beforeEach, describe, expect } from 'vitest';
 
 import { Database } from '../db';
+import { clearDatabase } from '../scripts/clear-db';
 import { isDefined } from './assert-helpers';
 import { checkAuthenticatedRoute } from './auth-check';
-import { clearDatabase } from './clear-db';
 import { appTest, createTodos, createUser } from './test-client';
 
 describe('Find user todos', () => {

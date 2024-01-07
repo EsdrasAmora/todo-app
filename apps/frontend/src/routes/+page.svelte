@@ -1,59 +1,63 @@
 <script lang="ts">
+  import { trpcClient } from '$lib/trpc/index.js';
+
   const { data } = $props();
 
-  type Todo = (typeof data.todos)[0];
+  type Todo = (typeof data.todos)[0] & { loading?: boolean; completed: boolean | null };
 
   type Filters = 'all' | 'active' | 'completed';
 
-  let todos = $state<Todo[]>([]);
+  let todos = $state<Todo[]>(data.todos);
   let filter = $state<Filters>('all');
   let filteredTodos = $derived(filterTodos());
+  let loading = $state(false);
+  let newTodoInput = $state('');
 
-  async function addTodo(event: KeyboardEvent) {
-    if (event.key !== 'Enter') return;
-
-    const todoEl = event.target as HTMLInputElement;
-    const title = todoEl.value;
-
-    todos = [
-      ...todos,
-      {
-        completed: false,
-        createdAt: new Date(),
-        updatedAt: new Date(),
-        description: 'description',
-        id: crypto.randomUUID(),
-        title,
-      },
-    ];
-
-    todoEl.value = '';
-
-    //FIXME:
-    //this is not working yet
-    //there's a missing cookie
-    //should I have both cookie and local storage in the frontend?
-    //or make the backend accept cookies instead?
-    // await trpcClient().todo.create.mutate({
-    //   title,
-    //   description: 'description',
-    // });
+  async function addTodo() {
+    const todo = {
+      completed: false,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+      description: 'empty',
+      loading: true,
+      id: crypto.randomUUID(),
+      title: newTodoInput,
+    };
+    todos.unshift(todo);
+    loading = true;
+    newTodoInput = '';
+    try {
+      const result = await trpcClient.todo.create.mutate({
+        title: todo.title,
+        description: 'empty',
+      });
+      todos[0] = result;
+      todo.loading = false;
+    } catch (_e) {
+      todos.shift();
+    }
+    loading = false;
   }
 
-  function editTodo(event: Event) {
-    const inputEl = event.target as HTMLInputElement;
-    const index = +inputEl.dataset.index!;
-    todos[index].title = inputEl.title;
+  async function editTodo(index: number) {
+    const todo = todos[index];
+    todo.loading = true;
+    await trpcClient.todo.update.mutate({
+      todoId: todo.id,
+      title: todo.title,
+    });
+    todo.loading = false;
   }
 
-  function toggleTodo(event: Event) {
-    const inputEl = event.target as HTMLInputElement;
-    const index = +inputEl.dataset.index!;
-    todos[index].completed = !todos[index].completed;
-  }
-
-  function setFilter(newFilter: Filters) {
-    filter = newFilter;
+  async function toggleTodo(index: number) {
+    const todo = todos[index];
+    todo.completed = !todo.completed;
+    todo.loading = true;
+    await trpcClient.todo.update.mutate({
+      todoId: todo.id,
+      completed: todo.completed,
+    });
+    todo.loading = false;
   }
 
   function filterTodos() {
@@ -66,36 +70,50 @@
         return todos.filter((todo) => todo.completed);
     }
   }
-
-  function remaining() {
-    return todos.filter((todo) => !todo.completed).length;
-  }
 </script>
 
-<input onkeydown={addTodo} placeholder="Add todo" type="text" />
+<div class="add-todo">
+  <input
+    bind:value={newTodoInput}
+    onkeydown={(e) => {
+      if (e.key !== 'Enter') return;
+      addTodo();
+    }}
+    placeholder="Add new TODO"
+    type="text"
+  />
+  <button aria-busy={loading ? 'true' : null} onclick={() => addTodo()}>Add</button>
+</div>
+
+<div class="filter">
+  <select bind:value={filter}>
+    <option value="all" selected>Select</option>
+    <option value="active">Active</option>
+    <option value="completed">Completed</option>
+  </select>
+  <div></div>
+</div>
 
 <div class="todos">
-  {#each filteredTodos as todo, i}
-    <div class:completed={todo.completed} class="todo">
-      <input oninput={editTodo} data-index={i} value={todo.title} type="text" />
-      <input onchange={toggleTodo} data-index={i} checked={todo.completed} type="checkbox" />
+  {#each filteredTodos as todo, i (todo.id)}
+    <div class="todo" class:completed={todo.completed}>
+      <input onblur={() => editTodo(i)} bind:value={todo.title} type="text" disabled={todo.loading} />
+      <input onchange={() => toggleTodo(i)} checked={todo.completed} type="checkbox" disabled={todo.loading} />
     </div>
   {/each}
 </div>
 
-<div class="filters">
-  <button onclick={() => setFilter('all')}>All</button>
-  <button onclick={() => setFilter('active')}>Active</button>
-  <button onclick={() => setFilter('completed')}>Completed</button>
-</div>
-
-<p>{remaining()} remaining</p>
-
 <style>
-  .todos {
-    display: grid;
+  .add-todo {
+    width: 40rem;
     gap: 1rem;
-    margin-block-start: 1rem;
+    display: grid;
+    grid-template-columns: 5fr 1fr;
+  }
+
+  .todos {
+    width: 40rem;
+    display: grid;
   }
 
   .todo {
@@ -108,18 +126,21 @@
   }
 
   input[type='text'] {
-    width: 100%;
     padding: 1rem;
   }
 
   input[type='checkbox'] {
     position: absolute;
-    right: 4%;
-    top: 50%;
+    right: 1%;
+    top: 42%;
     translate: 0% -50%;
   }
 
-  .filters {
-    margin-block: 1rem;
+  .filter {
+    width: 40rem;
+    gap: 1rem;
+    display: grid;
+    align-items: center;
+    grid-template-columns: 1fr 4fr;
   }
 </style>

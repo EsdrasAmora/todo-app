@@ -1,9 +1,9 @@
 import { beforeEach, describe, expect } from 'vitest';
 
 import { Database } from '../db';
+import { clearDatabase } from '../scripts/clear-db';
 import { assertValidationError } from './assert-helpers';
 import { checkAuthenticatedRoute } from './auth-check';
-import { clearDatabase } from './clear-db';
 import { appTest } from './test-client';
 
 describe('Create Todo', () => {
