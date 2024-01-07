@@ -31,7 +31,7 @@ export const Env = z
     DATABASE_POOL_ACQUIRE_CONNECTION_TIMEOUT: z.coerce.number().int().default(30),
     NODE_ENV: z.enum(['production', 'development', 'test']).default('production'),
     IS_RUNNIG_ON_CLOUD: z.boolean().default(false),
-    CORS_ALLOW_ORIGIN: z.string().default('*'),
+    CORS_ALLOW_ORIGIN: z.string().array().default(['http://localhost:5173', 'http://localhost:3000']),
   })
   .parse(process.env);
 console.info('ENV initialized.');

@@ -2,8 +2,10 @@ import { faker } from '@faker-js/faker';
 
 import { Database } from '../db';
 import { CryptoService } from '../shared/crypto';
+import { clearDatabase } from './clear-db';
 
 console.info('Seeding database');
+await clearDatabase();
 const users = await Database.insertInto('users')
   .values(
     [...new Array(5)].map((_, i) => {

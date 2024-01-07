@@ -7,7 +7,7 @@ export type BaseContext = {
   sessionId?: string;
   userAgent?: string;
   ip?: string;
-  setCookie: (name: string, value: string) => void;
+  setCookie: (name: string, value: string, maxAge?: number) => void;
   setHeader: (name: string, value: string) => void;
 };
 
