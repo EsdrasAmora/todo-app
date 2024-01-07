@@ -1,9 +1,9 @@
 import type { TRPCClientError } from '@trpc/client';
-import { redirect } from '@sveltejs/kit';
+import { error, redirect } from '@sveltejs/kit';
 
-export function handleUnauthorizedError(error: TRPCClientError<any>): never {
-  if (error.data?.code === 'UNAUTHORIZED') {
+export function handleUnauthorizedError(err: TRPCClientError<any>): never {
+  if (err.data?.code === 'UNAUTHORIZED') {
     redirect(302, '/login');
   }
-  throw error;
+  error(500, 'Something went wrong');
 }

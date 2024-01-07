@@ -5,17 +5,24 @@ import superjson from 'superjson';
 
 import type { AppRouter } from '@repo/backend';
 
-export const trpcClient = (loadFetch?: LoadEvent['fetch']) =>
+export const createTrpcClient = (loadFetch: LoadEvent['fetch'] = fetch) =>
   createTRPCProxyClient<AppRouter>({
     links: [
-      loggerLink({ enabled: () => dev }),
+      loggerLink({ enabled: () => false ?? dev }),
       httpLink({
         url: `http://localhost:3000/trpc`,
-        fetch: loadFetch,
+        fetch(url, options) {
+          return loadFetch(url, {
+            ...options,
+            credentials: 'include',
+          });
+        },
       }),
     ],
     transformer: superjson,
   });
+
+export const trpcClient = createTrpcClient();
 
 export function isTRPCClientError(cause: unknown): cause is TRPCClientError<AppRouter> {
   return cause instanceof TRPCClientError;
