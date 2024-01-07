@@ -2,9 +2,9 @@ import { randomUUID } from 'crypto';
 import { beforeEach, describe, expect } from 'vitest';
 
 import { Database } from '../db';
+import { clearDatabase } from '../scripts/clear-db';
 import { assertThrows, assertValidationError } from './assert-helpers';
 import { checkAuthenticatedRoute } from './auth-check';
-import { clearDatabase } from './clear-db';
 import { appTest, createTodo } from './test-client';
 
 describe('Update Todo', () => {

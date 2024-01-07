@@ -1,9 +1,9 @@
 import { randomUUID } from 'crypto';
 import { beforeEach, describe, expect } from 'vitest';
 
+import { clearDatabase } from '../scripts/clear-db';
 import { assertThrows } from './assert-helpers';
 import { checkAuthenticatedRoute } from './auth-check';
-import { clearDatabase } from './clear-db';
 import { appTest, createTodo, createUser } from './test-client';
 
 describe('Find user todos', () => {

@@ -1,8 +1,8 @@
 import { beforeEach, describe, expect, test } from 'vitest';
 
 import { Env } from '../env';
+import { clearDatabase } from '../scripts/clear-db';
 import { assertThrows, assertValidationError } from './assert-helpers';
-import { clearDatabase } from './clear-db';
 import { appTest, createUnauthorizedCaller } from './test-client';
 
 describe('Create User', () => {

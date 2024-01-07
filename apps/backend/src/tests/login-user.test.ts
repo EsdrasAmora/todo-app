@@ -1,8 +1,8 @@
 import { beforeEach, describe, expect } from 'vitest';
 
+import { clearDatabase } from '../scripts/clear-db';
 import { JwtService } from '../shared/jwt';
 import { assertThrows, isDefined } from './assert-helpers';
-import { clearDatabase } from './clear-db';
 import { appTest } from './test-client';
 
 describe('Login User', () => {

@@ -1,8 +1,8 @@
 import { beforeEach, describe, expect } from 'vitest';
 
 import { Database } from '../db';
+import { clearDatabase } from '../scripts/clear-db';
 import { checkAuthenticatedRoute } from './auth-check';
-import { clearDatabase } from './clear-db';
 import { appTest, createTodos } from './test-client';
 
 describe('Delete User', () => {
